@@ -14,20 +14,11 @@ val LocalTudeeTextStyle = staticCompositionLocalOf { TudeeTextStyle }
 val nunito = FontFamily(
     Font(R.font.nunito_regular, weight = FontWeight.Normal),
     Font(R.font.nunito_medium, weight = FontWeight.Medium),
-    Font(R.font.nunito_mediumitalic, weight = FontWeight.Medium, style = FontStyle.Italic),
     Font(R.font.nunito_semibold, weight = FontWeight.SemiBold),
     Font(R.font.nunito_bold, weight = FontWeight.Bold),
-    Font(R.font.nunito_bolditalic, weight = FontWeight.Bold, style = FontStyle.Italic),
     Font(R.font.nunito_extrabold, weight = FontWeight.ExtraBold),
-    Font(R.font.nunito_extrabolditalic, weight = FontWeight.ExtraBold, style = FontStyle.Italic),
-    Font(R.font.nunito_semibolditalic, weight = FontWeight.SemiBold, style = FontStyle.Italic),
     Font(R.font.nunito_black, weight = FontWeight.Black),
-    Font(R.font.nunito_blackitalic, weight = FontWeight.Black, style = FontStyle.Italic),
-    Font(R.font.nunito_italic, weight = FontWeight.Normal, style = FontStyle.Italic),
-    Font(R.font.nunito_extralightitalic, weight = FontWeight.ExtraLight, style = FontStyle.Italic),
-    Font(R.font.nunito_extralight, weight = FontWeight.ExtraLight),
     Font(R.font.nunito_light, weight = FontWeight.Light),
-    Font(R.font.nunito_lightitalic, weight = FontWeight.Light, style = FontStyle.Italic),
 )
 val TudeeTextStyle = TudeeTextStyles(
     headline = SizedTextStyle(
