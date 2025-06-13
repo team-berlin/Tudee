@@ -92,7 +92,7 @@ val TudeeTextStyle = TudeeTextStyles(
             fontFamily = nunito,
             fontWeight = FontWeight.Medium,
             fontSize = 14.sp,
-            lineHeight = 14.sp
+            lineHeight = 17.sp
         ),
         small = TextStyle(
             fontFamily = nunito,
