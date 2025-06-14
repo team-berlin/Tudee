@@ -5,7 +5,7 @@ import androidx.compose.ui.graphics.Color
 val TudeeDarkColors = TudeeColors(
     primary = Color(0xFF3090BF),
     secondary = Color(0xFFCC7851),
-    primaryVarient = Color(0xFF05202E),
+    primaryVariant = Color(0xFF05202E),
     primaryGradient = listOf(Color(0xFF3090BF), Color(0xFF3A9CCD)),
     textColors = TextColors(
         title = Color(0xDEFFFFFF),
