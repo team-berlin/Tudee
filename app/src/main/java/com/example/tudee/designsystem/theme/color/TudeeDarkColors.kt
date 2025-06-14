@@ -11,15 +11,16 @@ val TudeeDarkColors = TudeeColors(
     surfaceLow = Color(0xFF020108),
     surface = Color(0xFF0D0C14),
     surfaceHigh = Color(0xFF0F0E19),
-    onPrimary = Color(0xDEFFFFFF),
-    onPrimaryCaption = Color(0xB3FFFFFF),
-    onPrimaryCard = Color(0x29060414),
-    onPrimaryStroke = Color(0x99242424),
+
     disable = Color(0xFF1D1E1F),
     textColors = TextColors(
         title = Color(0xDEFFFFFF),
         body = Color(0x99FFFFFF),
         hint = Color(0x61FFFFFF),
+        onPrimary = Color(0xDEFFFFFF),
+        onPrimaryCaption = Color(0xB3FFFFFF),
+        onPrimaryCard = Color(0x29060414),
+        onPrimaryStroke = Color(0x99242424),
     ),
     statusColors = StatusColors(
         pinkAccent = Color(0xFFCC5268),
