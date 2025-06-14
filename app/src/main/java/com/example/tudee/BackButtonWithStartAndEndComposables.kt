@@ -1,13 +1,14 @@
 package com.example.tudee
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -15,7 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,13 +24,11 @@ import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.designsystem.theme.textstyle.TudeeTextStyle
 
 @Composable
-fun BackButton(
+fun BackButtonWithStartAndEndComposables(
     modifier: Modifier = Modifier
         .fillMaxWidth()
         .padding(vertical = 12.dp, horizontal = 16.dp),
-    startIcon: Painter = painterResource(R.drawable.back_button),
-    startIconContentDescription: String = "Back Button",
-    onStartIconClicked: () -> Unit = {},
+    startComposable: (@Composable () -> Unit)? = null,
     title: String? = "Tasks",
     titleColor: Color = TudeeTheme.color.textColors.title,
     titleStyle: TextStyle = TudeeTextStyle.title.medium,
@@ -44,14 +42,7 @@ fun BackButton(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        IconButton(
-            onClick = onStartIconClicked,
-        ) {
-            Icon(
-                painter = startIcon,
-                contentDescription = startIconContentDescription,
-            )
-        }
+        startComposable?.invoke()
         Column(
             verticalArrangement = Arrangement.spacedBy(2.dp),
         ) {
@@ -77,14 +68,23 @@ fun BackButton(
 @Composable
 private fun BackButtonPreview() {
     TudeeTheme {
-        BackButton(
-            onStartIconClicked = {},
+        BackButtonWithStartAndEndComposables(
+            startComposable = {
+                IconButton(onClick = { /* Handle back action */ }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.back_button),
+                        contentDescription = "Back",
+                        modifier = Modifier.size(40.dp)
+                    )
+                }
+            },
             title = "Tasks",
             subTitle = "Today",
             endComposable = {
                 Icon(
-                    painter = painterResource(R.drawable.back_button),
-                    contentDescription = "Search Icon"
+                    painter = painterResource(id = R.drawable.back_button),
+                    contentDescription = "Settings",
+                    modifier = Modifier.size(40.dp)
                 )
             }
         )
