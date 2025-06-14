@@ -1,15 +1,17 @@
-@file:JvmName("DefaultButtonKt")
-
 package com.example.tudee.presentation.composables.buttons
 
-import androidx.compose.foundation.border
+import android.graphics.Color
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.graphics.toColor
+import com.example.tudee.designsystem.theme.TudeeTheme
 
 @Composable
 fun SecondaryButton(
@@ -17,25 +19,85 @@ fun SecondaryButton(
     modifier: Modifier = Modifier,
     state: ButtonState = ButtonState.IDLE,
     enabled: Boolean = state != ButtonState.DISABLED,
-    shape: Shape = ButtonDefaults.DefaultShape,
-    contentPadding: PaddingValues = ButtonDefaults.DefaultPadding,
-    buttonColors: ButtonColors = ButtonColors.secondary(state),
+    shape: Shape = ButtonDefaults.defaultShape,
+    contentPadding: PaddingValues = ButtonDefaults.defaultPadding,
+    buttonColors: ButtonColors = ButtonDefaults.colors(),
     content: @Composable RowScope.() -> Unit
 ) {
+    val backgroundColor = androidx.compose.ui.graphics.Color.Transparent
+    val contentColor = when (state) {
+        ButtonState.IDLE -> TudeeTheme.color.primary
+        ButtonState.LOADING -> TudeeTheme.color.primary
+        ButtonState.DISABLED -> TudeeTheme.color.textColors.stroke
+        ButtonState.ERROR -> TudeeTheme.color.statusColors.error
+
+    }
     DefaultButton(
         onClick = onClick,
         modifier = modifier,
         state = state,
-        type = ButtonType.SECONDARY,
         enabled = enabled,
         contentPadding = contentPadding,
-        contentColor = buttonColors.contentColor,
-        borderModifier = Modifier.border(
-            width = 1.dp,
-            color = buttonColors.borderColor ?: Color.Transparent,
-            shape = shape
+        colors = buttonColors.copy(
+            backgroundColor = backgroundColor,
+            contentColor = contentColor
         ),
+        shape = shape,
         content = content
     )
 }
 
+@Preview
+@Composable
+private fun SecondaryButtonPreview() {
+    SecondaryButton(
+        onClick = {},
+        content = {
+            Text(
+                text = "Button",
+            )
+        }
+    )
+}
+
+@Preview
+@Composable
+private fun SecondaryButtonLoadingPreview() {
+    SecondaryButton(
+        onClick = {},
+        state = ButtonState.LOADING,
+        content = {
+            Text(
+                text = "Button",
+            )
+        }
+    )
+}
+
+@Preview
+@Composable
+private fun SecondaryButtonDisabledPreview() {
+    SecondaryButton(
+        onClick = {},
+        state = ButtonState.DISABLED,
+        content = {
+            Text(
+                text = "Button",
+            )
+        }
+    )
+}
+
+@Preview
+@Composable
+private fun SecondaryButtonErrorPreview() {
+    SecondaryButton(
+        onClick = {},
+        state = ButtonState.ERROR,
+        content = {
+            Text(
+                text = "Button",
+            )
+        }
+    )
+}
