@@ -1,4 +1,4 @@
-package com.example.tudee.designsystem.theme
+package com.example.tudee.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.tudee.designsystem.theme.TudeeTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 
@@ -42,7 +43,7 @@ fun TabBarComponent(
         selectedTabIndex = selectedIndex,
         modifier = modifier
             .fillMaxWidth()
-            .background(TudeeTheme.color.textColors.surfaceHigh)
+            .background(TudeeTheme.color.surfaceHigh)
         ,
         indicator = {
             TabRowDefaults.PrimaryIndicator(
@@ -76,19 +77,19 @@ fun TabBarComponent(
                         Text(
                             text = header,
                             modifier = Modifier.padding(end = 4.dp),
-                            style = if(isSelected)TudeeTheme.textStyle.label.medium else TudeeTheme.textStyle.label.small,
-                            color = if(isSelected)TudeeTheme.color.textColors.title else TudeeTheme.color.textColors.hint
+                            style = if(isSelected) TudeeTheme.textStyle.label.medium else TudeeTheme.textStyle.label.small,
+                            color = if(isSelected) TudeeTheme.color.textColors.title else TudeeTheme.color.textColors.hint
                         )
                         if (index == selectedIndex) {
                             Box(
                                 Modifier
                                     .size(28.dp)
                                     .clip(RoundedCornerShape(100))
-                                    .background(TudeeTheme.color.textColors.surfaceLow),
+                                    .background(TudeeTheme.color.surfaceLow),
                                 contentAlignment = Alignment.Center
 
                             ) {
-                                Text(tasksCount, style = TudeeTheme.color.surface)
+                                Text(tasksCount, style = TudeeTheme.textStyle.label.medium, color = TudeeTheme.color.textColors.body)
                             }
                         }
                     }
@@ -101,7 +102,7 @@ fun TabBarComponent(
 
 @Composable
 private fun TabBarHorizontalDivider() {
-    HorizontalDivider(Modifier.fillMaxWidth(), thickness = 1.dp, color = TudeeTheme.color.textColors.stroke)
+    HorizontalDivider(Modifier.fillMaxWidth(), thickness = 1.dp, color = TudeeTheme.color.stroke)
 }
 
 @Composable
