@@ -5,7 +5,7 @@ import androidx.compose.ui.graphics.Color
 data class TudeeColors(
     val primary: Color,
     val secondary: Color,
-    val primaryVarient: Color,
+    val primaryVariant: Color,
     val primaryGradient: List<Color>,
     val textColors: TextColors,
     val statusColors: StatusColors,
