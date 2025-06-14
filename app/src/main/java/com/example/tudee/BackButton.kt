@@ -12,22 +12,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.example.tudee.designsystem.theme.textstyle.TudeeTextStyle
 
 typealias EmptyLambda = () -> Unit
 
-@Preview(showBackground = true)
 @Composable
-private fun BackButton(
-    onBackClicked: EmptyLambda = {},
-    label: String? = "null",
-    clickableIcon: Painter = painterResource(R.drawable.back_button),
-    onOptionClicked: EmptyLambda = {},
-    clickableIconContentDescription: String? = null,
+fun BackButton(
+    onBackClicked: () -> Unit,
+    label: String? = null,
+    endComposable: (@Composable () -> Unit)? = null,
 ) {
     Row(
         modifier = Modifier
@@ -50,25 +46,26 @@ private fun BackButton(
         ) {
             Text(
                 text = "Tasks",
-                fontSize = 20.sp,
-                lineHeight = 24.sp,
+                style = TudeeTextStyle.title.medium,
             )
             if (label != null) Text(
                 text = label,
-                fontSize = 12.sp,
-                lineHeight = 16.sp,
+                style = TudeeTextStyle.label.small,
             )
         }
         Spacer(modifier = Modifier.weight(1f))
-        IconButton(
-            onClick = onBackClicked,
-            modifier = Modifier,
-        ) {
-            Icon(
-                painter = clickableIcon,
-                contentDescription = clickableIconContentDescription,
-            )
-        }
+        endComposable?.invoke()
 
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun BackButtonPreview() {
+    BackButton(
+        onBackClicked = {},
+        label = "Label",
+    ) {
+        Icon(painterResource(R.drawable.back_button), null)
     }
 }
