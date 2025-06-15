@@ -11,30 +11,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.example.tudee.designsystem.theme.TudeeTheme
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
 import com.example.tudee.R
-
+import com.example.tudee.designsystem.theme.TudeeTheme
 
 @Composable
 fun CategoryTaskComponent(
-    title: String = "Organize Study Desk",
-    description: String? = null,
-    priority: String = "Medium",
-    priorityBackgroundColor: Color = TudeeTheme.color.statusColors.yellowAccent,
     modifier: Modifier = Modifier,
+    title: String = stringResource(R.string.default_task_title),
+    description: String? = stringResource(R.string.default_task_description),
+    priority: String = stringResource(R.string.default_priority),
+    priorityBackgroundColor: Color = TudeeTheme.color.statusColors.yellowAccent,
     taskIcon: @Composable () -> Unit,
     priorityIcon: @Composable () -> Unit,
     dateIcon: (@Composable () -> Unit)? = null,
-    dateText: String? = null
-) {
+    dateText: String? = stringResource(R.string.default_date)
+)
+ {
     val colors = TudeeTheme.color
     val textStyles = TudeeTheme.textStyle
 
@@ -74,7 +70,7 @@ fun CategoryTaskComponent(
                         modifier = Modifier
                             .width(98.dp)
                             .height(28.dp)
-                            .background(Color(0xFFF9F9F9), RoundedCornerShape(100.dp))
+                            .background(colors.textColors.surface, RoundedCornerShape(100.dp))
                             .padding(horizontal = 8.dp, vertical = 6.dp),
                         horizontalArrangement = Arrangement.spacedBy(2.dp),
                         verticalAlignment = Alignment.CenterVertically
@@ -83,11 +79,7 @@ fun CategoryTaskComponent(
                         Text(
                             text = dateText,
                             style = textStyles.body.small.copy(
-                                fontSize = 12.sp,
-                                lineHeight = 16.sp,
-                                color = Color(0x991F1F1F),
-                                fontWeight = FontWeight.Medium,
-                                fontFamily = FontFamily(Font(R.font.nunito_medium))
+                                color = colors.textColors.body
                             ),
                             textAlign = TextAlign.Center,
                             modifier = Modifier.wrapContentWidth()
@@ -108,8 +100,6 @@ fun CategoryTaskComponent(
                     Text(
                         text = priority,
                         style = textStyles.body.small.copy(
-                            fontSize = 12.sp,
-                            lineHeight = 16.sp,
                             color = colors.textColors.surface
                         ),
                         modifier = Modifier.wrapContentWidth()
@@ -127,18 +117,14 @@ fun CategoryTaskComponent(
         ) {
             Text(
                 text = title,
-                style = textStyles.title.medium.copy(
-                    fontSize = 16.sp,
-                    lineHeight = 19.sp,
+                style = textStyles.label.large.copy(
                     color = colors.textColors.body
                 )
             )
-            description?.let { description ->
+            description?.let {
                 Text(
-                    text = description,
-                    style = textStyles.body.small.copy(
-                        fontSize = 12.sp,
-                        lineHeight = 16.sp,
+                    text = it,
+                    style = textStyles.label.small.copy(
                         color = colors.textColors.hint
                     ),
                     modifier = Modifier
@@ -147,56 +133,41 @@ fun CategoryTaskComponent(
                 )
             }
         }
+
     }
 }
-@Composable
-fun CustomIcon(
-    vectorId: Int,
-    contentDescription: String,
-    size: Dp,
-    tint: Color
-) {
-    Icon(
-        painter = painterResource(id = vectorId),
-        contentDescription = contentDescription,
-        modifier = Modifier.size(size),
-        tint = tint
-    )
-}
-
-
 @Preview(showBackground = true)
 @Composable
 fun CategoryTaskComponentPreview() {
     CategoryTaskComponent(
-        title = "Organize Study Desk",
-        description = "Review cell structure and functions for tomorrow...",
-        priority = "Medium",
+        title = stringResource(R.string.default_task_title),
+        description = stringResource(R.string.default_task_description),
+        priority = stringResource(R.string.default_priority),
         priorityBackgroundColor = TudeeTheme.color.statusColors.yellowAccent,
         taskIcon = {
-            CustomIcon(
-                vectorId = R.drawable.book_open1,
-                contentDescription = "Task Icon",
-                size = 32.dp,
+            Icon(
+                painter = painterResource(id = R.drawable.ic_category_book_open),
+                contentDescription = stringResource(R.string.task_icon_description),
+                modifier = Modifier.size(32.dp),
                 tint = TudeeTheme.color.statusColors.purpleAccent
             )
         },
         priorityIcon = {
-            CustomIcon(
-                vectorId = R.drawable.alert_error,
-                contentDescription = "Priority Icon",
-                size = 12.dp,
+            Icon(
+                painter = painterResource(id = R.drawable.ic_priority_medium),
+                contentDescription = stringResource(R.string.priority_icon_description),
+                modifier = Modifier.size(12.dp),
                 tint = TudeeTheme.color.textColors.onPrimary
             )
         },
         dateIcon = {
-            CustomIcon(
-                vectorId = R.drawable.calendar_favorite1,
-                contentDescription = "Date Icon",
-                size = 12.dp,
+            Icon(
+                painter = painterResource(id = R.drawable.ic_calendar),
+                contentDescription = stringResource(R.string.date_icon_description),
+                modifier = Modifier.size(12.dp),
                 tint = TudeeTheme.color.textColors.body
             )
         },
-        dateText = "12-03-2025"
+        dateText = stringResource(R.string.default_date)
     )
 }
