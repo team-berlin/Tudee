@@ -24,8 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
+import com.example.tudee.designsystem.theme.textstyle.CherryBombTextStyle
 import com.example.tudee.designsystem.theme.textstyle.TudeeTextStyle
-import com.example.tudee.designsystem.theme.textstyle.cherryBomb
 
 @Composable
 fun ImageTitleDescription(
@@ -64,10 +64,7 @@ fun ImageTitleDescription(
         Column {
             Text(
                 text = title,
-                fontSize = 18.sp,
-                fontFamily = cherryBomb,
-                fontWeight = FontWeight.Normal,
-                lineHeight = 18.sp,
+                style = CherryBombTextStyle,
                 color = TudeeTheme.color.textColors.onPrimary,
             )
 

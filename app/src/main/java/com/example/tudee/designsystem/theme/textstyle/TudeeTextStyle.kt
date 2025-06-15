@@ -103,3 +103,10 @@ val TudeeTextStyle = TudeeTextStyles(
         )
     )
 )
+
+val CherryBombTextStyle = TextStyle(
+    fontFamily = cherryBomb,
+    fontWeight = FontWeight.Normal,
+    fontSize = 18.sp,
+    lineHeight = 18.sp
+)
