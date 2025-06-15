@@ -7,12 +7,19 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
@@ -51,11 +58,18 @@ fun DefaultButton(
     }
     Box(
         modifier = modifier
-            .height(ButtonDefaults.defaultHeight)
-            .then(if (isFab) Modifier.widthIn(min = ButtonDefaults.defaultHeight) else Modifier)
+            .then(
+                if (isFab) Modifier.size(ButtonDefaults.defaultFabSize) else Modifier.height(
+                    ButtonDefaults.defaultHeight
+                )
+            )
             .clip(shape)
             .then(
-                if (colors.backgroundGradient != null) Modifier.background(
+                if (colors.backgroundGradient != null && state in listOf(
+                        ButtonState.IDLE,
+                        ButtonState.LOADING
+                    )
+                ) Modifier.background(
                     colors.backgroundGradient, shape
                 ) else Modifier.background(backgroundColor, shape)
             )
@@ -87,42 +101,134 @@ fun DefaultButton(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(
+    showBackground = true,
+    device = "spec:width=4000px,height=1500px,dpi=440"
+)
 @Composable
-private fun DefaultButtonPreview() {
-    DefaultButton(onClick = {}, content = {
-        Text(
-            text = "Button",
-        )
-    })
+private fun AllButtonPreview() {
+    Row(
+        Modifier.fillMaxSize(),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+    ) {
+        Column(
+            Modifier.fillMaxHeight(),
+            verticalArrangement = Arrangement.SpaceEvenly
+        ) {
+            PrimaryButton({}) {
+                Text(text = "Submit")
+            }
+            PrimaryButton(onClick = {}, state = ButtonState.LOADING) {
+                Text(text = "Submit")
+            }
+            PrimaryButton(onClick = {}, state = ButtonState.DISABLED) {
+                Text(text = "Submit")
+            }
+            PrimaryButton(onClick = {}, state = ButtonState.ERROR) {
+                Text(text = "Submit")
+            }
+        }
+
+        Column(
+            Modifier.fillMaxHeight(),
+            verticalArrangement = Arrangement.SpaceEvenly
+        ) {
+            SecondaryButton({}) {
+                Text(text = "Submit")
+            }
+            SecondaryButton(onClick = {}, state = ButtonState.LOADING) {
+                Text(text = "Submit")
+            }
+            SecondaryButton(onClick = {}, state = ButtonState.DISABLED) {
+                Text(text = "Submit")
+            }
+            SecondaryButton(onClick = {}, state = ButtonState.ERROR) {
+                Text(text = "Submit")
+            }
+        }
+        Column(
+            Modifier.fillMaxHeight(),
+            verticalArrangement = Arrangement.SpaceEvenly
+        ) {
+            TextButton({}) {
+                Text(text = "Cancel")
+            }
+            TextButton(onClick = {}, state = ButtonState.LOADING) {
+                Text(text = "Cancel")
+            }
+            TextButton(onClick = {}, state = ButtonState.DISABLED) {
+                Text(text = "Cancel")
+            }
+            TextButton(onClick = {}, state = ButtonState.ERROR) {
+                Text(text = "Cancel")
+            }
+        }
+        Column(
+            Modifier.fillMaxHeight(),
+            verticalArrangement = Arrangement.SpaceEvenly
+        ) {
+            FabButton({}) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = null
+                )
+            }
+            FabButton(onClick = {}, state = ButtonState.LOADING) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = null
+                )
+            }
+            FabButton(onClick = {}, state = ButtonState.DISABLED) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = null
+                )
+            }
+            FabButton(onClick = {}, state = ButtonState.ERROR) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = null
+                )
+            }
+        }
+        Column(
+            Modifier.fillMaxHeight(),
+            verticalArrangement = Arrangement.SpaceEvenly
+        ) {
+            NegativeButton({}) {
+                Text(text = "Submit")
+            }
+            NegativeButton(onClick = {}, state = ButtonState.LOADING) {
+                Text(text = "Submit")
+            }
+            NegativeButton(onClick = {}, state = ButtonState.DISABLED) {
+                Text(text = "Submit")
+            }
+            NegativeButton(onClick = {}, state = ButtonState.ERROR) {
+                Text(text = "Submit")
+            }
+        }
+        Column(
+            Modifier.fillMaxHeight(),
+            verticalArrangement = Arrangement.SpaceEvenly
+        ) {
+            NegativeTextButton({}) {
+                Text(text = "Submit")
+            }
+            NegativeTextButton(onClick = {}, state = ButtonState.LOADING) {
+                Text(text = "Submit")
+            }
+            NegativeTextButton(onClick = {}, state = ButtonState.DISABLED) {
+                Text(text = "Submit")
+            }
+            NegativeTextButton(onClick = {}, state = ButtonState.ERROR) {
+                Text(text = "Submit")
+            }
+        }
+    }
 }
 
-@Preview
-@Composable
-private fun DefaultButtonLoadingPreview() {
-    DefaultButton(onClick = {}, state = ButtonState.LOADING, content = {
-        Text(
-            text = "Button",
-        )
-    })
-}
 
-@Preview
-@Composable
-private fun DefaultButtonDisabledPreview() {
-    DefaultButton(onClick = {}, state = ButtonState.DISABLED, content = {
-        Text(
-            text = "Button",
-        )
-    })
-}
 
-@Preview
-@Composable
-private fun DefaultButtonErrorPreview() {
-    DefaultButton(onClick = {}, state = ButtonState.ERROR, content = {
-        Text(
-            text = "Button",
-        )
-    })
-}
+

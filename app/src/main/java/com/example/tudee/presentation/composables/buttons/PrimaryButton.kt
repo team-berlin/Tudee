@@ -5,8 +5,10 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.tudee.designsystem.theme.TudeeTheme
 
 @Composable
 fun PrimaryButton(
@@ -26,8 +28,9 @@ fun PrimaryButton(
         enabled = enabled,
         contentPadding = contentPadding,
         colors = buttonColors.copy(
-            backgroundColor = buttonColors.backgroundColor,
-            contentColor = buttonColors.contentColor,
+            backgroundGradient = Brush.horizontalGradient(
+                TudeeTheme.color.primaryGradient
+            )
         ),
         shape = shape,
         content = content

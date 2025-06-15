@@ -2,95 +2,95 @@ package com.example.tudee.presentation.composables.buttons
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.tudee.designsystem.theme.TudeeTheme
 
 @Composable
-fun FabButton(
+fun NegativeTextButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     state: ButtonState = ButtonState.IDLE,
     enabled: Boolean = state != ButtonState.DISABLED,
     shape: Shape = ButtonDefaults.defaultShape,
-    contentPadding: PaddingValues = ButtonDefaults.defaultFabPadding,
+    contentPadding: PaddingValues = ButtonDefaults.defaultPadding,
     buttonColors: ButtonColors = ButtonDefaults.colors(),
     content: @Composable RowScope.() -> Unit
 ) {
-    val currentContent = if (state == ButtonState.LOADING) {{}}else content
-
     DefaultButton(
         onClick = onClick,
         modifier = modifier,
         state = state,
         enabled = enabled,
-        isFab = true,
         contentPadding = contentPadding,
         colors = buttonColors.copy(
-            backgroundGradient = Brush.horizontalGradient(
-                TudeeTheme.color.primaryGradient
-            )
+            backgroundColor = Color.Transparent,
+            errorBackgroundColor = Color.Transparent,
+            disabledBackgroundColor = Color.Transparent,
+            contentColor = TudeeTheme.color.statusColors.error,
+            disabledContentColor =TudeeTheme.color.disable ,
+            errorContentColor = TudeeTheme.color.statusColors.error,
         ),
         shape = shape,
-        content = currentContent
+        content = content
     )
 }
 
-@Preview
+@Preview(showSystemUi = false, showBackground = true)
 @Composable
-private fun FabButtonPreview() {
-    FabButton(
+private fun NegativeTextButtonPreview() {
+    NegativeTextButton(
         onClick = {},
         content = {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = null
+            Text(
+                text = "Button",
             )
         }
     )
 }
 
-@Preview
+@Preview(showSystemUi = false, showBackground = true)
 @Composable
-private fun FabButtonLoadingPreview() {
-    FabButton(
+private fun NegativeTextButtonLoadingPreview() {
+    NegativeTextButton(
         onClick = {},
         state = ButtonState.LOADING,
-        content = {}
+        content = {
+            Text(
+                text = "Button",
+            )
+        }
     )
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
-private fun FabButtonDisabledPreview() {
-    FabButton(
+private fun NegativeTextButtonDisabledPreview() {
+    NegativeTextButton(
         onClick = {},
         state = ButtonState.DISABLED,
         content = {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = null
+            Text(
+                text = "Button",
             )
         }
     )
 }
 
-@Preview
+@Preview(showBackground = true, showSystemUi = false)
 @Composable
-private fun FabButtonErrorPreview() {
-    FabButton(
+private fun NegativeTextButtonErrorPreview() {
+    NegativeTextButton(
         onClick = {},
         state = ButtonState.ERROR,
         content = {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = null
+            Text(
+                text = "Button",
             )
-        })
+        }
+    )
 }
