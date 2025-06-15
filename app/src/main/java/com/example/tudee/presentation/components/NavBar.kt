@@ -1,5 +1,8 @@
 package com.example.tudee.presentation.components
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -8,48 +11,45 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import com.example.tudee.designsystem.theme.TudeeTheme
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
+import com.example.tudee.designsystem.theme.TudeeTheme
 
 data class BottomNavItem(
-    val icon: Int,
-    val selectedIcon: Int,
+    val icon: Painter,
+    val selectedIcon: Painter,
     val route: String
 )
 
 
 @Composable
 fun NavBar(
-    items: List<BottomNavItem>,
+    navDestinations: List<BottomNavItem>,
     currentRoute: String,
-    onItemClicked: (String) -> Unit,
+    onNavDestinationClicked: (String) -> Unit,
     modifier: Modifier = Modifier,
     backgroundColor: Color = TudeeTheme.color.surfaceHigh,
     selectedItemBackgroundColor: Color = TudeeTheme.color.primaryVariant,
     activeIconColor: Color = TudeeTheme.color.primary,
     inactiveIconColor: Color = Color.Unspecified,
-    shadowColor: Color = TudeeTheme.color.shadow,
-    shadowElevation: Int = 2,
-    shapeWhenSelected: RoundedCornerShape = RoundedCornerShape(16.dp),
-    shapeWhenNotSelected: RoundedCornerShape = RoundedCornerShape(100.dp),
-    navItemBoxSize: Int = 42,
-    iconSize: Int = 24,
+    shadowColor: Color = Color(0x14000000),
     rippleColor: Color = TudeeTheme.color.surfaceHigh,
-    paddingValues: PaddingValues =PaddingValues(horizontal = 32.dp, vertical = 16.dp),
+    paddingValues: PaddingValues = PaddingValues(horizontal = 32.dp, vertical = 16.dp),
     iconAlignment: Alignment = Alignment.Center
 ) {
 
@@ -57,7 +57,7 @@ fun NavBar(
         modifier = modifier
             .fillMaxWidth()
             .shadow(
-                elevation = shadowElevation.dp,
+                elevation = 2.dp,
                 clip = false,
                 ambientColor = shadowColor,
                 spotColor = shadowColor
@@ -67,30 +67,38 @@ fun NavBar(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        items.forEach { item ->
+        navDestinations.forEach { item ->
             val isSelected = currentRoute == item.route
-
+            val backgroundColorAnimated by animateColorAsState(
+                targetValue = if (isSelected) selectedItemBackgroundColor else backgroundColor,
+                animationSpec = spring(
+                    dampingRatio = Spring.DampingRatioMediumBouncy,
+                    stiffness = Spring.StiffnessLow
+                )
+            )
             Box(
                 modifier = Modifier
-                    .size(navItemBoxSize.dp)
+                    .size(42.dp)
                     .background(
-                        color = if (isSelected) selectedItemBackgroundColor else backgroundColor,
-                        shape = if (isSelected) shapeWhenSelected else shapeWhenNotSelected
+                        color = backgroundColorAnimated,
+                        shape = if (isSelected) RoundedCornerShape(16.dp) else RoundedCornerShape(
+                            100.dp
+                        )
                     )
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = rememberRipple(
                             bounded = true,
-                            radius = (navItemBoxSize / 2).dp,
+                            radius = (42 / 2).dp,
                             color = rippleColor
                         )
-                    ) { onItemClicked(item.route) },
+                    ) { onNavDestinationClicked(item.route) },
                 contentAlignment = iconAlignment
             ) {
                 Icon(
-                    painter = painterResource(id = if (isSelected) item.selectedIcon else item.icon),
+                    painter = if (isSelected) item.selectedIcon else item.icon,
                     contentDescription = item.route,
-                    modifier = Modifier.size(iconSize.dp),
+                    modifier = Modifier.size(24.dp),
                     tint = if (isSelected) activeIconColor else inactiveIconColor
                 )
             }
@@ -101,14 +109,28 @@ fun NavBar(
 
 @Preview(showBackground = true)
 @Composable
-fun NavBarPreview() {
-    NavBar(
-        items = listOf(
-            BottomNavItem(R.drawable.home, R.drawable.home_select, "home"),
-            BottomNavItem(R.drawable.task, R.drawable.task_select, "task"),
-            BottomNavItem(R.drawable.category, R.drawable.category_select, "category")
-        ),
-        currentRoute = "category",
-        onItemClicked = {}
-    )
+private fun NavBarPreview() {
+    TudeeTheme {
+        NavBar(
+            navDestinations = listOf(
+                BottomNavItem(
+                    icon = painterResource(id = R.drawable.home),
+                    selectedIcon = painterResource(id = R.drawable.home_select),
+                    route = "home"
+                ),
+                BottomNavItem(
+                    icon = painterResource(id = R.drawable.task),
+                    selectedIcon = painterResource(id = R.drawable.task_select),
+                    route = "search"
+                ),
+                BottomNavItem(
+                    icon = painterResource(id = R.drawable.category),
+                    selectedIcon = painterResource(id = R.drawable.category_select),
+                    route = "profile"
+                )
+            ),
+            currentRoute = "home",
+            onNavDestinationClicked = {}
+        )
+    }
 }
