@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -22,13 +23,13 @@ import com.example.tudee.designsystem.theme.TudeeTheme
 fun SnackBarComponent(
     modifier: Modifier = Modifier,
     message: String,
-    iconRes: Int,
+    icon: Painter,
     iconBackgroundColor: Color,
     iconTint: Color = TudeeTheme.color.statusColors.error,
     contentColor: Color = TudeeTheme.color.textColors.body,
 ) {
     val textStyles = TudeeTheme.textStyle
-    val colors =  TudeeTheme.color.textColors
+    val colors = TudeeTheme.color.textColors
 
     Row(
         modifier = modifier
@@ -37,6 +38,7 @@ fun SnackBarComponent(
             .shadow(
                 elevation = 4.dp,
                 shape = RoundedCornerShape(16.dp),
+                spotColor =  TudeeTheme.color.statusColors.blackBlur
             )
             .background(colors.surfaceHigh, RoundedCornerShape(16.dp))
             .padding(8.dp),
@@ -50,7 +52,7 @@ fun SnackBarComponent(
             contentAlignment = Alignment.Center
         ) {
             Icon(
-                painter = painterResource(id = iconRes),
+                painter = icon,
                 contentDescription = "snack bar icon",
                 tint = iconTint,
                 modifier = Modifier.size(20.dp)
@@ -64,12 +66,13 @@ fun SnackBarComponent(
         )
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun SnackBarExamplePreview() {
     SnackBarComponent(
         message = stringResource(R.string.snackBar_success_message),
-        iconRes = R.drawable.ic_successfully,
+        icon = painterResource(id = R.drawable.ic_successfully),
         iconBackgroundColor = TudeeTheme.color.statusColors.greenVariant,
         iconTint = TudeeTheme.color.statusColors.greenAccent
     )
