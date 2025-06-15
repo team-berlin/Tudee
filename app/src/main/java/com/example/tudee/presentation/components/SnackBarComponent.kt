@@ -28,8 +28,6 @@ fun SnackBarComponent(
     iconTint: Color = TudeeTheme.color.statusColors.error,
     contentColor: Color = TudeeTheme.color.textColors.body,
 ) {
-    val textStyles = TudeeTheme.textStyle
-    val colors = TudeeTheme.color.textColors
 
     Row(
         modifier = modifier
@@ -41,7 +39,7 @@ fun SnackBarComponent(
                 spotColor = Color(0x1F000000)
             )
 
-            .background(colors.surfaceHigh, RoundedCornerShape(16.dp))
+            .background(TudeeTheme.color.textColors.surfaceHigh, RoundedCornerShape(16.dp))
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -62,7 +60,7 @@ fun SnackBarComponent(
 
         Text(
             text = message,
-            style = textStyles.body.medium.copy(color = contentColor),
+            style = TudeeTheme.textStyle.body.medium.copy(color = contentColor),
             textAlign = TextAlign.Start
         )
     }
