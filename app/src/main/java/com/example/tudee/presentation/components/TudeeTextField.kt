@@ -1,6 +1,5 @@
 package com.example.tudee.presentation.components
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -23,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -82,7 +82,7 @@ fun TudeeTextField(
 @Composable
 fun DefaultLeadingContent(
     modifier: Modifier = Modifier,
-    @DrawableRes leadingIcon: Int,
+    painter: Painter,
     isFocused: Boolean
 ) {
     Row(
@@ -90,7 +90,7 @@ fun DefaultLeadingContent(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
-            painter = painterResource(leadingIcon),
+            painter = painter,
             contentDescription = null,
             tint = if (isFocused) TudeeTheme.color.textColors.body else TudeeTheme.color.textColors.hint,
             modifier = Modifier
@@ -137,7 +137,10 @@ private fun NoFocusPreview() {
         modifier = Modifier,
         placeholder = "Full name",
         leadingContent = { isFocused ->
-            DefaultLeadingContent(leadingIcon = R.drawable.user_icon, isFocused = isFocused)
+            DefaultLeadingContent(
+                painter = painterResource(R.drawable.user_icon),
+                isFocused = isFocused
+            )
         },
         textStyle = TudeeTheme.textStyle.body.medium,
         value = text,
