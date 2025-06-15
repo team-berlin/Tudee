@@ -6,6 +6,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -60,7 +63,7 @@ private fun BackButtonPreview() {
             leadingComposable = {
                 IconButton(onClick = { /* Handle back action */ }) {
                     Icon(
-                        painter = painterResource(id = R.drawable.arrow_left),
+                        Icons.Default.ArrowBack,
                         contentDescription = "Back",
                         modifier = Modifier.size(40.dp)
                     )
@@ -69,7 +72,7 @@ private fun BackButtonPreview() {
             title = "Tasks",
             trailingComposable = {
                 Icon(
-                    painter = painterResource(id = R.drawable.arrow_left),
+                    Icons.Default.Settings,
                     contentDescription = "Settings",
                     modifier = Modifier.size(40.dp)
                 )
