@@ -7,6 +7,12 @@ data class TudeeColors(
     val secondary: Color,
     val primaryVariant: Color,
     val primaryGradient: List<Color>,
+    val stroke: Color,
+    val surfaceLow: Color,
+    val surface: Color,
+    val surfaceHigh: Color,
+
+    val disable: Color,
     val textColors: TextColors,
     val statusColors: StatusColors,
     val white40: Color,
@@ -16,15 +22,10 @@ data class TextColors(
     val title: Color,
     val body: Color,
     val hint: Color,
-    val stroke: Color,
-    val surfaceLow: Color,
-    val surface: Color,
-    val surfaceHigh: Color,
     val onPrimary: Color,
     val onPrimaryCaption: Color,
     val onPrimaryCard: Color,
     val onPrimaryStroke: Color,
-    val disable: Color,
 )
 
 data class StatusColors(
