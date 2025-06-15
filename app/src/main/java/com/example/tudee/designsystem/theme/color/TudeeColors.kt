@@ -11,7 +11,6 @@ data class TudeeColors(
     val surfaceLow: Color,
     val surface: Color,
     val surfaceHigh: Color,
-
     val disable: Color,
     val textColors: TextColors,
     val statusColors: StatusColors,
