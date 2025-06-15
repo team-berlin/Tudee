@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Icon
@@ -37,24 +36,24 @@ fun TudeeTextField(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     singleLine: Boolean = true,
-    @DrawableRes leadingIcon: Int? = null,
+    leadingContent: @Composable ((isFocused: Boolean) -> Unit)? = null,
     placeholder: String? = null,
     textStyle: TextStyle = TudeeTheme.textStyle.body.medium,
 ) {
     var isFocused by remember { mutableStateOf(false) }
-
     val borderColor = if (isFocused) TudeeTheme.color.primary else TudeeTheme.color.stroke
+    val shape = RoundedCornerShape(12.dp)
 
     BasicTextField(
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
+            .clip(shape)
             .border(
                 border = BorderStroke(
                     width = 1.dp,
                     color = borderColor
                 ),
-                shape = RoundedCornerShape(12.dp)
+                shape = shape
             )
             .onFocusChanged { focusState ->
                 isFocused = focusState.isFocused
@@ -67,11 +66,9 @@ fun TudeeTextField(
             Row(
                 verticalAlignment = if (singleLine) Alignment.CenterVertically else Alignment.Top,
             ) {
-                leadingIcon?.let {
-                    LeadingContent(leadingIcon, isFocused)
-                }
+                leadingContent?.invoke(isFocused)
 
-                TextFieldWithPlaceHolder(
+                TextFieldContent(
                     innerTextField = innerTextField,
                     modifier = Modifier.weight(1f),
                     value = value,
@@ -83,12 +80,13 @@ fun TudeeTextField(
 }
 
 @Composable
-private fun LeadingContent(
+fun DefaultLeadingContent(
+    modifier: Modifier = Modifier,
     @DrawableRes leadingIcon: Int,
     isFocused: Boolean
 ) {
     Row(
-        modifier = Modifier.wrapContentSize(),
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
@@ -108,7 +106,7 @@ private fun LeadingContent(
 }
 
 @Composable
-private fun TextFieldWithPlaceHolder(
+private fun TextFieldContent(
     innerTextField: @Composable () -> Unit,
     modifier: Modifier,
     value: String,
@@ -138,24 +136,28 @@ private fun NoFocusPreview() {
     TudeeTextField(
         modifier = Modifier,
         placeholder = "Full name",
-        leadingIcon = R.drawable.user_icon,
+        leadingContent = { isFocused ->
+            DefaultLeadingContent(leadingIcon = R.drawable.user_icon, isFocused = isFocused)
+        },
         textStyle = TudeeTheme.textStyle.body.medium,
         value = text,
         onValueChange = { text = it }
     )
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
-private fun NoLeadingIconPreview() {
-    var text by remember { mutableStateOf("") }
+private fun NoLeadingContentPreviewDarkTheme() {
+    TudeeTheme(isDarkTheme = true) {
+        var text by remember { mutableStateOf("") }
 
-    TudeeTextField(
-        modifier = Modifier.height(100.dp),
-        placeholder = "Full name",
-        singleLine = false,
-        textStyle = TudeeTheme.textStyle.body.medium,
-        value = text,
-        onValueChange = { text = it }
-    )
+        TudeeTextField(
+            modifier = Modifier.height(100.dp),
+            placeholder = "Full name",
+            singleLine = false,
+            textStyle = TudeeTheme.textStyle.body.medium,
+            value = text,
+            onValueChange = { text = it }
+        )
+    }
 }
