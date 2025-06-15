@@ -10,6 +10,8 @@ import com.example.tudee.R
 
 val LocalTudeeTextStyle = staticCompositionLocalOf { TudeeTextStyle }
 
+val cherryBomb = FontFamily(Font(R.font.cherry_bomb_regular, weight = FontWeight.Normal))
+
 val nunito = FontFamily(
     Font(R.font.nunito_light, weight = FontWeight.Light),
     Font(R.font.nunito_regular, weight = FontWeight.Normal),
