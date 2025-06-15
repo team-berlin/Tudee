@@ -21,7 +21,8 @@ data class ButtonColors(
 )
 
 object ButtonDefaults {
-    val defaultHeight: Dp = 64.dp
+    val defaultHeight: Dp = 56.dp
+    val defaultFabSize: Dp = 64.dp
     val defaultShape: RoundedCornerShape = CircleShape
     val defaultPadding: PaddingValues = PaddingValues(horizontal = 24.dp, vertical = 16.dp)
     val defaultFabPadding: PaddingValues = PaddingValues(horizontal = 18.dp, vertical = 18.dp)
