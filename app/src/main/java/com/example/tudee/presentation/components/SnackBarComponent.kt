@@ -24,10 +24,13 @@ fun SnackBarComponent(
     modifier: Modifier = Modifier,
     message: String,
     icon: Painter,
+    iconDescription: String="",
     iconBackgroundColor: Color,
     iconTint: Color = TudeeTheme.color.statusColors.error,
     contentColor: Color = TudeeTheme.color.textColors.body,
+
 ) {
+    val shadowColor = Color(0x1F000000)
 
     Row(
         modifier = modifier
@@ -36,9 +39,8 @@ fun SnackBarComponent(
             .shadow(
                 elevation = 4.dp,
                 shape = RoundedCornerShape(16.dp),
-                spotColor = Color(0x1F000000)
+                spotColor = shadowColor
             )
-
             .background(TudeeTheme.color.textColors.surfaceHigh, RoundedCornerShape(16.dp))
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -52,7 +54,7 @@ fun SnackBarComponent(
         ) {
             Icon(
                 painter = icon,
-                contentDescription = "snack bar icon",
+                contentDescription = iconDescription,
                 tint = iconTint,
                 modifier = Modifier.size(20.dp)
             )
@@ -70,8 +72,9 @@ fun SnackBarComponent(
 @Composable
 fun SnackBarExamplePreview() {
     SnackBarComponent(
-        message = stringResource(R.string.snackBar_success_message),
-        icon = painterResource(id = R.drawable.ic_successfully),
+        message = stringResource(R.string.snack_bar_success_message),
+        icon = painterResource(id = R.drawable.ic_success),
+        iconDescription = "snack bar icon",
         iconBackgroundColor = TudeeTheme.color.statusColors.greenVariant,
         iconTint = TudeeTheme.color.statusColors.greenAccent
     )
