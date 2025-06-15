@@ -32,7 +32,7 @@ fun TextButton(
             errorBackgroundColor = Color.Transparent,
             disabledBackgroundColor = Color.Transparent,
             contentColor = TudeeTheme.color.primary,
-            disabledContentColor =TudeeTheme.color.textColors.disable ,
+            disabledContentColor =TudeeTheme.color.disable ,
             errorContentColor = TudeeTheme.color.statusColors.error,
         ),
         shape = shape,

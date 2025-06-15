@@ -30,8 +30,8 @@ object ButtonDefaults {
     fun colors() = ButtonColors(
         backgroundColor = TudeeTheme.color.primary,
         contentColor = TudeeTheme.color.textColors.onPrimary,
-        disabledBackgroundColor = TudeeTheme.color.textColors.disable,
-        disabledContentColor = TudeeTheme.color.textColors.stroke,
+        disabledBackgroundColor = TudeeTheme.color.disable,
+        disabledContentColor = TudeeTheme.color.stroke,
         errorBackgroundColor = TudeeTheme.color.statusColors.errorVariant,
         errorContentColor = TudeeTheme.color.statusColors.error,
     )

@@ -32,13 +32,13 @@ fun SecondaryButton(
             backgroundColor = androidx.compose.ui.graphics.Color.Transparent,
             contentColor = TudeeTheme.color.primary,
             disabledBackgroundColor = androidx.compose.ui.graphics.Color.Transparent,
-            disabledContentColor = TudeeTheme.color.textColors.stroke,
+            disabledContentColor = TudeeTheme.color.stroke,
             errorBackgroundColor = androidx.compose.ui.graphics.Color.Transparent,
             errorContentColor = TudeeTheme.color.statusColors.error,
         ),
         border = BorderStroke(
             1.dp,
-            TudeeTheme.color.textColors.disable
+            TudeeTheme.color.disable
         ),
         shape = shape,
         content = content
