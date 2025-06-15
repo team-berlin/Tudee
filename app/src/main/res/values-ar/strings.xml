@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">تودي</string>
+    <string name="snackBar_error_message">حدث خطأ ما</string>
+    <string name="snackBar_success_message">تم بنجاح.</string>
+</resources>
