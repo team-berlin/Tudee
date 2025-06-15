@@ -24,7 +24,7 @@ fun SnackBarComponent(
     modifier: Modifier = Modifier,
     message: String,
     icon: Painter,
-    iconDescription: String="",
+    iconDescription: String = "",
     iconBackgroundColor: Color,
     iconTint: Color = TudeeTheme.color.statusColors.error,
     contentColor: Color = TudeeTheme.color.textColors.body,
