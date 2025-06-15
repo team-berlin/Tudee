@@ -38,5 +38,4 @@ data class StatusColors(
     val greenVariant: Color,
     val purpleVariant: Color,
     val errorVariant: Color,
-    val blackBlur: Color
 )

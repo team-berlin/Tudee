@@ -32,7 +32,6 @@ val TudeeDarkColors = TudeeColors(
         yellowVariant = Color(0xFF1F1E1C),
         greenVariant = Color(0xFF1C1F1D),
         purpleVariant = Color(0xFF1C1A33),
-        errorVariant = Color(0xFF1F1111),
-        blackBlur = Color(0x1F000000)
+        errorVariant = Color(0xFF1F1111)
     )
 )

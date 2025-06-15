@@ -38,8 +38,9 @@ fun SnackBarComponent(
             .shadow(
                 elevation = 4.dp,
                 shape = RoundedCornerShape(16.dp),
-                spotColor =  TudeeTheme.color.statusColors.blackBlur
+                spotColor = Color(0x1F000000)
             )
+
             .background(colors.surfaceHigh, RoundedCornerShape(16.dp))
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
