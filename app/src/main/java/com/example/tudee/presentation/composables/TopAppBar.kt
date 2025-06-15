@@ -1,11 +1,15 @@
 package com.example.tudee.presentation.composables
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Settings
@@ -15,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -27,7 +32,8 @@ import com.example.tudee.designsystem.theme.textstyle.TudeeTextStyle
 @Composable
 fun TopAppBar(
     modifier: Modifier = Modifier,
-    leadingComposable: (@Composable () -> Unit)? = null,
+    showBackButton: Boolean = true,
+    onBackButtonClicked: () -> Unit = {},
     title: String? = null,
     titleColor: Color = TudeeTheme.color.textColors.title,
     titleStyle: TextStyle = TudeeTextStyle.title.medium,
@@ -40,14 +46,26 @@ fun TopAppBar(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        leadingComposable?.invoke()
-
-        if (title != null)
-            Text(
-                text = title,
-                style = titleStyle,
-                color = titleColor,
-            )
+        if (showBackButton) IconButton(onClick = onBackButtonClicked) {
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .border(
+                        1.dp, TudeeTheme.color.textColors.stroke, RoundedCornerShape(100.dp)
+                    ),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.arrow_left),
+                    contentDescription = "Back",
+                )
+            }
+        }
+        if (title != null) Text(
+            text = title,
+            style = titleStyle,
+            color = titleColor,
+        )
 
         Spacer(modifier = Modifier.weight(1f))
 
@@ -60,23 +78,12 @@ fun TopAppBar(
 private fun BackButtonPreview() {
     TudeeTheme {
         TopAppBar(
-            leadingComposable = {
-                IconButton(onClick = { /* Handle back action */ }) {
-                    Icon(
-                        Icons.Default.ArrowBack,
-                        contentDescription = "Back",
-                        modifier = Modifier.size(40.dp)
-                    )
-                }
-            },
-            title = "Tasks",
-            trailingComposable = {
+            title = "Tasks", trailingComposable = {
                 Icon(
                     Icons.Default.Settings,
                     contentDescription = "Settings",
                     modifier = Modifier.size(40.dp)
                 )
-            }
-        )
+            })
     }
 }
