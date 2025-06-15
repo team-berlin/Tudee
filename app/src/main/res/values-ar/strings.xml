@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Tudee</string>
-    <string name="snackBar_error_message">حدث خطأ ما</string>
-    <string name="snackBar_success_message">تم بنجاح.</string>
+    <string name="snack_bar_error_message">حدث خطأ ما</string>
+    <string name="snack_bar_success_message">تم بنجاح.</string>
 </resources>
