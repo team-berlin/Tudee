@@ -9,6 +9,7 @@ data class TudeeColors(
     val primaryGradient: List<Color>,
     val textColors: TextColors,
     val statusColors: StatusColors,
+    val white40: Color,
 )
 
 data class TextColors(
