@@ -1,7 +1,6 @@
 package com.example.tudee.presentation.composables
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,43 +22,33 @@ import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.designsystem.theme.textstyle.TudeeTextStyle
 
 @Composable
-fun BackButtonWithStartAndEndComposables(
-    modifier: Modifier = Modifier
-        .fillMaxWidth()
-        .padding(vertical = 12.dp, horizontal = 16.dp),
-    startComposable: (@Composable () -> Unit)? = null,
-    title: String? = "Tasks",
+fun TopAppBar(
+    modifier: Modifier = Modifier,
+    leadingComposable: (@Composable () -> Unit)? = null,
+    title: String? = null,
     titleColor: Color = TudeeTheme.color.textColors.title,
     titleStyle: TextStyle = TudeeTextStyle.title.medium,
-    subTitle: String? = null,
-    subTitleColor: Color = TudeeTheme.color.textColors.hint,
-    subTitleStyle: TextStyle = TudeeTextStyle.label.small,
-    endComposable: (@Composable () -> Unit)? = null,
+    trailingComposable: (@Composable () -> Unit)? = null,
 ) {
     Row(
-        modifier = modifier,
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 12.dp, horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        startComposable?.invoke()
-        Column(
-            verticalArrangement = Arrangement.spacedBy(2.dp),
-        ) {
-            if (title != null)
-                Text(
-                    text = title,
-                    style = titleStyle,
-                    color = titleColor,
-                )
-            if (subTitle != null) Text(
-                text = subTitle,
-                style = subTitleStyle,
-                color = subTitleColor
-            )
-        }
-        Spacer(modifier = Modifier.weight(1f))
-        endComposable?.invoke()
+        leadingComposable?.invoke()
 
+        if (title != null)
+            Text(
+                text = title,
+                style = titleStyle,
+                color = titleColor,
+            )
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        trailingComposable?.invoke()
     }
 }
 
@@ -67,21 +56,20 @@ fun BackButtonWithStartAndEndComposables(
 @Composable
 private fun BackButtonPreview() {
     TudeeTheme {
-        BackButtonWithStartAndEndComposables(
-            startComposable = {
+        TopAppBar(
+            leadingComposable = {
                 IconButton(onClick = { /* Handle back action */ }) {
                     Icon(
-                        painter = painterResource(id = R.drawable.back_button),
+                        painter = painterResource(id = R.drawable.arrow_left),
                         contentDescription = "Back",
                         modifier = Modifier.size(40.dp)
                     )
                 }
             },
             title = "Tasks",
-            subTitle = "Today",
-            endComposable = {
+            trailingComposable = {
                 Icon(
-                    painter = painterResource(id = R.drawable.back_button),
+                    painter = painterResource(id = R.drawable.arrow_left),
                     contentDescription = "Settings",
                     modifier = Modifier.size(40.dp)
                 )
