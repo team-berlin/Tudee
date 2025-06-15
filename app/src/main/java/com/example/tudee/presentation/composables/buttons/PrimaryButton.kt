@@ -34,7 +34,7 @@ fun PrimaryButton(
     )
 }
 
-@Preview
+@Preview(showSystemUi = false, showBackground = true)
 @Composable
 private fun PrimaryButtonPreview() {
     PrimaryButton(
@@ -47,7 +47,7 @@ private fun PrimaryButtonPreview() {
     )
 }
 
-@Preview
+@Preview(showSystemUi = false, showBackground = true)
 @Composable
 private fun PrimaryButtonLoadingPreview() {
     PrimaryButton(
@@ -61,7 +61,7 @@ private fun PrimaryButtonLoadingPreview() {
     )
 }
 
-@Preview
+@Preview(showSystemUi = false, showBackground = true)
 @Composable
 private fun PrimaryButtonDisabledPreview() {
     PrimaryButton(
@@ -75,7 +75,7 @@ private fun PrimaryButtonDisabledPreview() {
     )
 }
 
-@Preview
+@Preview(showSystemUi = false, showBackground = true)
 @Composable
 private fun PrimaryButtonErrorPreview() {
     PrimaryButton(

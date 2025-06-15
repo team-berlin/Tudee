@@ -1,8 +1,6 @@
 package com.example.tudee.presentation.composables.buttons
 
-import android.graphics.Color
-import android.os.Build
-import androidx.annotation.RequiresApi
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.Text
@@ -10,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.graphics.toColor
+import androidx.compose.ui.unit.dp
 import com.example.tudee.designsystem.theme.TudeeTheme
 
 @Composable
@@ -24,14 +22,6 @@ fun SecondaryButton(
     buttonColors: ButtonColors = ButtonDefaults.colors(),
     content: @Composable RowScope.() -> Unit
 ) {
-    val backgroundColor = androidx.compose.ui.graphics.Color.Transparent
-    val contentColor = when (state) {
-        ButtonState.IDLE -> TudeeTheme.color.primary
-        ButtonState.LOADING -> TudeeTheme.color.primary
-        ButtonState.DISABLED -> TudeeTheme.color.textColors.stroke
-        ButtonState.ERROR -> TudeeTheme.color.statusColors.error
-
-    }
     DefaultButton(
         onClick = onClick,
         modifier = modifier,
@@ -39,15 +29,23 @@ fun SecondaryButton(
         enabled = enabled,
         contentPadding = contentPadding,
         colors = buttonColors.copy(
-            backgroundColor = backgroundColor,
-            contentColor = contentColor
+            backgroundColor = androidx.compose.ui.graphics.Color.Transparent,
+            contentColor = TudeeTheme.color.primary,
+            disabledBackgroundColor = androidx.compose.ui.graphics.Color.Transparent,
+            disabledContentColor = TudeeTheme.color.textColors.stroke,
+            errorBackgroundColor = androidx.compose.ui.graphics.Color.Transparent,
+            errorContentColor = TudeeTheme.color.statusColors.error,
+        ),
+        border = BorderStroke(
+            1.dp,
+            TudeeTheme.color.textColors.disable
         ),
         shape = shape,
         content = content
     )
 }
 
-@Preview
+@Preview(showSystemUi = false, showBackground = true)
 @Composable
 private fun SecondaryButtonPreview() {
     SecondaryButton(
@@ -60,7 +58,7 @@ private fun SecondaryButtonPreview() {
     )
 }
 
-@Preview
+@Preview(showSystemUi = false, showBackground = true)
 @Composable
 private fun SecondaryButtonLoadingPreview() {
     SecondaryButton(
@@ -74,7 +72,7 @@ private fun SecondaryButtonLoadingPreview() {
     )
 }
 
-@Preview
+@Preview(showSystemUi = false, showBackground = true)
 @Composable
 private fun SecondaryButtonDisabledPreview() {
     SecondaryButton(
@@ -88,7 +86,7 @@ private fun SecondaryButtonDisabledPreview() {
     )
 }
 
-@Preview
+@Preview(showSystemUi = false, showBackground = true)
 @Composable
 private fun SecondaryButtonErrorPreview() {
     SecondaryButton(

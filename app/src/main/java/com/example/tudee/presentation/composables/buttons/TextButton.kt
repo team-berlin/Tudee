@@ -1,6 +1,5 @@
 package com.example.tudee.presentation.composables.buttons
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.Text
@@ -9,7 +8,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.example.tudee.designsystem.theme.TudeeTheme
 
 @Composable
@@ -23,12 +21,6 @@ fun TextButton(
     buttonColors: ButtonColors = ButtonDefaults.colors(),
     content: @Composable RowScope.() -> Unit
 ) {
-    val contentColor = when (state) {
-        ButtonState.IDLE -> TudeeTheme.color.primary
-        ButtonState.LOADING -> TudeeTheme.color.primary
-        ButtonState.DISABLED -> TudeeTheme.color.textColors.disable
-        ButtonState.ERROR -> TudeeTheme.color.statusColors.error
-    }
     DefaultButton(
         onClick = onClick,
         modifier = modifier,
@@ -37,7 +29,11 @@ fun TextButton(
         contentPadding = contentPadding,
         colors = buttonColors.copy(
             backgroundColor = Color.Transparent,
-            contentColor = contentColor,
+            errorBackgroundColor = Color.Transparent,
+            disabledBackgroundColor = Color.Transparent,
+            contentColor = TudeeTheme.color.primary,
+            disabledContentColor =TudeeTheme.color.textColors.disable ,
+            errorContentColor = TudeeTheme.color.statusColors.error,
         ),
         shape = shape,
         content = content

@@ -6,6 +6,7 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
@@ -42,7 +43,6 @@ fun SpinningProgressIndicatorLines(
         ),
         label = "progress"
     )
-    ButtonDefaults
     Canvas(
         modifier = modifier.size(size)
     ) {
@@ -54,7 +54,7 @@ fun SpinningProgressIndicatorLines(
             val angle = (i * 360f / lines) * (PI / 180f)
 
             val currentActiveIndex = (animationProgress * lines).toInt() % lines
-            val distanceFromActive = kotlin.comparisons.minOf(
+            val distanceFromActive = minOf(
                 abs(i - currentActiveIndex),
                 abs(i - currentActiveIndex + lines),
                 abs(i - currentActiveIndex - lines)
