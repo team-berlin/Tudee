@@ -46,19 +46,15 @@ fun SnackBarComponent(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Box(
+        Icon(
+            painter = icon,
+            contentDescription = iconDescription,
+            tint = iconTint,
             modifier = Modifier
                 .size(40.dp)
-                .background(iconBackgroundColor, RoundedCornerShape(12.dp)),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                painter = icon,
-                contentDescription = iconDescription,
-                tint = iconTint,
-                modifier = Modifier.size(20.dp)
-            )
-        }
+                .background(iconBackgroundColor, shape = RoundedCornerShape(12.dp))
+                .padding(8.dp)
+        )
 
         Text(
             text = message,
@@ -70,12 +66,14 @@ fun SnackBarComponent(
 
 @Preview(showBackground = true)
 @Composable
-fun SnackBarExamplePreview() {
-    SnackBarComponent(
-        message = stringResource(R.string.snack_bar_success_message),
-        icon = painterResource(id = R.drawable.ic_success),
-        iconDescription = "snack bar icon",
-        iconBackgroundColor = TudeeTheme.color.statusColors.greenVariant,
-        iconTint = TudeeTheme.color.statusColors.greenAccent
-    )
+private fun SnackBarExamplePreview() {
+    TudeeTheme {
+        SnackBarComponent(
+            message = stringResource(R.string.snack_bar_success_message),
+            icon = painterResource(id = R.drawable.ic_success),
+            iconDescription = "snack bar icon",
+            iconBackgroundColor = TudeeTheme.color.statusColors.greenVariant,
+            iconTint = TudeeTheme.color.statusColors.greenAccent
+        )
+    }
 }
