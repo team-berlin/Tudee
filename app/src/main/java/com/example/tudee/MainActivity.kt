@@ -18,7 +18,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             TudeeTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-
+                ScrollableBottomSheetDemo()
                 }
             }
         }
