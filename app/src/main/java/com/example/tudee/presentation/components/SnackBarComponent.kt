@@ -1,4 +1,4 @@
-package com.example.tudee.components
+package com.example.tudee.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
