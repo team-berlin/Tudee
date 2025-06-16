@@ -30,7 +30,7 @@ fun FabButton(
         modifier = modifier,
         state = state,
         enabled = enabled,
-        isFab = true,
+        isFabType = true,
         contentPadding = contentPadding,
         colors = buttonColors.copy(
             backgroundGradient = Brush.horizontalGradient(
