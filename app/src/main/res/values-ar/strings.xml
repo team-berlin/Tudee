@@ -3,4 +3,5 @@
     <string name="app_name">تودي</string>
 
     <string name="tudee_description">مساعدك اللطيف لكل مهمة</string>
+    <string name="back_button">زر العودة</string>
 </resources>
