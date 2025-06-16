@@ -4,10 +4,10 @@ import com.example.tudee.data.dao.TaskDao
 import com.example.tudee.data.mapper.toDomain
 import com.example.tudee.data.mapper.toEntity
 import com.example.tudee.data.model.TaskEntity
+import com.example.tudee.domain.TaskService
 import com.example.tudee.domain.entity.Task
 import com.example.tudee.domain.entity.TaskStatus
 import com.example.tudee.domain.request.TaskCreationRequest
-import com.example.tudee.domain.service.TaskService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.LocalDate

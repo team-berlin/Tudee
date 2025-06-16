@@ -3,8 +3,8 @@ package com.example.tudee.data.service
 import com.example.tudee.data.dao.TaskCategoryDao
 import com.example.tudee.data.mapper.toDomain
 import com.example.tudee.data.mapper.toEntity
+import com.example.tudee.domain.TaskCategoryService
 import com.example.tudee.domain.entity.TaskCategory
-import com.example.tudee.domain.service.TaskCategoryService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
