@@ -3,4 +3,5 @@
     <string name="app_name">Tudee</string>
     <string name="snack_bar_error_message">Some error occurred</string>
     <string name="snack_bar_success_message">Successfully.</string>
+    <string name="tudee_description">Your cute Helper for Every Task</string>
 </resources>
