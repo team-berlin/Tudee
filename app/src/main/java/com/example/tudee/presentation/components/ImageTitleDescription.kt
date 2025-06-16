@@ -18,20 +18,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
-import com.example.tudee.designsystem.theme.textstyle.CherryBombTextStyle
 import com.example.tudee.designsystem.theme.textstyle.TudeeTextStyle
 
 @Composable
-fun ImageTitleDescription(
+fun IconWithTitleAndDescription(
     modifier: Modifier = Modifier,
     imagePainter: Painter,
-    title: String,
+    titleImagePainter: Painter,
     description: String
 ) {
     Row(
@@ -54,18 +51,16 @@ fun ImageTitleDescription(
             contentAlignment = Alignment.Center
         ) {
             Image(
-                modifier = Modifier,
                 painter = imagePainter,
                 contentDescription = null
             )
         }
 
 
-        Column {
-            Text(
-                text = title,
-                style = CherryBombTextStyle,
-                color = TudeeTheme.color.textColors.onPrimary,
+        Column (verticalArrangement = Arrangement.spacedBy(6.dp)) {
+            Image(
+                painter = titleImagePainter,
+                contentDescription = null
             )
 
             Text(
@@ -83,9 +78,9 @@ fun ImageTitleDescription(
 )
 @Composable
 private fun ImageTitleDescriptionPreview() {
-    ImageTitleDescription(
+    IconWithTitleAndDescription(
         imagePainter = painterResource(id = R.drawable.tudee),
-        title = stringResource(id = R.string.tudee_title),
+        titleImagePainter = painterResource(id = R.drawable.app_name),
         description = stringResource(id = R.string.tudee_description)
     )
 }
