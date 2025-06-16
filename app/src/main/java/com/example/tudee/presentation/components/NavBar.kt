@@ -8,7 +8,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -36,7 +35,6 @@ data class BottomNavItem(
     val route: String
 )
 
-
 @Composable
 fun NavBar(
     navDestinations: List<BottomNavItem>,
@@ -49,10 +47,7 @@ fun NavBar(
     inactiveIconColor: Color = Color.Unspecified,
     shadowColor: Color = Color(0x14000000),
     rippleColor: Color = TudeeTheme.color.surfaceHigh,
-    paddingValues: PaddingValues = PaddingValues(horizontal = 32.dp, vertical = 16.dp),
-    iconAlignment: Alignment = Alignment.Center
 ) {
-
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -63,7 +58,7 @@ fun NavBar(
                 spotColor = shadowColor
             )
             .background(color = backgroundColor)
-            .padding(paddingValues),
+            .padding(horizontal = 32.dp, vertical = 16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -93,7 +88,7 @@ fun NavBar(
                             color = rippleColor
                         )
                     ) { onNavDestinationClicked(item.route) },
-                contentAlignment = iconAlignment
+                contentAlignment = Alignment.Center
             ) {
                 Icon(
                     painter = if (isSelected) item.selectedIcon else item.icon,
@@ -105,7 +100,6 @@ fun NavBar(
         }
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable
