@@ -62,11 +62,13 @@ fun TopAppBar(
                 )
             }
         }
-        if (title != null) Text(
-            text = title,
-            style = titleStyle,
-            color = titleColor,
-        )
+        title?.let {
+            Text(
+                text = title,
+                style = titleStyle,
+                color = titleColor,
+            )
+        }
 
         Spacer(modifier = Modifier.weight(1f))
 
