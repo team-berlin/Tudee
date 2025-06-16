@@ -23,7 +23,7 @@ import com.example.tudee.designsystem.theme.TudeeTheme
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun DayCard(
+fun TudeeDayCard(
     modifier: Modifier = Modifier,
     dayOfMonth: String,
     dayOfWeek: String,
@@ -31,7 +31,6 @@ fun DayCard(
     dayOfWeekTextColor: Color,
     onClick: () -> Unit
 ) {
-
     Column(
         modifier = modifier
             .padding(vertical = 12.dp, horizontal = 14.dp)
@@ -46,7 +45,6 @@ fun DayCard(
             style = TudeeTheme.textStyle.title.medium,
             color = dayOfMonthTextColor
         )
-
         Text(
             text = dayOfWeek,
             style = TudeeTheme.textStyle.body.small,
@@ -90,19 +88,17 @@ fun DayCardPreview() {
         } else {
             Modifier
                 .background(
-                    TudeeTheme.color.textColors.surface,
+                    TudeeTheme.color.surface,
                     shape = RoundedCornerShape(16.dp)
                 )
         }
-
-        DayCard(
+        TudeeDayCard(
+            modifier = modifier,
             dayOfMonth = "14",
             dayOfWeek = "SAT",
-            modifier = modifier,
             dayOfMonthTextColor = dayOfMonthTextColor,
             dayOfWeekTextColor = dayOfWeekTextColor,
             onClick = {}
         )
     }
-
 }
