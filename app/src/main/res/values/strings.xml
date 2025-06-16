@@ -1,14 +1,10 @@
 <resources>
     <string name="app_name">Tudee</string>
-    <string name="tudee_title">Tudee</string>
     <string name="tudee_description">Your cute Helper for Every Task</string>
 
     <string name="default_task_title">Organize Study Desk</string>
     <string name="default_task_description">Review cell structure and functions for tomorrow...</string>
     <string name="default_priority">Medium</string>
-    <string name="default_date">12-03-2025</string>
 
-    <string name="task_icon_description">Task Icon</string>
-    <string name="priority_icon_description">Priority Icon</string>
-    <string name="date_icon_description">Date Icon</string>
+
 </resources>

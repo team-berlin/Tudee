@@ -6,9 +6,5 @@
     <string name="default_task_title">تنظيم مكتب الدراسة</string>
     <string name="default_task_description">راجع بنية الخلية ووظائفها للغد...</string>
     <string name="default_priority">متوسطة</string>
-    <string name="default_date">٢٠٢٥-٠٣-١٢</string>
 
-    <string name="task_icon_description">أيقونة المهمة</string>
-    <string name="priority_icon_description">أيقونة الأولوية</string>
-    <string name="date_icon_description">أيقونة التاريخ</string>
 </resources>
