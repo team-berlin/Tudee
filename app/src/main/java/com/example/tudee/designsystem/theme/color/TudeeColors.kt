@@ -15,7 +15,6 @@ data class TudeeColors(
     val disable: Color,
     val textColors: TextColors,
     val statusColors: StatusColors,
-    val white40: Color,
 )
 
 data class TextColors(

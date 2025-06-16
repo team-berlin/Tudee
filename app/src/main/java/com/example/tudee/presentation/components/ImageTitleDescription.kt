@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -43,11 +44,12 @@ fun IconWithTitleAndDescription(
                 .clip(RoundedCornerShape(12.dp))
                 .border(
                     width = 1.dp,
-                    color = TudeeTheme.color.white40,
+                    color = Color(0x66FFFFFF),
                     shape = RoundedCornerShape(12.dp)
                 )
-                .background(TudeeTheme.color.white40)
-                .padding(horizontal = 6.2.dp, vertical = 7.2.dp),
+                .background(Color(0x66FFFFFF))
+                .padding(horizontal = 6.2.dp, vertical = 7.2.dp)
+                ,
             contentAlignment = Alignment.Center
         ) {
             Image(
