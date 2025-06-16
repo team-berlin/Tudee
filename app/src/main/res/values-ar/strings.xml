@@ -4,4 +4,9 @@
     <string name="snack_bar_success_message">تم بنجاح.</string>
     <string name="app_name">تودي</string>
     <string name="tudee_description">مساعدك اللطيف لكل مهمة</string>
+<<<<<<< feature/component-snack-bar
 </resources>
+=======
+    <string name="back_button">زر العودة</string>
+</resources>
+>>>>>>> develop
