@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -24,18 +25,30 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.tudee.designsystem.theme.TudeeTheme
 
+
+data class TabBarItem(
+    val title: String,
+    val taskCount: String,
+    val isSelected: Boolean,
+)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TabBarComponent(
     modifier: Modifier = Modifier,
-    backgroundColor: Color=Color.Unspecified,
-    contentColor : Color=Color.Unspecified,
-    selectedTabIndex:Int,
+    backgroundColor: Color = Color.Unspecified,
+    contentColor: Color = Color.Unspecified,
+    selectedTabIndex: Int,
     tabBarItems: List<TabBarItem>,
     onTabSelected: () -> Unit,
-    tabContent: @Composable (tab: TabBarItem) -> Unit = { DefaultTabContent(it) },
+    tabContent: @Composable (tab: TabBarItem) -> Unit = {
+        DefaultTabContent(
+            tabBarItem = it,
+            modifier = Modifier
+        )
+    },
     tabIndicator: @Composable TabIndicatorScope.() -> Unit = {
-        DefaultTudeeTabIndicator(selectedTabIndex)
+        DefaultTabIndicator(selectedTabIndex, Modifier)
     },
 ) {
     PrimaryTabRow(
@@ -53,16 +66,67 @@ fun TabBarComponent(
                 onClick = {
                     onTabSelected()
                 },
-                modifier = Modifier,
                 text = {
                     tabContent(tabItem)
                 },
             )
-
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun TabIndicatorScope.DefaultTabIndicator(selectedTabIndex: Int, modifier: Modifier) =
+    TabRowDefaults.PrimaryIndicator(
+        modifier = modifier.tabIndicatorOffset(
+            selectedTabIndex,
+            matchContentSize = true
+        ),
+        height = 4.dp,
+        color = TudeeTheme.color.secondary,
+        shape = (RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)),
+        width = Dp.Unspecified
+    )
+
+@Composable
+private fun DefaultTabContent(
+    modifier: Modifier = Modifier,
+    tabBarItem: TabBarItem,
+
+    ) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = tabBarItem.title,
+            modifier = Modifier.padding(end = 4.dp),
+            style = if (tabBarItem.isSelected) TudeeTheme.textStyle.label.medium else TudeeTheme.textStyle.label.small,
+            color = if (tabBarItem.isSelected) TudeeTheme.color.textColors.title else TudeeTheme.color.textColors.hint
+        )
+        if (tabBarItem.isSelected) {
+            Box(
+                Modifier
+                    .size(28.dp)
+                    .clip(CircleShape)
+                    .background(TudeeTheme.color.surfaceLow),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    tabBarItem.taskCount,
+                    style = TudeeTheme.textStyle.label.medium,
+                    color = TudeeTheme.color.textColors.body
+                )
+            }
+        }
+    }
+}
+
+
+@Composable
+private fun TabBarHorizontalDivider() {
+    HorizontalDivider(Modifier.fillMaxWidth(), thickness = 1.dp, color = TudeeTheme.color.stroke)
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
@@ -91,102 +155,43 @@ fun TabBarComponentPreview() {
             selectedTabIndex = 0,
             tabBarItems = defaultTabBarHeaders,
             onTabSelected = {},
-            tabContent = { DefaultTabContent(it) }
+            tabContent = { DefaultTabContent(tabBarItem = it) }
         )
     }
-
 }
-
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun TabIndicatorScope.DefaultTudeeTabIndicator(selectedTabIndex: Int) =
-    TabRowDefaults.PrimaryIndicator(
-        modifier = Modifier.tabIndicatorOffset(
-            selectedTabIndex,
-            matchContentSize = true
-        ),
-        height = 4.dp,
-        color = TudeeTheme.color.secondary,
-        shape = (RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)),
-        width = Dp.Unspecified
-    )
-
-@Composable
-private fun DefaultTabContent(
-    tabBarItem: TabBarItem
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = tabBarItem.title,
-            modifier = Modifier.padding(end = 4.dp),
-            style = if (tabBarItem.isSelected) TudeeTheme.textStyle.label.medium else TudeeTheme.textStyle.label.small,
-            color = if (tabBarItem.isSelected) TudeeTheme.color.textColors.title else TudeeTheme.color.textColors.hint
-        )
-        if (tabBarItem.isSelected) {
-            Box(
-                Modifier
-                    .size(28.dp)
-                    .clip(RoundedCornerShape(100))
-                    .background(TudeeTheme.color.surfaceLow),
-                contentAlignment = Alignment.Center
-
-            ) {
-                Text(
-                    tabBarItem.taskCount,
-                    style = TudeeTheme.textStyle.label.medium,
-                    color = TudeeTheme.color.textColors.body
-                )
-            }
-        }
-    }
-}
-
 
 @Preview(showBackground = true)
 @Composable
 private fun DefaultTabContentPreview(
     tabBarItem: TabBarItem = TabBarItem("tesPreview", "2", true)
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = tabBarItem.title,
-            modifier = Modifier.padding(end = 4.dp),
-            style = if (tabBarItem.isSelected) TudeeTheme.textStyle.label.medium else TudeeTheme.textStyle.label.small,
-            color = if (tabBarItem.isSelected) TudeeTheme.color.textColors.title else TudeeTheme.color.textColors.hint
-        )
-        if (tabBarItem.isSelected) {
-            Box(
-                Modifier
-                    .size(28.dp)
-                    .clip(RoundedCornerShape(100))
-                    .background(TudeeTheme.color.surfaceLow),
-                contentAlignment = Alignment.Center
+    TudeeTheme {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = tabBarItem.title,
+                modifier = Modifier.padding(end = 4.dp),
+                style = if (tabBarItem.isSelected) TudeeTheme.textStyle.label.medium else TudeeTheme.textStyle.label.small,
+                color = if (tabBarItem.isSelected) TudeeTheme.color.textColors.title else TudeeTheme.color.textColors.hint
+            )
+            if (tabBarItem.isSelected) {
+                Box(
+                    Modifier
+                        .size(28.dp)
+                        .clip(RoundedCornerShape(100))
+                        .background(TudeeTheme.color.surfaceLow),
+                    contentAlignment = Alignment.Center
 
-            ) {
-                Text(
-                    tabBarItem.taskCount,
-                    style = TudeeTheme.textStyle.label.medium,
-                    color = TudeeTheme.color.textColors.body
-                )
+                ) {
+                    Text(
+                        tabBarItem.taskCount,
+                        style = TudeeTheme.textStyle.label.medium,
+                        color = TudeeTheme.color.textColors.body
+                    )
+                }
             }
         }
     }
 }
-
-
-@Composable
-private fun TabBarHorizontalDivider() {
-    HorizontalDivider(Modifier.fillMaxWidth(), thickness = 1.dp, color = TudeeTheme.color.stroke)
-}
-
-data class TabBarItem(
-    val title: String,
-    val taskCount: String,
-    val isSelected: Boolean,
-)
 
