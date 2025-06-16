@@ -28,14 +28,14 @@ import com.example.tudee.designsystem.theme.TudeeTheme
 @Composable
 fun TabBarComponent(
     modifier: Modifier = Modifier,
-    backgroundColor: Color=Color.Unspecified,
-    contentColor : Color=Color.Unspecified,
-    selectedTabIndex:Int,
+    backgroundColor: Color = Color.Unspecified,
+    contentColor: Color = Color.Unspecified,
+    selectedTabIndex: Int,
     tabBarItems: List<TabBarItem>,
     onTabSelected: () -> Unit,
     tabContent: @Composable (tab: TabBarItem) -> Unit = { DefaultTabContent(it) },
     tabIndicator: @Composable TabIndicatorScope.() -> Unit = {
-        DefaultTudeeTabIndicator(selectedTabIndex)
+        DefaultTabIndicator(selectedTabIndex)
     },
 ) {
     PrimaryTabRow(
@@ -58,49 +58,13 @@ fun TabBarComponent(
                     tabContent(tabItem)
                 },
             )
-
         }
     }
 }
 
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview(showBackground = true)
-@Composable
-fun TabBarComponentPreview() {
-    val defaultTabBarHeaders = listOf<TabBarItem>(
-        TabBarItem(
-            title = "In Progress",
-            taskCount = "0",
-            isSelected = true
-        ),
-        TabBarItem(
-            title = "To DO",
-            taskCount = "0",
-            isSelected = false
-        ),
-        TabBarItem(
-            title = "Done",
-            taskCount = "0",
-            isSelected = false
-        ),
-    )
-    TudeeTheme {
-        TabBarComponent(
-            modifier = Modifier,
-            selectedTabIndex = 0,
-            tabBarItems = defaultTabBarHeaders,
-            onTabSelected = {},
-            tabContent = { DefaultTabContent(it) }
-        )
-    }
-
-}
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun TabIndicatorScope.DefaultTudeeTabIndicator(selectedTabIndex: Int) =
+private fun TabIndicatorScope.DefaultTabIndicator(selectedTabIndex: Int) =
     TabRowDefaults.PrimaryIndicator(
         modifier = Modifier.tabIndicatorOffset(
             selectedTabIndex,
@@ -132,41 +96,6 @@ private fun DefaultTabContent(
                     .clip(RoundedCornerShape(100))
                     .background(TudeeTheme.color.surfaceLow),
                 contentAlignment = Alignment.Center
-
-            ) {
-                Text(
-                    tabBarItem.taskCount,
-                    style = TudeeTheme.textStyle.label.medium,
-                    color = TudeeTheme.color.textColors.body
-                )
-            }
-        }
-    }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-private fun DefaultTabContentPreview(
-    tabBarItem: TabBarItem = TabBarItem("tesPreview", "2", true)
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = tabBarItem.title,
-            modifier = Modifier.padding(end = 4.dp),
-            style = if (tabBarItem.isSelected) TudeeTheme.textStyle.label.medium else TudeeTheme.textStyle.label.small,
-            color = if (tabBarItem.isSelected) TudeeTheme.color.textColors.title else TudeeTheme.color.textColors.hint
-        )
-        if (tabBarItem.isSelected) {
-            Box(
-                Modifier
-                    .size(28.dp)
-                    .clip(RoundedCornerShape(100))
-                    .background(TudeeTheme.color.surfaceLow),
-                contentAlignment = Alignment.Center
-
             ) {
                 Text(
                     tabBarItem.taskCount,
@@ -182,6 +111,73 @@ private fun DefaultTabContentPreview(
 @Composable
 private fun TabBarHorizontalDivider() {
     HorizontalDivider(Modifier.fillMaxWidth(), thickness = 1.dp, color = TudeeTheme.color.stroke)
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview(showBackground = true)
+@Composable
+fun TabBarComponentPreview() {
+    val defaultTabBarHeaders = listOf<TabBarItem>(
+        TabBarItem(
+            title = "In Progress",
+            taskCount = "0",
+            isSelected = true
+        ),
+        TabBarItem(
+            title = "To DO",
+            taskCount = "0",
+            isSelected = false
+        ),
+        TabBarItem(
+            title = "Done",
+            taskCount = "0",
+            isSelected = false
+        ),
+    )
+    TudeeTheme {
+        TabBarComponent(
+            modifier = Modifier,
+            selectedTabIndex = 0,
+            tabBarItems = defaultTabBarHeaders,
+            onTabSelected = {},
+            tabContent = { DefaultTabContent(it) }
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun DefaultTabContentPreview(
+    tabBarItem: TabBarItem = TabBarItem("tesPreview", "2", true)
+) {
+    TudeeTheme {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = tabBarItem.title,
+                modifier = Modifier.padding(end = 4.dp),
+                style = if (tabBarItem.isSelected) TudeeTheme.textStyle.label.medium else TudeeTheme.textStyle.label.small,
+                color = if (tabBarItem.isSelected) TudeeTheme.color.textColors.title else TudeeTheme.color.textColors.hint
+            )
+            if (tabBarItem.isSelected) {
+                Box(
+                    Modifier
+                        .size(28.dp)
+                        .clip(RoundedCornerShape(100))
+                        .background(TudeeTheme.color.surfaceLow),
+                    contentAlignment = Alignment.Center
+
+                ) {
+                    Text(
+                        tabBarItem.taskCount,
+                        style = TudeeTheme.textStyle.label.medium,
+                        color = TudeeTheme.color.textColors.body
+                    )
+                }
+            }
+        }
+    }
 }
 
 data class TabBarItem(
