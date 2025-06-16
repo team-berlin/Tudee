@@ -12,8 +12,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
@@ -25,12 +28,13 @@ fun TudeeSlider(
     description: String,
     emoji: Painter,
     image: Painter,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    titleColor: Color = TudeeTheme.color.textColors.title,
+    descriptionTextColor: Color = TudeeTheme.color.textColors.body,
+    titleStyle: TextStyle = TudeeTheme.textStyle.title.small,
+    descriptionTextStyle: TextStyle = TudeeTheme.textStyle.body.small
 ) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth(),
-    ) {
+    Row(modifier = modifier.fillMaxWidth()) {
         Column(
             modifier = Modifier
                 .weight(1f)
@@ -40,8 +44,8 @@ fun TudeeSlider(
             Row(modifier = Modifier.padding(bottom = 8.dp)) {
                 Text(
                     text = title,
-                    color = TudeeTheme.color.textColors.title,
-                    style = TudeeTheme.textStyle.title.small,
+                    color = titleColor,
+                    style = titleStyle,
                     modifier = Modifier.padding(end = 8.dp)
                 )
                 Image(
@@ -52,8 +56,8 @@ fun TudeeSlider(
             }
             Text(
                 text = description,
-                color = TudeeTheme.color.textColors.body,
-                style = TudeeTheme.textStyle.body.small,
+                color = descriptionTextColor,
+                style = descriptionTextStyle,
             )
         }
         Image(
@@ -77,8 +81,8 @@ fun TudeeSlider(
 private fun TudeeSliderPreview() {
     TudeeTheme {
         TudeeSlider(
-            title = "Stay working!",
-            description = "You just scrolling, not working. Tudee is watching. back to work!!!",
+            title = stringResource(R.string.stay_working),
+            description = stringResource(R.string.you_ve_completed_3_out_of_10_tasks_keep_going),
             emoji = painterResource(R.drawable.emoji_stay_working),
             image = painterResource(R.drawable.tudee_stay_working_or_nothing),
         )
