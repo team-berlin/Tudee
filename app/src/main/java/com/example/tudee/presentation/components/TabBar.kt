@@ -24,6 +24,13 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.tudee.designsystem.theme.TudeeTheme
 
+
+data class TabBarItem(
+    val title: String,
+    val taskCount: String,
+    val isSelected: Boolean,
+)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TabBarComponent(
@@ -179,10 +186,4 @@ private fun DefaultTabContentPreview(
         }
     }
 }
-
-data class TabBarItem(
-    val title: String,
-    val taskCount: String,
-    val isSelected: Boolean,
-)
 
