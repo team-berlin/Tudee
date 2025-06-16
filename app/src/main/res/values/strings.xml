@@ -6,5 +6,8 @@
     <string name="default_task_description">Review cell structure and functions for tomorrow...</string>
     <string name="default_priority">Medium</string>
 
-
+    <string name="stay_working">Stay working!</string>
+    <string name="you_ve_completed_3_out_of_10_tasks_keep_going">You\'ve completed 3 out of 10 tasks Keep going!</string>
+    <string name="tudee_description">Your cute Helper for Every Task</string>
+    <string name="back_button">Back Button</string>
 </resources>

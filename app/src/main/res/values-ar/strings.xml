@@ -2,9 +2,8 @@
 <resources>
     <string name="app_name">تودي</string>
     <string name="tudee_description">مساعدك اللطيف لكل مهمة</string>
-
     <string name="default_task_title">تنظيم مكتب الدراسة</string>
     <string name="default_task_description">راجع بنية الخلية ووظائفها للغد...</string>
     <string name="default_priority">متوسطة</string>
-
+    <string name="back_button">زر العودة</string>
 </resources>
