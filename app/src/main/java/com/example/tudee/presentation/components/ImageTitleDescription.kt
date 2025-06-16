@@ -48,7 +48,7 @@ fun IconWithTitleAndDescription(
                     shape = RoundedCornerShape(12.dp)
                 )
                 .background(Color(0x66FFFFFF))
-                .padding(horizontal = 6.2.dp, vertical = 7.2.dp)
+                .padding(6.dp)
                 ,
             contentAlignment = Alignment.Center
         ) {
