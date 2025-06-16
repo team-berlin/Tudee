@@ -23,7 +23,7 @@ import com.example.tudee.designsystem.theme.TudeeTheme
 fun SnackBarComponent(
     modifier: Modifier = Modifier,
     message: String,
-    icon: Painter,
+    iconPainter : Painter,
     iconDescription: String = "",
     iconBackgroundColor: Color,
     iconTint: Color = TudeeTheme.color.statusColors.error,
@@ -35,7 +35,6 @@ fun SnackBarComponent(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .height(56.dp)
             .shadow(
                 elevation = 4.dp,
                 shape = RoundedCornerShape(16.dp),
@@ -47,7 +46,7 @@ fun SnackBarComponent(
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Icon(
-            painter = icon,
+            painter = iconPainter,
             contentDescription = iconDescription,
             tint = iconTint,
             modifier = Modifier
@@ -70,7 +69,7 @@ private fun SnackBarExamplePreview() {
     TudeeTheme {
         SnackBarComponent(
             message = stringResource(R.string.snack_bar_success_message),
-            icon = painterResource(id = R.drawable.ic_success),
+            iconPainter  = painterResource(id = R.drawable.ic_success),
             iconDescription = "snack bar icon",
             iconBackgroundColor = TudeeTheme.color.statusColors.greenVariant,
             iconTint = TudeeTheme.color.statusColors.greenAccent
