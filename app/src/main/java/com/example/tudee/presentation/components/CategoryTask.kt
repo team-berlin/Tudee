@@ -1,4 +1,4 @@
-package com.example.tudee.components
+package com.example.tudee.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -38,8 +38,8 @@ fun CategoryTaskComponent(
         modifier = modifier
             .fillMaxWidth()
             .height(111.dp)
-            .border(1.dp, colors.textColors.surfaceHigh, RoundedCornerShape(16.dp))
-            .background(colors.textColors.surfaceHigh)
+            .border(1.dp, TudeeTheme.color.surfaceHigh, RoundedCornerShape(16.dp))
+            .background( TudeeTheme.color.surfaceHigh)
             .padding(top = 4.dp, start = 4.dp, end = 12.dp, bottom = 12.dp),
         verticalArrangement = Arrangement.spacedBy(2.dp)
     ) {
@@ -70,7 +70,7 @@ fun CategoryTaskComponent(
                         modifier = Modifier
                             .width(98.dp)
                             .height(28.dp)
-                            .background(colors.textColors.surface, RoundedCornerShape(100.dp))
+                            .background( TudeeTheme.color.surfaceHigh, RoundedCornerShape(100.dp))
                             .padding(horizontal = 8.dp, vertical = 6.dp),
                         horizontalArrangement = Arrangement.spacedBy(2.dp),
                         verticalAlignment = Alignment.CenterVertically
@@ -100,7 +100,7 @@ fun CategoryTaskComponent(
                     Text(
                         text = priority,
                         style = textStyles.body.small.copy(
-                            color = colors.textColors.surface
+                            color = TudeeTheme.color.surface
                         ),
                         modifier = Modifier.wrapContentWidth()
                     )
