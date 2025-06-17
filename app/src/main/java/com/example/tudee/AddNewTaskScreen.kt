@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -29,6 +31,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tudee.designsystem.theme.TudeeTheme
+import com.example.tudee.presentation.components.CategoryComponent
 import com.example.tudee.presentation.components.DefaultLeadingContent
 import com.example.tudee.presentation.components.TudeeChip
 import com.example.tudee.presentation.components.TudeeTextField
@@ -69,7 +72,7 @@ fun ScrollableBottomSheetDemo(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, widthDp = 360, heightDp = 852)
 @Composable
 fun BottomSheetContent(
     taskTitle: String = "Task 1",
@@ -150,8 +153,21 @@ fun BottomSheetContent(
             style = TudeeTheme.textStyle.title.medium,
             color = TudeeTheme.color.textColors.title
         )
-        repeat(30) {
-            Text(text = "Item #$it", modifier = Modifier.padding(vertical = 8.dp))
+        LazyVerticalGrid(
+            columns = GridCells.Adaptive(minSize = 104.dp),
+            modifier = Modifier
+                .height(400.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(24.dp)
+        ) {
+            items(10) {
+                CategoryComponent(
+                    categoryPainter = painterResource(R.drawable.ic_education),
+                    categoryImageContentDescription = "Education Category",
+                    categoryName = "Education",
+                )
+            }
         }
     }
 }
