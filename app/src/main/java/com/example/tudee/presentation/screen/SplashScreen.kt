@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
@@ -46,11 +47,12 @@ fun SplashScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(overlayColor)
+                .background(overlayColor),
         ) {
             Image(
                 painter = backgroundPainter,
                 contentDescription = null,
+                contentScale = ContentScale.Crop
             )
         }
 
@@ -61,7 +63,7 @@ fun SplashScreen(
 @Preview(showSystemUi = true, uiMode = UI_MODE_NIGHT_NO)
 @Preview(showSystemUi = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
-fun SplashScreenPreview() {
+private fun SplashScreenPreview() {
     TudeeTheme {
         SplashScreen()
     }
