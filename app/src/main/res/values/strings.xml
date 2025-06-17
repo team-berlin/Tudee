@@ -3,4 +3,5 @@
 
     <string name="tudee_description">Your cute Helper for Every Task</string>
     <string name="back_button">Back Button</string>
+    <string name="Title_Error">Title Not Valid</string>
 </resources>
