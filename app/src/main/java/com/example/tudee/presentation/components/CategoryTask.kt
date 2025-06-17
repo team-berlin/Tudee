@@ -88,19 +88,20 @@ fun CategoryTaskComponent(
         }
 
         CategoryTaskComponentInformation(
+            modifier = modifier ,
             title = title,
             description = description
         )
-
     }
 }
 @Composable
 private fun CategoryTaskComponentInformation(
+    modifier: Modifier = Modifier,
     title: String,
     description: String?
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(start = 8.dp),
         verticalArrangement = Arrangement.spacedBy(2.dp)
@@ -124,7 +125,7 @@ private fun CategoryTaskComponentInformation(
 
 @Preview(showBackground = true)
 @Composable
-fun CategoryTaskComponentPreview() {
+private fun CategoryTaskComponentPreview() {
     CategoryTaskComponent(
         title = stringResource(R.string.default_task_title),
         description = stringResource(R.string.default_task_description),
