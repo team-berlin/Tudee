@@ -31,10 +31,10 @@ import com.example.tudee.presentation.composables.buttons.FabButton
 @Composable
 fun OnBoardingPage(
     modifier: Modifier = Modifier,
-    page: Page,
-    currentPage: Int = 0,
     onClick: () -> Unit = {},
+    currentPage: Int = 0,
     orientation: Boolean = true,
+    page: Page,
 ) {
     if (orientation) {
         Column(
