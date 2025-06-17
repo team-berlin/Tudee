@@ -14,19 +14,19 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.datetime.LocalDateTime
 
 class AddNewTaskViewModel(
-    taskService: TaskService
+    taskService: TaskService,
 ) : ViewModel() {
 
     private val _taskState: MutableStateFlow<AddNewTaskScreenState> =
         MutableStateFlow(AddNewTaskScreenState())
     val taskState: StateFlow<AddNewTaskScreenState> = _taskState.asStateFlow()
 
-    val isCreateTaskRequestValid: StateFlow<Boolean> = _taskState
+    val isTaskValid: StateFlow<Boolean> = _taskState
         .map { state ->
             state.taskTitle.isNotBlank() &&
                     state.taskDescription.isNotBlank() &&
                     state.selectedTaskPriority != null &&
-                    state.categories != null
+                    state.selectedCategoryId != null
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
@@ -57,9 +57,9 @@ class AddNewTaskViewModel(
         )
     }
 
-    fun onSelectTaskCategory(selectedCategory: Long) {
+    fun onSelectTaskCategory(selectedCategoryID: Long) {
         _taskState.value = _taskState.value.copy(
-            selectedCategoryId = selectedCategory
+            selectedCategoryId = selectedCategoryID
         )
     }
 
