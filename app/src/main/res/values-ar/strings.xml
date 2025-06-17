@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="snack_bar_error_message">حدث خطأ ما</string>
+    <string name="snack_bar_success_message">تم بنجاح.</string>
     <string name="app_name">تودي</string>
-
     <string name="tudee_description">مساعدك اللطيف لكل مهمة</string>
+
+    <string name="default_task_title">تنظيم مكتب الدراسة</string>
+    <string name="default_task_description">راجع بنية الخلية ووظائفها للغد...</string>
+    <string name="default_priority">متوسطة</string>
+
+
+    <string name="stay_working">واصل العمل!</string>
+    <string name="you_ve_completed_3_out_of_10_tasks_keep_going">لقد أنجزت 3 من أصل 10 مهام، واصل التقدم!</string>
+
     <string name="back_button">زر العودة</string>
     <string name="Title_Error">غير مسموح بنص فارغ</string>
 </resources>
+
