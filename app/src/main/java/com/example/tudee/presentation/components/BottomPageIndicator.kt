@@ -1,4 +1,4 @@
-package com.example.tudee.presentation.onBoarding.components
+package com.example.tudee.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -15,19 +15,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
-import com.example.tudee.presentation.onBoarding.Page
+import com.example.tudee.presentation.screen.onboarding.OnBoardingPageUiModel
 
 @Composable
 fun BottomPageIndicator(
     modifier: Modifier = Modifier,
     pageNumber: Int,
-    pages: List<Page>
+    OnBoardingPageUiModels: List<OnBoardingPageUiModel>
 ) {
     Row(
         modifier = modifier.padding(horizontal = 20.dp),
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        repeat(pages.size) { page ->
+        repeat(OnBoardingPageUiModels.size) { page ->
             Box(
                 modifier = Modifier
                     .weight(1f)
@@ -47,10 +47,10 @@ fun BottomPageIndicator(
 private fun BottomPageIndicatorPreview() {
     BottomPageIndicator(
         pageNumber = 1,
-        pages = listOf(
-            Page(0, 0, painterResource(R.drawable.tudee_onboarding_1)),
-            Page(0, 0, painterResource(R.drawable.tudee_onboarding_1)),
-            Page(0, 0, painterResource(R.drawable.tudee_onboarding_1))
+        OnBoardingPageUiModels = listOf(
+            OnBoardingPageUiModel(0, 0, painterResource(R.drawable.tudee_onboarding_1)),
+            OnBoardingPageUiModel(0, 0, painterResource(R.drawable.tudee_onboarding_1)),
+            OnBoardingPageUiModel(0, 0, painterResource(R.drawable.tudee_onboarding_1))
         )
     )
 }

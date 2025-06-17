@@ -1,4 +1,4 @@
-package com.example.tudee.presentation.onBoarding
+package com.example.tudee.presentation.screen.onboarding
 
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
@@ -25,8 +25,8 @@ import androidx.compose.ui.unit.dp
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.designsystem.theme.textstyle.TudeeTextStyle
-import com.example.tudee.presentation.onBoarding.components.BottomPageIndicator
-import com.example.tudee.presentation.onBoarding.components.OnBoardingPage
+import com.example.tudee.presentation.components.BottomPageIndicator
+import com.example.tudee.presentation.components.OnBoardingPage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -34,25 +34,25 @@ import kotlinx.coroutines.launch
 fun OnBoardingScreen(
     modifier: Modifier = Modifier,
 ) {
-    val onboardingPages = listOf(
-        Page(
+    val onboardingOnBoardingPageUiModels = listOf(
+        OnBoardingPageUiModel(
             title = R.string.on_boarding_title1,
             description = R.string.on_boarding_description1,
             image = painterResource(R.drawable.tudee_onboarding_1)
         ),
-        Page(
+        OnBoardingPageUiModel(
             title = R.string.on_boarding_title2,
             description = R.string.on_boarding_description2,
             image = painterResource(R.drawable.tudee_onboarding_2),
         ),
-        Page(
+        OnBoardingPageUiModel(
             title = R.string.on_boarding_title3,
             description = R.string.on_boarding_description3,
             image = painterResource(R.drawable.tudee_onboarding_3),
         )
     )
     val onBoardingPageState = rememberPagerState(initialPage = 0) {
-        onboardingPages.size
+        onboardingOnBoardingPageUiModels.size
     }
     val coroutineScope = rememberCoroutineScope()
 
@@ -64,7 +64,7 @@ fun OnBoardingScreen(
         modifier = modifier,
         pageState = onBoardingPageState,
         scope = coroutineScope,
-        pages = onboardingPages,
+        OnBoardingPageUiModels = onboardingOnBoardingPageUiModels,
         orientation = orientation
     )
 }
@@ -72,7 +72,7 @@ fun OnBoardingScreen(
 @Composable
 private fun OnBoardingContent(
     modifier: Modifier = Modifier,
-    pages: List<Page>,
+    OnBoardingPageUiModels: List<OnBoardingPageUiModel>,
     pageState: PagerState,
     scope: CoroutineScope,
     orientation: Int,
@@ -110,12 +110,12 @@ private fun OnBoardingContent(
                 orientation = (orientation == Configuration.ORIENTATION_PORTRAIT),
                 modifier = Modifier.align(alignment = Alignment.Center),
                 currentPage = pageState.currentPage,
-                page = pages[index],
+                onBoardingPageUiModel = OnBoardingPageUiModels[index],
                 onClick = { scope.launch { pageState.animateScrollToPage(pageState.currentPage + 1) } }
             )
         }
         BottomPageIndicator(
-            pages = pages,
+            OnBoardingPageUiModels = OnBoardingPageUiModels,
             pageNumber = pageState.currentPage,
             modifier = Modifier
                 .align(alignment = Alignment.BottomCenter)
