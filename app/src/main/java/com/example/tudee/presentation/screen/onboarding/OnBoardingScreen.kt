@@ -86,7 +86,7 @@ private fun OnBoardingContent(
             .background(TudeeTheme.color.statusColors.overlay),
         contentAlignment = Alignment.Center
     ) {
-        if (pageState.currentPage != 2)
+        if (pageState.currentPage != Pages.ThirdPage.page)
             TextButton(
                 modifier = Modifier.align(alignment = Alignment.TopStart),
                 onClick = { /* TODO NAVIGATE TO HOME SCREEN */ },
@@ -117,7 +117,7 @@ private fun OnBoardingContent(
                 onClick = {
                     scope.launch {
                         if (pageState.currentPage < onBoardingPageUiModels.lastIndex) {
-                            pageState.animateScrollToPage(pageState.currentPage + 1)
+                            pageState.animateScrollToPage(pageState.currentPage + Pages.SecondPage.page)
                         }
                     }
                 }

@@ -27,6 +27,7 @@ import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.presentation.screen.onboarding.OnBoardingPageUiModel
 import com.example.tudee.presentation.composables.buttons.FabButton
+import com.example.tudee.presentation.screen.onboarding.Pages
 
 @Composable
 fun OnBoardingPage(
@@ -111,7 +112,7 @@ private fun OnBoardingPageContent(
                 color = TudeeTheme.color.textColors.body
             )
         }
-        if (currentPage != 2) {
+        if (currentPage != Pages.ThirdPage.page) {
             FabButton(
                 modifier = Modifier
                     .align(alignment = Alignment.BottomCenter)
