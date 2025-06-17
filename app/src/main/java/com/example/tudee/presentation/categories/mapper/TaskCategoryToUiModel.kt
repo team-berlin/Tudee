@@ -6,8 +6,8 @@ import com.example.tudee.presentation.categories.model.TaskCategoryUiModel
 fun TaskCategory.toUiModel(count: Int = 0): TaskCategoryUiModel {
     return TaskCategoryUiModel(
         id = id,
-        name = name,
-        iconResId = mapToIcon(image),
+        name = title,
+        iconResId = image,
         count = count,
         isPredefined = isPredefined
     )
