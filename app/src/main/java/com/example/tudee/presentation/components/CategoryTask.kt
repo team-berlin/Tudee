@@ -2,6 +2,7 @@ package com.example.tudee.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,7 +36,8 @@ fun CategoryTaskComponent(
     priorityBackgroundColor: Color = TudeeTheme.color.statusColors.yellowAccent,
     taskIcon: @Composable () -> Unit,
     priorityIcon: Painter,
-    dateText: String? = null
+    dateText: String? = null,
+    onClick: () -> Unit,
 ) {
 
     Column(
@@ -43,7 +45,8 @@ fun CategoryTaskComponent(
             .fillMaxWidth()
             .border(1.dp, TudeeTheme.color.surfaceHigh, RoundedCornerShape(16.dp))
             .background( TudeeTheme.color.surfaceHigh)
-            .padding(top = 4.dp, start = 4.dp, end = 12.dp, bottom = 12.dp),
+            .padding(top = 4.dp, start = 4.dp, end = 12.dp, bottom = 12.dp)
+            .clickable { onClick()},
         verticalArrangement = Arrangement.spacedBy(2.dp)
     ) {
         Row(
@@ -135,6 +138,7 @@ fun CategoryTaskComponentPreview() {
                 tint = TudeeTheme.color.statusColors.purpleAccent
             )
         },
-        priorityIcon = painterResource(id = R.drawable.ic_priority_medium)
+        priorityIcon = painterResource(id = R.drawable.ic_priority_medium),
+        onClick = {}
     )
 }
