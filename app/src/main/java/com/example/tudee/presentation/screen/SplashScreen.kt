@@ -25,7 +25,7 @@ import kotlinx.coroutines.delay
 fun SplashScreen(
     modifier: Modifier = Modifier,
     navController: NavController = rememberNavController(),
-    backgroundColor: Color = TudeeTheme.color.surface, // Use surface color as base
+    backgroundColor: Color = TudeeTheme.color.surface,
     overlayColor: Color = TudeeTheme.color.statusColors.overlay,
     backgroundPainter: Painter = painterResource(R.drawable.background_ellipse),
     iconPainter: Painter = painterResource(R.drawable.tudee_logo)
@@ -56,8 +56,6 @@ fun SplashScreen(
 
         Image(painter = iconPainter, contentDescription = null)
     }
-
-
 }
 
 @Preview(showSystemUi = true, uiMode = UI_MODE_NIGHT_NO)
@@ -67,5 +65,4 @@ fun SplashScreenPreview() {
     TudeeTheme {
         SplashScreen()
     }
-
 }
