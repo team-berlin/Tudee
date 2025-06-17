@@ -1,5 +1,6 @@
-package com.example.tudee.onBoarding
+package com.example.tudee.presentation.onBoarding
 
+import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -11,37 +12,76 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.designsystem.theme.textstyle.TudeeTextStyle
-import com.example.tudee.onBoarding.comonents.BottomPageIndicator
-import com.example.tudee.onBoarding.comonents.OnBoardingPageContent
+import com.example.tudee.presentation.onBoarding.components.BottomPageIndicator
+import com.example.tudee.presentation.onBoarding.components.OnBoardingPage
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun OnBoardingScreen(
     modifier: Modifier = Modifier,
 ) {
+    val onboardingPages = listOf(
+        Page(
+            title = R.string.on_boarding_title1,
+            description = R.string.on_boarding_description1,
+            image = painterResource(R.drawable.tudee_onboarding_1)
+        ),
+        Page(
+            title = R.string.on_boarding_title2,
+            description = R.string.on_boarding_description2,
+            image = painterResource(R.drawable.tudee_onboarding_2),
+        ),
+        Page(
+            title = R.string.on_boarding_title3,
+            description = R.string.on_boarding_description3,
+            image = painterResource(R.drawable.tudee_onboarding_3),
+        )
+    )
     val onBoardingPageState = rememberPagerState(initialPage = 0) {
         onboardingPages.size
     }
-    OnBoardingContent(modifier = modifier, pageState = onBoardingPageState)
+    val coroutineScope = rememberCoroutineScope()
+
+    val configuration = LocalConfiguration.current
+
+    val orientation = rememberSaveable { configuration.orientation }
+
+    OnBoardingContent(
+        modifier = modifier,
+        pageState = onBoardingPageState,
+        scope = coroutineScope,
+        pages = onboardingPages,
+        orientation = orientation
+    )
 }
 
 @Composable
 private fun OnBoardingContent(
     modifier: Modifier = Modifier,
-    pageState: PagerState
+    pages: List<Page>,
+    pageState: PagerState,
+    scope: CoroutineScope,
+    orientation: Int,
 ) {
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(TudeeTheme.color.statusColors.overlay), contentAlignment = Alignment.Center
+            .background(TudeeTheme.color.statusColors.overlay),
+        contentAlignment = Alignment.Center
     ) {
         if (pageState.currentPage != 2)
             TextButton(
@@ -49,8 +89,8 @@ private fun OnBoardingContent(
                 onClick = { /* TODO NAVIGATE TO HOME SCREEN */ },
             ) {
                 Text(
+                    stringResource(R.string.skip_button),
                     modifier = Modifier.padding(16.dp),
-                    text = "Skip",
                     style = TudeeTextStyle.label.large,
                     color = TudeeTheme.color.primary
                 )
@@ -66,14 +106,18 @@ private fun OnBoardingContent(
                 .padding(bottom = 75.dp),
             state = pageState
         ) { index ->
-            OnBoardingPageContent(
+            OnBoardingPage(
+                orientation = (orientation == Configuration.ORIENTATION_PORTRAIT),
+                modifier = Modifier.align(alignment = Alignment.Center),
                 currentPage = pageState.currentPage,
-                page = onboardingPages[index],
-                onClick = { /* TODO MOVE TO NEXT PAGE */ }
+                page = pages[index],
+                onClick = { scope.launch { pageState.animateScrollToPage(pageState.currentPage + 1) } }
             )
         }
         BottomPageIndicator(
-            pageNumber = pageState.currentPage, modifier = Modifier
+            pages = pages,
+            pageNumber = pageState.currentPage,
+            modifier = Modifier
                 .align(alignment = Alignment.BottomCenter)
                 .padding(bottom = 24.dp)
         )
@@ -81,17 +125,11 @@ private fun OnBoardingContent(
 }
 
 @Composable
-@PreviewLightDark
-@Preview(locale = "ar" , uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+@PreviewLightDark()
+@Preview(locale = "ar")
+@Preview(heightDp = 360, widthDp = 800)
 private fun OnBoardingScreenPreview() {
     TudeeTheme {
-        OnBoardingContent(pageState = rememberPagerState(initialPage = 0) {
-            onboardingPages.size
-        }
-        )
-        OnBoardingContent(pageState = rememberPagerState(initialPage = 0) {
-            onboardingPages.size
-        }
-        )
+        OnBoardingScreen()
     }
 }
