@@ -1,5 +1,6 @@
 package com.example.tudee
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -12,9 +13,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.magnifier
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
@@ -24,6 +27,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,6 +39,9 @@ import com.example.tudee.presentation.components.CategoryComponent
 import com.example.tudee.presentation.components.DefaultLeadingContent
 import com.example.tudee.presentation.components.TudeeChip
 import com.example.tudee.presentation.components.TudeeTextField
+import com.example.tudee.presentation.composables.buttons.ButtonColors
+import com.example.tudee.presentation.composables.buttons.DefaultButton
+import com.example.tudee.presentation.composables.buttons.PrimaryButton
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
@@ -48,9 +55,10 @@ fun AddNewTaskScreen(
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun ScrollableBottomSheetDemo(
-    showSheetState: MutableState<Boolean> = mutableStateOf(false),
+    showSheetState: MutableState<Boolean> = mutableStateOf(true),
 ) {
     val sheetState = rememberModalBottomSheetState()
+    val scope = rememberCoroutineScope()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -66,7 +74,13 @@ fun ScrollableBottomSheetDemo(
                 containerColor = TudeeTheme.color.surface,
                 modifier = Modifier.fillMaxHeight(0.8f)
             ) {
-
+                BottomSheetContent(
+                    taskTitle = "Task Title",
+                    onTaskTitleChanged = {},
+                    taskDescription = "This is a task description",
+                    onTaskDescriptionChanged = {}
+                )
+                AddOrCancelButtons()
             }
         }
     }
@@ -162,12 +176,55 @@ fun BottomSheetContent(
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
             items(10) {
-                CategoryComponent(
-                    categoryPainter = painterResource(R.drawable.ic_education),
-                    categoryImageContentDescription = "Education Category",
-                    categoryName = "Education",
-                )
+                if (true)
+                    CategoryComponent(
+                        categoryPainter = painterResource(R.drawable.ic_education),
+                        categoryImageContentDescription = "Education Category",
+                        categoryName = "Education",
+                        showCheckedIcon = true
+                    )
             }
+        }
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+fun AddOrCancelButtons(modifier: Modifier = Modifier) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(TudeeTheme.color.surfaceHigh),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        PrimaryButton(
+            onClick = {},
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp),
+        ) {
+            Text(
+                text = "Add",
+                style = TudeeTheme.textStyle.label.large,
+                color = TudeeTheme.color.textColors.onPrimary
+            )
+        }
+        DefaultButton(
+            onClick = {},
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp),
+            border = BorderStroke(
+                1.dp,
+                TudeeTheme.color.stroke
+            ),
+            colors = ButtonColors(backgroundColor = TudeeTheme.color.surfaceHigh)
+        ) {
+            Text(
+                text = "Cancel",
+                style = TudeeTheme.textStyle.label.large,
+                color = TudeeTheme.color.primary
+            )
         }
     }
 }
