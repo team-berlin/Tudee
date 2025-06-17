@@ -22,6 +22,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.designsystem.theme.textstyle.TudeeTextStyle
@@ -33,6 +35,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun OnBoardingScreen(
     modifier: Modifier = Modifier,
+    navController: NavController = rememberNavController(),
 ) {
     val onboardingOnBoardingPageUiModels = listOf(
         OnBoardingPageUiModel(
@@ -64,7 +67,7 @@ fun OnBoardingScreen(
         modifier = modifier,
         pageState = onBoardingPageState,
         scope = coroutineScope,
-        OnBoardingPageUiModels = onboardingOnBoardingPageUiModels,
+        onBoardingPageUiModels = onboardingOnBoardingPageUiModels,
         orientation = orientation
     )
 }
@@ -72,7 +75,7 @@ fun OnBoardingScreen(
 @Composable
 private fun OnBoardingContent(
     modifier: Modifier = Modifier,
-    OnBoardingPageUiModels: List<OnBoardingPageUiModel>,
+    onBoardingPageUiModels: List<OnBoardingPageUiModel>,
     pageState: PagerState,
     scope: CoroutineScope,
     orientation: Int,
@@ -110,12 +113,18 @@ private fun OnBoardingContent(
                 orientation = (orientation == Configuration.ORIENTATION_PORTRAIT),
                 modifier = Modifier.align(alignment = Alignment.Center),
                 currentPage = pageState.currentPage,
-                onBoardingPageUiModel = OnBoardingPageUiModels[index],
-                onClick = { scope.launch { pageState.animateScrollToPage(pageState.currentPage + 1) } }
+                onBoardingPageUiModel = onBoardingPageUiModels[index],
+                onClick = {
+                    scope.launch {
+                        if (pageState.currentPage < onBoardingPageUiModels.lastIndex) {
+                            pageState.animateScrollToPage(pageState.currentPage + 1)
+                        }
+                    }
+                }
             )
         }
         BottomPageIndicator(
-            OnBoardingPageUiModels = OnBoardingPageUiModels,
+            OnBoardingPageUiModels = onBoardingPageUiModels,
             pageNumber = pageState.currentPage,
             modifier = Modifier
                 .align(alignment = Alignment.BottomCenter)
