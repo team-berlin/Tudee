@@ -8,7 +8,7 @@ data class AddNewTaskScreenState(
     val taskTitle: String = "",
     val taskDescription: String = "",
     val taskDueDate: LocalDateTime? = null,
-    val taskPriority: TaskPriority? = null,
+    val selectedTaskPriority: TaskPriority? = null,
     val categories: List<TaskCategory> = emptyList(),
     val selectedCategoryId: Long? = null,
 )

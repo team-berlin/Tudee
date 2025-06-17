@@ -25,7 +25,7 @@ class AddNewTaskViewModel(
         .map { state ->
             state.taskTitle.isNotBlank() &&
                     state.taskDescription.isNotBlank() &&
-                    state.taskPriority != null &&
+                    state.selectedTaskPriority != null &&
                     state.categories != null
         }.stateIn(
             scope = viewModelScope,
@@ -53,7 +53,7 @@ class AddNewTaskViewModel(
 
     fun onUpdateTaskPriority(newPriority: TaskPriority) {
         _taskState.value = _taskState.value.copy(
-            taskPriority = newPriority
+            selectedTaskPriority = newPriority
         )
     }
 

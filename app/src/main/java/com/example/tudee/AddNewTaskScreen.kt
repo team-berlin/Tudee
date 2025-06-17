@@ -102,15 +102,16 @@ fun Content(
             ) {
                 BottomSheetContent(
                     taskState = taskState,
-                    taskTitle = taskState.taskTitle,
                     onTaskTitleChanged = onTaskTitleChanged,
-                    taskDescription = taskState.taskDescription,
                     onTaskDescriptionChanged = onTaskDescriptionChanged,
                     onUpdateTaskDueDate = onUpdateTaskDueDate,
                     onUpdateTaskPriority = onUpdateTaskPriority,
                     onSelectTaskCategory = onSelectTaskCategory,
                 )
-                AddOrCancelButtons()
+                AddOrCancelButtons(
+                    onAddButtonClicked,
+                    onCancelButtonClicked,
+                )
             }
         }
     }
@@ -120,9 +121,7 @@ fun Content(
 @Composable
 fun BottomSheetContent(
     taskState: AddNewTaskScreenState,
-    taskTitle: String = "Task 1",
     onTaskTitleChanged: (String) -> Unit,
-    taskDescription: String = "This is a task description",
     onTaskDescriptionChanged: (String) -> Unit,
     onUpdateTaskDueDate: (LocalDateTime) -> Unit,
     onUpdateTaskPriority: (TaskPriority) -> Unit = {},
@@ -136,7 +135,7 @@ fun BottomSheetContent(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         TudeeTextField(
-            value = taskTitle,
+            value = taskState.taskTitle,
             onValueChange = onTaskTitleChanged,
             leadingContent = { isFocused ->
                 DefaultLeadingContent(
@@ -152,14 +151,14 @@ fun BottomSheetContent(
             modifier = Modifier
                 .height(168.dp),
             placeholder = "Description",
+            onValueChange = onTaskDescriptionChanged,
             singleLine = false,
             textStyle = TudeeTheme.textStyle.body.medium,
-            value = taskDescription,
-            onValueChange = onTaskDescriptionChanged
+            value = taskState.taskDescription,
         )
         TudeeTextField(
-            value = taskTitle,
-            onValueChange = onTaskTitleChanged,
+            value = taskState.taskDueDate?.date.toString(),
+            onValueChange = TODO(),
             leadingContent = { isFocused ->
                 DefaultLeadingContent(
                     painter = painterResource(R.drawable.ic_add_calendar),
@@ -180,22 +179,20 @@ fun BottomSheetContent(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
 
             ) {
-            val priorities = listOf("High", "Medium", "Low")
-            var selected by remember { mutableStateOf("High") }
-            priorities.forEach { label ->
-                val isSelected = selected == label
+            val priorities = listOf(TaskPriority.HIGH, TaskPriority.MEDIUM, TaskPriority.LOW)
+            priorities.forEach { taskPriority ->
+                val isSelected = taskState.selectedTaskPriority == taskPriority
                 TudeeChip(
-                    label = label,
+                    label = taskPriority.name,
                     modifier = Modifier.clickable {
-
+                        onUpdateTaskPriority
                     },
                     labelColor = if (isSelected) TudeeTheme.color.textColors.onPrimary else TudeeTheme.color.textColors.hint,
                     backgroundColor = if (isSelected) TudeeTheme.color.statusColors.pinkAccent else TudeeTheme.color.surfaceLow,
-                    icon = when (label) {
-                        "High" -> painterResource(id = R.drawable.ic_priority_high)
-                        "Medium" -> painterResource(id = R.drawable.ic_priority_medium)
-                        "Low" -> painterResource(id = R.drawable.ic_priority_low)
-                        else -> null
+                    icon = when (taskPriority) {
+                        TaskPriority.HIGH -> painterResource(id = R.drawable.ic_priority_high)
+                        TaskPriority.MEDIUM -> painterResource(id = R.drawable.ic_priority_medium)
+                        TaskPriority.LOW -> painterResource(id = R.drawable.ic_priority_low)
                     }, iconSize = 12.dp
                 )
             }
@@ -230,7 +227,11 @@ fun BottomSheetContent(
 
 @Composable
 @Preview(showBackground = true)
-fun AddOrCancelButtons(modifier: Modifier = Modifier) {
+fun AddOrCancelButtons(
+    onAddButtonClicked: (TaskCreationRequest) -> Unit,
+    onCancelButtonClicked: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
