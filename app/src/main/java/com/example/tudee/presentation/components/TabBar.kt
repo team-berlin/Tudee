@@ -1,5 +1,6 @@
 package com.example.tudee.presentation.components
 
+import androidx.compose.foundation.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -20,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -40,7 +42,7 @@ fun TabBarComponent(
     contentColor: Color = Color.Unspecified,
     selectedTabIndex: Int,
     tabBarItems: List<TabBarItem>,
-    onTabSelected: () -> Unit,
+    onTabSelected: (Int) -> Unit,
     tabContent: @Composable (tab: TabBarItem) -> Unit = {
         DefaultTabContent(
             tabBarItem = it,
@@ -64,7 +66,7 @@ fun TabBarComponent(
             Tab(
                 selected = tabItem.isSelected,
                 onClick = {
-                    onTabSelected()
+                    onTabSelected(index)
                 },
                 text = {
                     tabContent(tabItem)
@@ -99,7 +101,7 @@ private fun DefaultTabContent(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = tabBarItem.title,
+            text = stringResource(tabBarItem.title.toInt()),
             modifier = Modifier.padding(end = 4.dp),
             style = if (tabBarItem.isSelected) TudeeTheme.textStyle.label.medium else TudeeTheme.textStyle.label.small,
             color = if (tabBarItem.isSelected) TudeeTheme.color.textColors.title else TudeeTheme.color.textColors.hint
