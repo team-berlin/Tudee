@@ -17,7 +17,7 @@
     <string name="back_button">Back Button</string>
 
 <!--    content description -->
-    <string name="switch_sun_icon">Sun</string>
-    <string name="switch_moon_icon">Moon</string>
-    <string name="switch_stars_icon">stars</string>
+    <string name="switch_sun_icon_content_description">Sun</string>
+    <string name="switch_moon_icon_content_description">Moon</string>
+    <string name="switch_stars_icon_content_description">stars</string>
 </resources>

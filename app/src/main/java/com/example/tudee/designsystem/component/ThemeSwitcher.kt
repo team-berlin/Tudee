@@ -169,7 +169,7 @@ private fun SunIcon() {
     ) {
         Image(
             painter = painterResource(R.drawable.ic_sun),
-            contentDescription = stringResource(R.string.switch_sun_icon),
+            contentDescription = stringResource(R.string.switch_sun_icon_content_description),
         )
     }
 }
@@ -235,7 +235,7 @@ private fun StarsAndMoonCircles() {
         ) {
             Icon(
                 painter = painterResource(R.drawable.ic_stars),
-                contentDescription = stringResource(R.string.switch_stars_icon),
+                contentDescription = stringResource(R.string.switch_stars_icon_content_description),
                 tint = Color.Unspecified,
                 modifier = Modifier
                     .size(width = 28.dp, height = 27.dp)
@@ -286,7 +286,7 @@ private fun MoonIcon() {
     ) {
         Image(
             painter = painterResource(R.drawable.ic_moon),
-            contentDescription = stringResource(R.string.switch_moon_icon),
+            contentDescription = stringResource(R.string.switch_moon_icon_content_description),
         )
     }
 }

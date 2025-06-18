@@ -16,8 +16,8 @@
     <string name="back_button">زر العودة</string>
 
     <!--    content description -->
-    <string name="switch_sun_icon">شمس</string>
-    <string name="switch_moon_icon">قمر</string>
-    <string name="switch_stars_icon">نجوم</string>
+    <string name="switch_sun_icon_content_description">شمس</string>
+    <string name="switch_moon_icon_content_description">قمر</string>
+    <string name="switch_stars_icon_content_description">نجوم</string>
 </resources>
 
