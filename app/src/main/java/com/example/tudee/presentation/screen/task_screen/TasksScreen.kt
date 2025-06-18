@@ -129,7 +129,7 @@ fun TasksScreenContent(
             if (taskScreenUiState.isSnackBarVisible) {
                 SnackBarComponent(
                     message = stringResource(R.string.task_deleted_success),
-                    iconPainter = painterResource(R.drawable.check_mark_ic),
+                    iconPainter = painterResource(R.drawable.ic_check_mark),
                     iconBackgroundColor = TudeeTheme.color.statusColors.greenVariant
                 )
             }
