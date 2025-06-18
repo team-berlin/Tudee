@@ -32,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -108,16 +109,8 @@ fun AddNewTaskContent(
     addButtonState: Boolean = false,
 ) {
     val sheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = false,
-        confirmValueChange = { it != SheetValue.Hidden },
-//        initialValue = SheetValue.Expanded,
+        skipPartiallyExpanded = true,
     )
-    val scope = rememberCoroutineScope()
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(if (showSheetState.value) Color(0x99000000) else Color.Transparent) // 60% opacity
-    ) {
         if (showSheetState.value) {
             ModalBottomSheet(
                 onDismissRequest = {
@@ -149,7 +142,6 @@ fun AddNewTaskContent(
             }
         }
     }
-}
 
 //@Preview(showBackground = true, widthDp = 360, heightDp = 852)
 @Composable
@@ -159,122 +151,7 @@ fun BottomSheetContent(
         taskDescription = "Desc",
         taskDueDate = LocalDateTime(2023, 10, 1, 12, 0, 0),
         selectedTaskPriority = TaskPriority.MEDIUM,
-        categories = listOf(
-            TaskCategory(
-                id = 1L,
-                title = "Education",
-                image = "ic_education",
-                isPredefined = true
-            ),
-            TaskCategory(
-                id = 1L,
-                title = "Education",
-                image = "ic_education",
-                isPredefined = true
-            ),
-            TaskCategory(
-                id = 1L,
-                title = "Education",
-                image = "ic_education",
-                isPredefined = true
-            ),
-            TaskCategory(
-                id = 1L,
-                title = "Education",
-                image = "ic_education",
-                isPredefined = true
-            ),
-            TaskCategory(
-                id = 1L,
-                title = "Education",
-                image = "ic_education",
-                isPredefined = true
-            ),
-            TaskCategory(
-                id = 1L,
-                title = "Education",
-                image = "ic_education",
-                isPredefined = true
-            ),
-            TaskCategory(
-                id = 1L,
-                title = "Education",
-                image = "ic_education",
-                isPredefined = true
-            ),
-            TaskCategory(
-                id = 1L,
-                title = "Education",
-                image = "ic_education",
-                isPredefined = true
-            ),
-            TaskCategory(
-                id = 1L,
-                title = "Education",
-                image = "ic_education",
-                isPredefined = true
-            ),
-            TaskCategory(
-                id = 1L,
-                title = "Education",
-                image = "ic_education",
-                isPredefined = true
-            ),
-            TaskCategory(
-                id = 1L,
-                title = "Education",
-                image = "ic_education",
-                isPredefined = true
-            ),
-            TaskCategory(
-                id = 1L,
-                title = "Education",
-                image = "ic_education",
-                isPredefined = true
-            ),
-            TaskCategory(
-                id = 1L,
-                title = "Education",
-                image = "ic_education",
-                isPredefined = true
-            ),
-            TaskCategory(
-                id = 1L,
-                title = "Education",
-                image = "ic_education",
-                isPredefined = true
-            ),
-            TaskCategory(
-                id = 1L,
-                title = "Education",
-                image = "ic_education",
-                isPredefined = true
-            ),
-            TaskCategory(
-                id = 1L,
-                title = "Education",
-                image = "ic_education",
-                isPredefined = true
-            ),
-            TaskCategory(
-                id = 1L,
-                title = "Education",
-                image = "ic_education",
-                isPredefined = true
-            ),
-            TaskCategory(
-                id = 1L,
-                title = "Education",
-                image = "ic_education",
-                isPredefined = true
-            ),
-            TaskCategory(
-                id = 1L,
-                title = "Education",
-                image = "ic_education",
-                isPredefined = true
-            ),
-        ),
+        categories = emptyList(),
         selectedCategoryId = 12344L
     ),
     onTaskTitleChanged: (String) -> Unit = {},
@@ -305,7 +182,7 @@ fun BottomSheetContent(
                     )
                 },
 
-                placeholder = "Task title",
+                placeholder = stringResource(R.string.task_title),
                 textStyle = TudeeTheme.textStyle.label.medium
             )
         }
@@ -313,7 +190,7 @@ fun BottomSheetContent(
             TudeeTextField(
                 modifier = Modifier
                     .height(168.dp),
-                placeholder = "Description",
+                placeholder = stringResource(R.string.description),
                 onValueChange = onTaskDescriptionChanged,
                 singleLine = false,
                 textStyle = TudeeTheme.textStyle.body.medium,
@@ -330,13 +207,13 @@ fun BottomSheetContent(
                         isFocused = isFocused
                     )
                 },
-                placeholder = "set due date",
+                placeholder = stringResource(R.string.set_due_date),
                 textStyle = TudeeTheme.textStyle.label.medium
             )
         }
         item {
             Text(
-                text = "Priority",
+                text = stringResource(R.string.priority),
                 style = TudeeTheme.textStyle.title.medium,
                 color = TudeeTheme.color.textColors.title
             )
@@ -344,7 +221,6 @@ fun BottomSheetContent(
         item {
             Row(
                 modifier = Modifier,
-//                    .align(Alignment.Start),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 priorities.forEach { taskPriority ->
@@ -367,7 +243,7 @@ fun BottomSheetContent(
         }
         item {
             Text(
-                text = "Category",
+                text = stringResource(R.string.category),
                 style = TudeeTheme.textStyle.title.medium,
                 color = TudeeTheme.color.textColors.title
             )
@@ -377,7 +253,8 @@ fun BottomSheetContent(
                 columns = GridCells.Adaptive(minSize = 104.dp),
                 modifier = Modifier
                     .height(400.dp)
-                    .fillMaxWidth().padding(bottom = 148.dp),
+                    .fillMaxWidth()
+                    .padding(bottom = 148.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {

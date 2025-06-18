@@ -15,5 +15,10 @@
 
     <string name="back_button">زر العودة</string>
     <string name="Title_Error">غير مسموح بنص فارغ</string>
+    <string name="task_title">عنوان المهمة</string>
+    <string name="description">وصف المهمة</string>
+    <string name="set_due_date">تاريخ الإنتهاء</string>
+    <string name="priority">الأولوية</string>
+    <string name="category">الفئة</string>
 </resources>
 
