@@ -21,17 +21,12 @@ import kotlinx.datetime.LocalDate
 
 class TaskViewModel(
     private val taskService: TaskService,
-    private val categoryService: TaskCategoryService
+    private val categoryService: TaskCategoryService,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<TaskScreenState> =
         MutableStateFlow(TaskScreenState())
     val uiState: StateFlow<TaskScreenState> = _uiState.asStateFlow()
-
-    private val _isEditMode = MutableStateFlow(false)
-  //  val isEditMode: StateFlow<Boolean> = _isEditMode.asStateFlow()
-
-    private val _taskId = MutableStateFlow<Long?>(null)
 
     val isTaskValid: StateFlow<Boolean> = _uiState
         .map { state ->
@@ -80,29 +75,44 @@ class TaskViewModel(
         _uiState.update { it.copy(selectedCategoryId = selectedCategoryID) }
     }
 
-    fun onShowBottomSheet() {
+    fun showButtonSheet() {
         _uiState.update { it.copy(showBottomSheet = true) }
     }
 
-    fun setEditMode(isEdit: Boolean, taskId: Long? = null) {
-        _isEditMode.value = isEdit
-        _taskId.value = taskId
-        if (isEdit && taskId != null) {
-            viewModelScope.launch {
-                val task = taskService.getTaskById(taskId)
+    fun showTaskData(taskId: Long) {
+        viewModelScope.launch {
+            with(taskService.getTaskById(taskId)) {
                 _uiState.update {
                     it.copy(
-                        taskTitle = task.title,
-                        taskDescription = task.description,
-                        selectedTaskPriority = task.priority,
-                        selectedCategoryId = task.categoryId,
-                        taskDueDate = task.assignedDate
+                        taskId = taskId,
+                        isEditMode = true,
+                        taskStatus = status,
+                        taskTitle = title,
+                        taskDescription = description,
+                        selectedTaskPriority = priority,
+                        selectedCategoryId = categoryId,
+                        taskDueDate = assignedDate,
                     )
                 }
             }
-        } else {
+        }
+    }
+
+    fun onAddClicked(taskCreationRequest: TaskCreationRequest) {
+        viewModelScope.launch {
+            taskService.createTask(taskCreationRequest)
+            Log.d("TaskViewModel", "Task created: $taskCreationRequest")
+        }
+//        _uiState.update { it.copy(showBottomSheet = true, isEditMode = false) }
+    }
+    fun onSaveClicked(editedTask: Task){
+        viewModelScope.launch {
+            taskService.editTask(editedTask)
+            hideButtonSheet()
             _uiState.update {
                 it.copy(
+                    showBottomSheet = false,
+                    isEditMode = false,
                     taskTitle = "",
                     taskDescription = "",
                     selectedTaskPriority = null,
@@ -110,33 +120,12 @@ class TaskViewModel(
                     taskDueDate = null
                 )
             }
+            Log.d("TaskViewModel", "Task saved: $editedTask")
         }
+//        _uiState.update { it.copy(showBottomSheet = false, isEditMode = false) }
     }
 
-    fun onAddOrSaveClicked(taskCreationRequest: TaskCreationRequest) {
-        viewModelScope.launch {
-            if (_isEditMode.value && _taskId.value != null) {
-                val task = _uiState.value.run {
-                    Task(
-                        id = _taskId.value!!,
-                        title = taskTitle,
-                        description = taskDescription,
-                        priority = selectedTaskPriority ?: TaskPriority.MEDIUM,
-                        categoryId = selectedCategoryId ?: 1L,
-                        status = TaskStatus.TODO,
-                        assignedDate = taskDueDate ?: LocalDate(2024, 1, 1)
-                    )
-                }
-                taskService.editTask(task)
-            } else {
-                taskService.createTask(taskCreationRequest)
-            }
-        }
-    }
-
-    fun onDismissBottomSheet() {
+    fun hideButtonSheet() {
         _uiState.update { it.copy(showBottomSheet = false) }
-        _isEditMode.value = false
-        _taskId.value = null
     }
 }

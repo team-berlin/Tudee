@@ -27,9 +27,9 @@ fun EditScreen(taskId: Long = 1L) {
         Button(
             onClick = {
                 Log.d("EditScreen", "Edit button clicked")
-                viewModel.setEditMode(true, taskId)
+                viewModel.showTaskData(taskId)
                 scope.launch {
-                    viewModel.onShowBottomSheet()
+                    viewModel.showButtonSheet()
                 }
             },
             modifier = Modifier.fillMaxWidth(),
@@ -46,9 +46,10 @@ fun EditScreen(taskId: Long = 1L) {
             onUpdateTaskPriority = viewModel::onUpdateTaskPriority,
             onSelectTaskCategory = viewModel::onSelectTaskCategory,
             addButtonState = addButtonState,
-            onAddOrSaveButtonClicked = viewModel::onAddOrSaveClicked,
-            onDismissBottomSheet = viewModel::onDismissBottomSheet,
-            isEditMode = true
+            hideButtonSheet = viewModel::hideButtonSheet,
+            isEditMode = true,
+            onSaveClicked = viewModel::onSaveClicked,
+            onAddClicked = viewModel::onAddClicked,
         )
     }
 }

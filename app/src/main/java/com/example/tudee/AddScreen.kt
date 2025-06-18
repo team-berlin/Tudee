@@ -27,10 +27,7 @@ fun AddScreen() {
         Button(
             onClick = {
                 Log.d("AddScreen", "Add button clicked")
-                viewModel.setEditMode(false)
-                scope.launch {
-                    viewModel.onShowBottomSheet()
-                }
+                viewModel.showButtonSheet()
             },
             modifier = Modifier.fillMaxWidth(),
             enabled = true
@@ -46,9 +43,10 @@ fun AddScreen() {
             onUpdateTaskPriority = viewModel::onUpdateTaskPriority,
             onSelectTaskCategory = viewModel::onSelectTaskCategory,
             addButtonState = addButtonState,
-            onAddOrSaveButtonClicked = viewModel::onAddOrSaveClicked,
-            onDismissBottomSheet = viewModel::onDismissBottomSheet,
-            isEditMode = false
+            hideButtonSheet = viewModel::hideButtonSheet,
+            isEditMode = false,
+            onSaveClicked = viewModel::onSaveClicked,
+            onAddClicked = viewModel::onAddClicked
         )
     }
 }
