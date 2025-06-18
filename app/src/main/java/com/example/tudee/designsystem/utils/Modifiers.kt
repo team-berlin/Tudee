@@ -117,7 +117,7 @@ fun Modifier.innerShadow(
         }
 
         // Step 3: Draw the same outline offset and blurred (to punch out the shadow)
-        paint.color = Color.Black
+        paint.color = Color(0x00000000)
         canvas.translate(offsetXPx, offsetYPx)
         canvas.drawOutline(shadowOutline, paint)
 
