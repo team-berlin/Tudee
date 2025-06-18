@@ -25,15 +25,13 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
-import com.example.tudee.presentation.screen.onboarding.OnBoardingPageUiModel
 import com.example.tudee.presentation.composables.buttons.FabButton
-import com.example.tudee.presentation.screen.onboarding.Pages
+import com.example.tudee.presentation.screen.onboarding.OnBoardingPageUiModel
 
 @Composable
 fun OnBoardingPage(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
-    currentPage: Int = 0,
     orientation: Boolean = true,
     onBoardingPageUiModel: OnBoardingPageUiModel,
 ) {
@@ -43,7 +41,7 @@ fun OnBoardingPage(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            OnBoardingPageContent(onBoardingPageUiModel, currentPage, onClick)
+            OnBoardingPageContent(onBoardingPageUiModel, onClick)
         }
     } else {
         Row(
@@ -53,16 +51,14 @@ fun OnBoardingPage(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            OnBoardingPageContent(onBoardingPageUiModel, currentPage, onClick)
+            OnBoardingPageContent(onBoardingPageUiModel, onClick)
         }
     }
-
 }
 
 @Composable
 private fun OnBoardingPageContent(
     onBoardingPageUiModel: OnBoardingPageUiModel,
-    currentPage: Int,
     onClick: () -> Unit
 ) {
     Box(modifier = Modifier, contentAlignment = Alignment.Center) {
@@ -93,14 +89,15 @@ private fun OnBoardingPageContent(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Text(
-                stringResource(onBoardingPageUiModel.title),
+                text = onBoardingPageUiModel.title,
                 style = TudeeTheme.textStyle.title.medium,
                 modifier = Modifier.padding(top = 24.dp, start = 16.dp, end = 16.dp),
-                color = TudeeTheme.color.textColors.title,
                 textAlign = TextAlign.Center,
+                color = TudeeTheme.color.textColors.title,
             )
+
             Text(
-                stringResource(onBoardingPageUiModel.description),
+                text = onBoardingPageUiModel.description,
                 style = TudeeTheme.textStyle.body.medium,
                 modifier = Modifier.padding(
                     top = 16.dp,
@@ -112,7 +109,6 @@ private fun OnBoardingPageContent(
                 color = TudeeTheme.color.textColors.body
             )
         }
-        if (currentPage != Pages.ThirdPage.page) {
             FabButton(
                 modifier = Modifier
                     .align(alignment = Alignment.BottomCenter)
@@ -127,7 +123,7 @@ private fun OnBoardingPageContent(
             }
         }
     }
-}
+
 
 @Composable
 @PreviewLightDark
@@ -135,8 +131,8 @@ private fun OnBoardingPagePreview() {
     TudeeTheme {
         OnBoardingPage(
             onBoardingPageUiModel = OnBoardingPageUiModel(
-                title = R.string.on_boarding_title1,
-                description = R.string.on_boarding_description1,
+                title= stringResource(R.string.on_boarding_title1),
+                description = stringResource(R.string.on_boarding_description1),
                 image = painterResource(R.drawable.tudee_onboarding_1),
             )
         )

@@ -21,13 +21,13 @@ import com.example.tudee.presentation.screen.onboarding.OnBoardingPageUiModel
 fun BottomPageIndicator(
     modifier: Modifier = Modifier,
     pageNumber: Int,
-    OnBoardingPageUiModels: List<OnBoardingPageUiModel>
+    onBoardingPageUiModels: List<OnBoardingPageUiModel>
 ) {
     Row(
         modifier = modifier.padding(horizontal = 20.dp),
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        repeat(OnBoardingPageUiModels.size) { page ->
+        repeat(onBoardingPageUiModels.size) { page ->
             Box(
                 modifier = Modifier
                     .weight(1f)
@@ -47,10 +47,10 @@ fun BottomPageIndicator(
 private fun BottomPageIndicatorPreview() {
     BottomPageIndicator(
         pageNumber = 1,
-        OnBoardingPageUiModels = listOf(
-            OnBoardingPageUiModel(0, 0, painterResource(R.drawable.tudee_onboarding_1)),
-            OnBoardingPageUiModel(0, 0, painterResource(R.drawable.tudee_onboarding_1)),
-            OnBoardingPageUiModel(0, 0, painterResource(R.drawable.tudee_onboarding_1))
+        onBoardingPageUiModels = listOf(
+            OnBoardingPageUiModel("0", "0", painterResource(R.drawable.tudee_onboarding_1)),
+            OnBoardingPageUiModel("0", "0", painterResource(R.drawable.tudee_onboarding_1)),
+            OnBoardingPageUiModel("0", "0", painterResource(R.drawable.tudee_onboarding_1))
         )
     )
 }

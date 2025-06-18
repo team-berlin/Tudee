@@ -22,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.tudee.R
@@ -37,21 +38,22 @@ import kotlinx.coroutines.launch
 fun OnBoardingScreen(
     modifier: Modifier = Modifier,
     navController: NavController = rememberNavController(),
-) {
+
+    ) {
     val onboardingOnBoardingPageUiModels = listOf(
         OnBoardingPageUiModel(
-            title = R.string.on_boarding_title1,
-            description = R.string.on_boarding_description1,
+            title = stringResource(R.string.on_boarding_title1),
+            description = stringResource(R.string.on_boarding_description1),
             image = painterResource(R.drawable.tudee_onboarding_1)
         ),
         OnBoardingPageUiModel(
-            title = R.string.on_boarding_title2,
-            description = R.string.on_boarding_description2,
+            title = stringResource(R.string.on_boarding_title2),
+            description = stringResource(R.string.on_boarding_description2),
             image = painterResource(R.drawable.tudee_onboarding_2),
         ),
         OnBoardingPageUiModel(
-            title = R.string.on_boarding_title3,
-            description = R.string.on_boarding_description3,
+            title = stringResource(R.string.on_boarding_title3),
+            description = stringResource(R.string.on_boarding_description3),
             image = painterResource(R.drawable.tudee_onboarding_3),
         )
     )
@@ -71,7 +73,7 @@ fun OnBoardingScreen(
         onBoardingPageUiModels = onboardingOnBoardingPageUiModels,
         orientation = orientation,
         navController = navController,
-    )
+        )
 }
 
 @Composable
@@ -81,8 +83,10 @@ private fun OnBoardingContent(
     pageState: PagerState,
     scope: CoroutineScope,
     navController: NavController,
+    viewModel: OnBoardingViewModel = viewModel(),
     orientation: Int,
-) {
+
+    ) {
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -104,7 +108,7 @@ private fun OnBoardingContent(
         Image(
             modifier = Modifier.align(alignment = Alignment.TopEnd),
             painter = painterResource(R.drawable.background_ellipse),
-            contentDescription = R.string.back_ground_ellipse.toString()
+            contentDescription = stringResource(R.string.back_ground_ellipse)
         )
         HorizontalPager(
             modifier = modifier
@@ -115,19 +119,21 @@ private fun OnBoardingContent(
             OnBoardingPage(
                 orientation = (orientation == Configuration.ORIENTATION_PORTRAIT),
                 modifier = Modifier.align(alignment = Alignment.Center),
-                currentPage = pageState.currentPage,
                 onBoardingPageUiModel = onBoardingPageUiModels[index],
                 onClick = {
                     scope.launch {
-                        if (pageState.currentPage < onBoardingPageUiModels.lastIndex) {
+                        if (pageState.currentPage != onBoardingPageUiModels.lastIndex) {
                             pageState.animateScrollToPage(pageState.currentPage + Pages.SecondPage.page)
+                        } else {
+                            navController.navigate(Destination.HomeScreen.route)
+                            viewModel.saveFirstEntry()
                         }
                     }
                 }
             )
         }
         BottomPageIndicator(
-            OnBoardingPageUiModels = onBoardingPageUiModels,
+            onBoardingPageUiModels = onBoardingPageUiModels,
             pageNumber = pageState.currentPage,
             modifier = Modifier
                 .align(alignment = Alignment.BottomCenter)
