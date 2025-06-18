@@ -12,4 +12,7 @@
     <string name="you_ve_completed_3_out_of_10_tasks_keep_going">لقد أنجزت 3 من أصل 10 مهام، واصل التقدم!</string>
 
     <string name="back_button">زر العودة</string>
+    <string name="status_in_progress">قيد التنفيذ</string>
+    <string name="status_to_do">قائمة المهام</string>
+    <string name="status_done">مكتمل</string>
 </resources>
