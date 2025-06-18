@@ -15,6 +15,11 @@
 
     <string name="back_button">زر العودة</string>
 
+    <!--    content description -->
+    <string name="switch_sun_icon_content_description">شمس</string>
+    <string name="switch_moon_icon_content_description">قمر</string>
+    <string name="switch_stars_icon_content_description">نجوم</string>
+
     // ON BOARDING SCREEN
     <string name="on_boarding_title1">هل تشعر بالإرهاق بسبب كثرة المهام؟</string>
     <string name="on_boarding_title2">آه لا! هل تؤجل المهام مرة أخرى؟</string>
