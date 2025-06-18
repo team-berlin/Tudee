@@ -79,13 +79,12 @@ fun OnBoardingScreen(
 @Composable
 private fun OnBoardingContent(
     modifier: Modifier = Modifier,
+    viewModel: OnBoardingViewModel = viewModel(),
     onBoardingPageUiModels: List<OnBoardingPageUiModel>,
     pageState: PagerState,
     scope: CoroutineScope,
     navController: NavController,
-    viewModel: OnBoardingViewModel = viewModel(),
     orientation: Int,
-
     ) {
     Box(
         modifier = modifier

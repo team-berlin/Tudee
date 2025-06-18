@@ -118,12 +118,11 @@ private fun OnBoardingPageContent(
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_double_arrow),
-                    contentDescription = "Double arrow Icon",
+                    contentDescription = stringResource(R.string.double_arrow_icon),
                 )
             }
         }
     }
-
 
 @Composable
 @PreviewLightDark
