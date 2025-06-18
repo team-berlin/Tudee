@@ -14,5 +14,21 @@
     <string name="you_ve_completed_3_out_of_10_tasks_keep_going">لقد أنجزت 3 من أصل 10 مهام، واصل التقدم!</string>
 
     <string name="back_button">زر العودة</string>
-</resources>
 
+
+        <!-- Task Status -->
+        <string name="todo">قيد التنفيذ</string>
+        <string name="in_progress">جارٍ العمل</string>
+        <string name="done">منجز</string>
+
+        <!-- Task Priority -->
+        <string name="low">منخفض</string>
+        <string name="medium">متوسط</string>
+        <string name="high">مرتفع</string>
+
+    <string name="task_deleted_success">تم حذف المهمة بنجاح.</string>
+
+    <string name="no_tasks">لا توجد مهام هنا!</string>
+    <string name="add_first_task_hint">اضغط على زر + لإضافة أول مهمة.</string>
+
+</resources>
