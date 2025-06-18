@@ -14,5 +14,10 @@
     <string name="you_ve_completed_3_out_of_10_tasks_keep_going">لقد أنجزت 3 من أصل 10 مهام، واصل التقدم!</string>
 
     <string name="back_button">زر العودة</string>
+
+    <!--    content description -->
+    <string name="switch_sun_icon">شمس</string>
+    <string name="switch_moon_icon">قمر</string>
+    <string name="switch_stars_icon">نجوم</string>
 </resources>
 
