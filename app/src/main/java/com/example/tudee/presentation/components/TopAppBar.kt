@@ -45,17 +45,17 @@ fun TopAppBar(
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         if (showBackButton) IconButton(onClick = onBackButtonClicked) {
-            Box(
-                modifier = Modifier
-                    .size(40.dp)
-                    .border(
-                        1.dp, TudeeTheme.color.stroke, RoundedCornerShape(100.dp)
-                    ),
-                contentAlignment = Alignment.Center,
-            ) {
+            Box(contentAlignment = Alignment.Center) {
                 Icon(
+                    modifier = Modifier
+                        .border(
+                            1.dp, TudeeTheme.color.stroke, RoundedCornerShape(100.dp)
+                        )
+                        .padding(10.dp)
+                        .size(20.dp),
                     painter = painterResource(R.drawable.arrow_left),
                     contentDescription = stringResource(R.string.back_button),
+                    tint = TudeeTheme.color.textColors.body
                 )
             }
         }
@@ -68,7 +68,6 @@ fun TopAppBar(
         }
 
         Spacer(modifier = Modifier.weight(1f))
-
         trailingComposable?.invoke()
     }
 }
@@ -80,10 +79,17 @@ private fun BackButtonPreview() {
         TopAppBar(
             title = "Tasks", trailingComposable = {
                 Icon(
-                    Icons.Default.Settings,
-                    contentDescription = "Settings",
-                    modifier = Modifier.size(40.dp)
+                    modifier = Modifier
+                        .border(
+                            1.dp, TudeeTheme.color.stroke, RoundedCornerShape(100.dp)
+                        )
+                        .padding(10.dp)
+                        .size(20.dp),
+                    painter = painterResource(R.drawable.filter_icon),
+                    contentDescription = stringResource(R.string.back_button),
+                    tint = TudeeTheme.color.textColors.body
                 )
-            })
+            }
+        )
     }
 }
