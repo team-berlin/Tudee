@@ -1,13 +1,23 @@
 package com.example.tudee.presentation.categories.mapper
 
+import com.example.tudee.R
 import com.example.tudee.domain.entity.TaskCategory
 import com.example.tudee.presentation.categories.model.TaskCategoryUiModel
+import com.example.tudee.presentation.categories.model.UiImage
 
 fun TaskCategory.toUiModel(count: Int = 0): TaskCategoryUiModel {
+    val uiImage: UiImage = if (isPredefined) {
+        // Safe fallback if key not found
+        val resId = R.drawable.tudee //handle predefined categories
+        UiImage.Drawable(resId)
+    } else {
+        UiImage.Url(image)
+    }
+
     return TaskCategoryUiModel(
         id = id,
         name = title,
-        iconResId = image,
+        iconResId = uiImage,
         count = count,
         isPredefined = isPredefined
     )
