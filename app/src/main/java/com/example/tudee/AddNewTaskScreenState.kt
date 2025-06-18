@@ -2,13 +2,19 @@ package com.example.tudee
 
 import com.example.tudee.domain.entity.TaskCategory
 import com.example.tudee.domain.entity.TaskPriority
-import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalDate
 
 data class AddNewTaskScreenState(
+    val showBottomSheet: Boolean = true,
     val taskTitle: String = "",
     val taskDescription: String = "",
-    val taskDueDate: LocalDateTime? = null,
+    val taskDueDate: LocalDate? = null,
     val selectedTaskPriority: TaskPriority? = null,
     val categories: List<TaskCategory> = emptyList(),
     val selectedCategoryId: Long? = null,
+    val taskPriorities: List<TaskPriority> = listOf(
+        TaskPriority.HIGH,
+        TaskPriority.MEDIUM,
+        TaskPriority.LOW
+    ),
 )

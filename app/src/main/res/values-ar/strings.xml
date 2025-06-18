@@ -20,5 +20,7 @@
     <string name="set_due_date">تاريخ الإنتهاء</string>
     <string name="priority">الأولوية</string>
     <string name="category">الفئة</string>
+    <string name="cancel">إلغاء</string>
+    <string name="add">إضافة</string>
 </resources>
 

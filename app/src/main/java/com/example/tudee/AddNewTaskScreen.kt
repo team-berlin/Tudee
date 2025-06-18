@@ -1,5 +1,7 @@
 package com.example.tudee
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -8,7 +10,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -23,22 +24,18 @@ import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tudee.designsystem.theme.TudeeTheme
-import com.example.tudee.domain.entity.TaskCategory
 import com.example.tudee.domain.entity.TaskPriority
+import com.example.tudee.domain.entity.TaskStatus
 import com.example.tudee.domain.request.TaskCreationRequest
 import com.example.tudee.presentation.components.CategoryComponent
 import com.example.tudee.presentation.components.DefaultLeadingContent
@@ -48,6 +45,8 @@ import com.example.tudee.presentation.composables.buttons.ButtonColors
 import com.example.tudee.presentation.composables.buttons.ButtonState
 import com.example.tudee.presentation.composables.buttons.DefaultButton
 import com.example.tudee.presentation.composables.buttons.PrimaryButton
+import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import org.koin.androidx.compose.koinViewModel
 
@@ -55,115 +54,84 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun AddNewTaskScreen() {
     val viewModel: AddNewTaskViewModel = koinViewModel()
-    val taskScreenUiState by viewModel.taskState.collectAsState()
+    val taskScreenUiState by viewModel.uiState.collectAsState()
 
     val addButtonState by viewModel.isTaskValid.collectAsState()
 
     AddNewTaskContent(
         taskState = taskScreenUiState,
-        addButtonState = addButtonState,
         onTaskTitleChanged = viewModel::onUpdateTaskTitle,
         onTaskDescriptionChanged = viewModel::onUpdateTaskDescription,
         onUpdateTaskDueDate = viewModel::onUpdateTaskDueDate,
         onUpdateTaskPriority = viewModel::onUpdateTaskPriority,
         onSelectTaskCategory = viewModel::onSelectTaskCategory,
+        addButtonState = addButtonState,
         onAddButtonClicked = viewModel::onAddClicked,
-        onCancelButtonClicked = viewModel::onCancelClicked,
+        onDismissBottomSheet = viewModel::onDismissBottomSheet,
     )
 }
 
 
-@Preview(showBackground = true, widthDp = 360, heightDp = 852)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddNewTaskContent(
-    showSheetState: MutableState<Boolean> = mutableStateOf(true),
-    taskState: AddNewTaskScreenState = AddNewTaskScreenState(
-        taskTitle = "Task",
-        taskDescription = "Desc",
-        taskDueDate = LocalDateTime(2023, 10, 1, 12, 0, 0),
-        selectedTaskPriority = TaskPriority.MEDIUM,
-        categories = listOf(
-            TaskCategory(
-                id = 1L,
-                title = "Education",
-                image = "ic_education",
-                isPredefined = true
-            ),
-            TaskCategory(
-                id = 2L,
-                title = "Work",
-                image = "ic_work",
-                isPredefined = true
-            ),
-        ),
-        selectedCategoryId = 12344L
-    ),
-    onTaskTitleChanged: (String) -> Unit = {},
-    onTaskDescriptionChanged: (String) -> Unit = {},
-    onUpdateTaskDueDate: (LocalDateTime) -> Unit = {},
-    onUpdateTaskPriority: (TaskPriority) -> Unit = {},
-    onSelectTaskCategory: (Long) -> Unit = {},
-    onAddButtonClicked: (TaskCreationRequest) -> Unit = {},
-    onCancelButtonClicked: () -> Unit = {},
-    addButtonState: Boolean = false,
+    taskState: AddNewTaskScreenState,
+    onTaskTitleChanged: (String) -> Unit,
+    onTaskDescriptionChanged: (String) -> Unit,
+    onUpdateTaskDueDate: (LocalDate) -> Unit,
+    onUpdateTaskPriority: (TaskPriority) -> Unit,
+    onSelectTaskCategory: (Long) -> Unit,
+    onAddButtonClicked: (TaskCreationRequest) -> Unit,
+    addButtonState: Boolean,
+    onDismissBottomSheet: () -> Unit,
 ) {
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true,
     )
-        if (showSheetState.value) {
-            ModalBottomSheet(
-                onDismissRequest = {
-                    showSheetState.value = false
-                },
-                sheetState = sheetState, // control the visibility of the sheet
-                shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
-                containerColor = TudeeTheme.color.surface,
-                modifier = Modifier.fillMaxHeight(fraction = 0.8f)
-            ) {
-                Box(
-//                    modifier = Modifier
-                ) {
-                    BottomSheetContent(
-                        taskState = taskState,
-                        onTaskTitleChanged = onTaskTitleChanged,
-                        onTaskDescriptionChanged = onTaskDescriptionChanged,
-                        onUpdateTaskDueDate = onUpdateTaskDueDate,
-                        onUpdateTaskPriority = onUpdateTaskPriority,
-                        onSelectTaskCategory = onSelectTaskCategory,
-                    )
-                    AddOrCancelButtons(
-                        modifier = Modifier.align(Alignment.BottomCenter),
-                        addButtonState = addButtonState,
-                        onAddButtonClicked,
-                        onCancelButtonClicked,
-                    )
-                }
+    val scope = rememberCoroutineScope()
+    if (taskState.showBottomSheet)
+        ModalBottomSheet(
+            onDismissRequest = onDismissBottomSheet,
+            sheetState = sheetState, // control the visibility of the sheet
+            shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
+            containerColor = TudeeTheme.color.surface,
+            modifier = Modifier.fillMaxHeight(fraction = 0.8f)
+        ) {
+            Box {
+                BottomSheetContent(
+                    taskState = taskState,
+                    onTaskTitleChanged = onTaskTitleChanged,
+                    onTaskDescriptionChanged = onTaskDescriptionChanged,
+                    onUpdateTaskDueDate = onUpdateTaskDueDate,
+                    onUpdateTaskPriority = onUpdateTaskPriority,
+                    onSelectTaskCategory = onSelectTaskCategory,
+                )
+                AddOrCancelButtons(
+                    modifier = Modifier.align(Alignment.BottomCenter),
+                    addButtonState = addButtonState,
+                    taskState = taskState,
+                    onAddButtonClicked = onAddButtonClicked,
+                    onCancelButtonClicked = onDismissBottomSheet
+                )
             }
         }
+    else {
+        LaunchedEffect(Unit) {
+            sheetState.hide()
+        }
     }
+
+}
 
 //@Preview(showBackground = true, widthDp = 360, heightDp = 852)
 @Composable
 fun BottomSheetContent(
-    taskState: AddNewTaskScreenState = AddNewTaskScreenState(
-        taskTitle = "Task",
-        taskDescription = "Desc",
-        taskDueDate = LocalDateTime(2023, 10, 1, 12, 0, 0),
-        selectedTaskPriority = TaskPriority.MEDIUM,
-        categories = emptyList(),
-        selectedCategoryId = 12344L
-    ),
-    onTaskTitleChanged: (String) -> Unit = {},
-    onTaskDescriptionChanged: (String) -> Unit = {},
-    onUpdateTaskDueDate: (LocalDateTime) -> Unit = {},
-    onUpdateTaskPriority: (TaskPriority) -> Unit = {},
-    onSelectTaskCategory: (Long) -> Unit = {},
-    priorities: List<TaskPriority> = listOf(
-        TaskPriority.HIGH,
-        TaskPriority.MEDIUM,
-        TaskPriority.LOW
-    ),
+    taskState: AddNewTaskScreenState,
+    onTaskTitleChanged: (String) -> Unit,
+    onTaskDescriptionChanged: (String) -> Unit,
+    onUpdateTaskDueDate: (LocalDate) -> Unit,
+    onUpdateTaskPriority: (TaskPriority) -> Unit,
+    onSelectTaskCategory: (Long) -> Unit,
 ) {
     LazyColumn(
         modifier = Modifier
@@ -199,7 +167,7 @@ fun BottomSheetContent(
         }
         item {
             TudeeTextField(
-                value = taskState.taskDueDate?.date.toString(),
+                value = "2024, 1, 1",
                 onValueChange = {},
                 leadingContent = { isFocused ->
                     DefaultLeadingContent(
@@ -223,7 +191,7 @@ fun BottomSheetContent(
                 modifier = Modifier,
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                priorities.forEach { taskPriority ->
+                taskState.taskPriorities.forEach { taskPriority ->
                     val isSelected: Boolean = taskState.selectedTaskPriority == taskPriority
                     TudeeChip(
                         label = taskPriority.name,
@@ -258,16 +226,15 @@ fun BottomSheetContent(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
-                items(9) { category ->
+                items(taskState.categories) { category ->
                     CategoryComponent(
                         modifier = Modifier.clickable {
-//                            onSelectTaskCategory(category.id)
+                            onSelectTaskCategory(category.id)
                         },
                         categoryPainter = painterResource(R.drawable.ic_education),
                         categoryImageContentDescription = "Education Category",
                         categoryName = "Education",
-//                        showCheckedIcon = category.id == taskState.selectedCategoryId,
-                        showCheckedIcon = true
+                        showCheckedIcon = category.id == taskState.selectedCategoryId,
                     )
                 }
             }
@@ -276,12 +243,12 @@ fun BottomSheetContent(
 }
 
 @Composable
-@Preview(showBackground = true)
 fun AddOrCancelButtons(
     modifier: Modifier = Modifier,
-    addButtonState: Boolean = true,
-    onAddButtonClicked: (TaskCreationRequest) -> Unit = {},
-    onCancelButtonClicked: () -> Unit = {},
+    taskState: AddNewTaskScreenState,
+    addButtonState: Boolean,
+    onAddButtonClicked: (TaskCreationRequest) -> Unit,
+    onCancelButtonClicked: () -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -290,21 +257,36 @@ fun AddOrCancelButtons(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         PrimaryButton(
-            onClick = {},
+            onClick = {
+                onAddButtonClicked(
+                    taskState.run {
+                        TaskCreationRequest(
+                            title = taskTitle,
+                            description = taskDescription,
+                            priority = selectedTaskPriority!!,
+                            categoryId = selectedCategoryId!!,
+                            status = TaskStatus.TODO,
+                            assignedDate = LocalDate(2024, 1, 1)
+                        )
+                    }
+                )
+                Log.d("MEME", "Add Task Button state = Task added Successfully")
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
             state = if (addButtonState) ButtonState.IDLE else ButtonState.DISABLED,
         ) {
             Text(
-                text = "Add",
+                text = stringResource(R.string.add),
                 style = TudeeTheme.textStyle.label.large,
                 color = TudeeTheme.color.textColors.onPrimary
             )
         }
         DefaultButton(
-            onClick = {},
-            enabled = false,
+            onClick = onCancelButtonClicked,
+            enabled = true,
+            state = ButtonState.IDLE,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
@@ -315,7 +297,7 @@ fun AddOrCancelButtons(
             colors = ButtonColors(backgroundColor = TudeeTheme.color.surfaceHigh)
         ) {
             Text(
-                text = "Cancel",
+                text = stringResource(R.string.cancel),
                 style = TudeeTheme.textStyle.label.large,
                 color = TudeeTheme.color.primary
             )

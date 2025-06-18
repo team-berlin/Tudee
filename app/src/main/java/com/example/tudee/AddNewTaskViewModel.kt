@@ -2,6 +2,7 @@ package com.example.tudee
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.tudee.domain.TaskCategoryService
 import com.example.tudee.domain.TaskService
 import com.example.tudee.domain.entity.TaskPriority
 import com.example.tudee.domain.request.TaskCreationRequest
@@ -11,17 +12,20 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.datetime.LocalDateTime
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDate
 
 class AddNewTaskViewModel(
-//    taskService: TaskService,
+    private val taskService: TaskService,
+    private val categoryService: TaskCategoryService,
 ) : ViewModel() {
 
-    private val _taskState: MutableStateFlow<AddNewTaskScreenState> =
+    private val _uiState: MutableStateFlow<AddNewTaskScreenState> =
         MutableStateFlow(AddNewTaskScreenState())
-    val taskState: StateFlow<AddNewTaskScreenState> = _taskState.asStateFlow()
+    val uiState: StateFlow<AddNewTaskScreenState> = _uiState.asStateFlow()
 
-    val isTaskValid: StateFlow<Boolean> = _taskState
+    val isTaskValid: StateFlow<Boolean> = _uiState
         .map { state ->
             state.taskTitle.isNotBlank() &&
                     state.taskDescription.isNotBlank() &&
@@ -33,42 +37,72 @@ class AddNewTaskViewModel(
             initialValue = false
         )
 
+    init {
+        observeCategories()
+    }
+
+    private fun observeCategories() {
+        viewModelScope.launch {
+            categoryService.getCategories()
+                .collect { list ->
+                    _uiState.update { it.copy(categories = list) }
+                }
+        }
+    }
+
+
     fun onUpdateTaskTitle(newTitle: String) {
-        _taskState.value = _taskState.value.copy(
-            taskTitle = newTitle,
-        )
+        _uiState.update {
+            it.copy(
+                taskTitle = newTitle,
+            )
+        }
     }
 
     fun onUpdateTaskDescription(newDescription: String) {
-        _taskState.value = _taskState.value.copy(
-            taskDescription = newDescription,
-        )
+        _uiState.update {
+            it.copy(
+                taskDescription = newDescription,
+            )
+        }
     }
 
-    fun onUpdateTaskDueDate(newDueDate: LocalDateTime) {
-        _taskState.value = _taskState.value.copy(
-            taskDueDate = newDueDate,
-        )
+    fun onUpdateTaskDueDate(newDueDate: LocalDate) {
+        _uiState.update {
+            it.copy(
+                taskDueDate = newDueDate,
+            )
+        }
     }
 
     fun onUpdateTaskPriority(newPriority: TaskPriority) {
-        _taskState.value = _taskState.value.copy(
-            selectedTaskPriority = newPriority
-        )
+        _uiState.update {
+            it.copy(
+                selectedTaskPriority = newPriority
+            )
+        }
     }
 
     fun onSelectTaskCategory(selectedCategoryID: Long) {
-        _taskState.value = _taskState.value.copy(
-            selectedCategoryId = selectedCategoryID
-        )
+        _uiState.update {
+            it.copy(
+                selectedCategoryId = selectedCategoryID
+            )
+        }
     }
 
     fun onAddClicked(taskCreationRequest: TaskCreationRequest) {
-
+        viewModelScope.launch {
+            taskService.createTask(taskCreationRequest)
+        }
     }
 
-    fun onCancelClicked() {
-
+    fun onDismissBottomSheet() {
+        _uiState.update {
+            it.copy(
+                showBottomSheet = false
+            )
+        }
     }
 
 
