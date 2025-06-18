@@ -1,4 +1,4 @@
-package com.example.tudee.presentation.screens.home.components
+package com.example.tudee.presentation.home.components
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
@@ -11,6 +11,8 @@ import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.domain.entity.Task
 import com.example.tudee.domain.entity.TaskPriority
 import com.example.tudee.domain.entity.TaskStatus
+import com.example.tudee.presentation.screens.home.components.TaskList
+import com.example.tudee.presentation.screens.home.components.TitleSection
 import kotlinx.datetime.LocalDate
 
 

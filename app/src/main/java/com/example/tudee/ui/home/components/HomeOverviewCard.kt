@@ -40,7 +40,6 @@ fun HomeOverviewCard(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp)
             .background(color = TudeeTheme.color.surfaceHigh, shape = RoundedCornerShape(16.dp))
     ) {
         Row(
