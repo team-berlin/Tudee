@@ -1,7 +1,6 @@
 package com.example.tudee
 
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -47,7 +46,6 @@ import com.example.tudee.presentation.composables.buttons.DefaultButton
 import com.example.tudee.presentation.composables.buttons.PrimaryButton
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalDateTime
 import org.koin.androidx.compose.koinViewModel
 
 
