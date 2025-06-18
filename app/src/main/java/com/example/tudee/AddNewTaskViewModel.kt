@@ -1,5 +1,6 @@
 package com.example.tudee
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tudee.domain.TaskCategoryService
@@ -45,6 +46,7 @@ class AddNewTaskViewModel(
         viewModelScope.launch {
             categoryService.getCategories()
                 .collect { list ->
+                    Log.d("MEME", "Category: ${list.toString()}")
                     _uiState.update { it.copy(categories = list) }
                 }
         }

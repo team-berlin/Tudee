@@ -89,7 +89,14 @@ fun AddNewTaskContent(
         skipPartiallyExpanded = true,
     )
     val scope = rememberCoroutineScope()
-    if (taskState.showBottomSheet)
+    // Animate show/hide of the sheet
+    LaunchedEffect(taskState.showBottomSheet) {
+        if (taskState.showBottomSheet)
+            sheetState.show()
+        else
+            sheetState.hide()
+    }
+    if (taskState.showBottomSheet || sheetState.currentValue != SheetValue.Hidden)
         ModalBottomSheet(
             onDismissRequest = onDismissBottomSheet,
             sheetState = sheetState, // control the visibility of the sheet
@@ -111,15 +118,14 @@ fun AddNewTaskContent(
                     addButtonState = addButtonState,
                     taskState = taskState,
                     onAddButtonClicked = onAddButtonClicked,
-                    onCancelButtonClicked = onDismissBottomSheet
-                )
+                    onCancelButtonClicked = {
+                        scope.launch {
+                            sheetState.hide()
+                            onDismissBottomSheet()
+                        }
+                    })
             }
         }
-    else {
-        LaunchedEffect(Unit) {
-            sheetState.hide()
-        }
-    }
 
 }
 
@@ -226,15 +232,16 @@ fun BottomSheetContent(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
-                items(taskState.categories) { category ->
+                items(taskState.categories) {
+                    Log.d("MEME", "Category: ${it.toString()}")
                     CategoryComponent(
                         modifier = Modifier.clickable {
-                            onSelectTaskCategory(category.id)
+                            onSelectTaskCategory(it.id)
                         },
                         categoryPainter = painterResource(R.drawable.ic_education),
                         categoryImageContentDescription = "Education Category",
                         categoryName = "Education",
-                        showCheckedIcon = category.id == taskState.selectedCategoryId,
+                        showCheckedIcon = it.id == taskState.selectedCategoryId,
                     )
                 }
             }
