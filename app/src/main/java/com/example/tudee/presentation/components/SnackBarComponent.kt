@@ -40,7 +40,7 @@ fun SnackBarComponent(
                 shape = RoundedCornerShape(16.dp),
                 spotColor = shadowColor
             )
-            .background(TudeeTheme.color.textColors.surfaceHigh, RoundedCornerShape(16.dp))
+            .background(TudeeTheme.color.surfaceHigh, RoundedCornerShape(16.dp))
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
