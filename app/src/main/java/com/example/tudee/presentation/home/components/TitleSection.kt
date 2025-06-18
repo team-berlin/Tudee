@@ -88,7 +88,7 @@ fun TitleSection(
 private fun TitleSectionPreview() {
     TudeeTheme {
         TitleSection(
-            statusTitle = stringResource(R.string.status_in_progress),
+            statusTitle = stringResource(R.string.in_progress),
             numberOfElement = "12",
             onClick = {}
         )
