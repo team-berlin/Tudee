@@ -44,7 +44,7 @@ fun NavBar(
     backgroundColor: Color = TudeeTheme.color.surfaceHigh,
     selectedItemBackgroundColor: Color = TudeeTheme.color.primaryVariant,
     activeIconColor: Color = TudeeTheme.color.primary,
-    inactiveIconColor: Color = Color.Unspecified,
+    inactiveIconColor: Color = TudeeTheme.color.textColors.hint,
     shadowColor: Color = Color(0x14000000),
     rippleColor: Color = TudeeTheme.color.surfaceHigh,
 ) {
