@@ -23,23 +23,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
+import com.example.tudee.domain.entity.TaskPriority
+import com.example.tudee.domain.entity.TaskStatus
 import com.example.tudee.presentation.composables.buttons.SecondaryButton
 import com.example.tudee.presentation.components.TudeeChip
 import com.example.tudee.presentation.viewmodel.taskuistate.TaskDetailsUiState
-import com.example.tudee.presentation.utils.Constant.CATEGORY_ICON_DESC
-import com.example.tudee.presentation.utils.Constant.EDIT_ICON_DESC
-import com.example.tudee.presentation.utils.Constant.MOVE_TO_DONE
-import com.example.tudee.presentation.utils.Constant.PRIORITY_HIGH
-import com.example.tudee.presentation.utils.Constant.PRIORITY_LOW
-import com.example.tudee.presentation.utils.Constant.PRIORITY_MEDIUM
-import com.example.tudee.presentation.utils.Constant.STATUS_DONE
-import com.example.tudee.presentation.utils.Constant.STATUS_IN_PROGRESS
-import com.example.tudee.presentation.utils.Constant.STATUS_TODO
-import com.example.tudee.presentation.utils.Constant.TASK_DETAILS
 
 @Composable
 fun TaskDetailsScreen(taskDetailsState: TaskDetailsUiState) {
@@ -58,7 +51,7 @@ fun TaskDetailsScreen(taskDetailsState: TaskDetailsUiState) {
             status = taskDetailsState.status,
             priority = taskDetailsState.priority
         )
-        if (taskDetailsState.status.lowercase() != STATUS_DONE) {
+        if (taskDetailsState.status != TaskStatus.DONE) {
             TaskActionButtons()
         }
     }
@@ -67,7 +60,7 @@ fun TaskDetailsScreen(taskDetailsState: TaskDetailsUiState) {
 @Composable
 private fun TaskDetailsHeader() {
     Text(
-        text = TASK_DETAILS,
+        text = stringResource(R.string.task_details),
         style = TudeeTheme.textStyle.title.large.copy(color = TudeeTheme.color.textColors.title)
     )
 }
@@ -83,7 +76,7 @@ private fun TaskCategoryIcon(categoryIconRes: Int) {
     ) {
         Icon(
             painter = painterResource(id = categoryIconRes),
-            contentDescription = CATEGORY_ICON_DESC,
+            contentDescription = stringResource(R.string.category_icon),
             modifier = Modifier.size(32.dp),
             tint = Color.Unspecified
         )
@@ -97,17 +90,17 @@ private fun TaskTitleAndDescription(title: String, description: String) {
 }
 
 @Composable
-private fun TaskStatusAndPriorityChips(status: String, priority: String) {
+private fun TaskStatusAndPriorityChips(status: TaskStatus, priority: TaskPriority) {
     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
         TudeeChip(
-            label = status,
+            label = status.name.lowercase().replaceFirstChar { it.uppercase() },
             icon = painterResource(id = R.drawable.ic_task_status),
             backgroundColor = getStatusLabelColor(status),
             labelColor = getStatusColor(status),
             iconSize = 5.dp
         )
         TudeeChip(
-            label = priority,
+            label = priority.name.lowercase().replaceFirstChar { it.uppercase() },
             icon = painterResource(getPriorityIcon(priority)),
             backgroundColor = getPriorityColor(priority),
             labelColor = TudeeTheme.color.textColors.onPrimary
@@ -124,14 +117,14 @@ private fun TaskActionButtons() {
         IconFab(
             onClick = {},
             icon = painterResource(R.drawable.pencil_edit),
-            contentDescription = EDIT_ICON_DESC
+            contentDescription = stringResource(R.string.edit_icon)
         )
         SecondaryButton(
             onClick = {},
             modifier = Modifier.weight(1f),
             content = {
                 Text(
-                    text = MOVE_TO_DONE,
+                    text = stringResource(R.string.move_to_done),
                     style = TudeeTheme.textStyle.label.large
                 )
             }
@@ -156,7 +149,7 @@ fun IconFab(
                 shape = RoundedCornerShape(100.dp)
             )
             .clickable(onClick = onClick)
-            .padding(start = 24.dp, end = 24.dp, top = 8.dp, bottom = 8.dp),
+            .padding(horizontal = 24.dp, vertical = 8.dp),
         contentAlignment = Alignment.Center
     ) {
         Icon(
@@ -168,42 +161,38 @@ fun IconFab(
     }
 }
 
-private fun getPriorityIcon(priority: String): Int {
-    return when (priority.lowercase()) {
-        PRIORITY_HIGH -> R.drawable.ic_priority_high
-        PRIORITY_MEDIUM -> R.drawable.ic_priority_medium
-        PRIORITY_LOW -> R.drawable.ic_priority_low
-        else -> R.drawable.ic_priority_low
+private fun getPriorityIcon(priority: TaskPriority): Int {
+    return when (priority) {
+        TaskPriority.HIGH -> R.drawable.ic_priority_high
+        TaskPriority.MEDIUM -> R.drawable.ic_priority_medium
+        TaskPriority.LOW -> R.drawable.ic_priority_low
     }
 }
 
 @Composable
-private fun getPriorityColor(priority: String): Color {
-    return when (priority.lowercase()) {
-        PRIORITY_HIGH -> TudeeTheme.color.statusColors.pinkAccent
-        PRIORITY_MEDIUM -> TudeeTheme.color.statusColors.yellowAccent
-        PRIORITY_LOW -> TudeeTheme.color.statusColors.greenAccent
-        else -> TudeeTheme.color.statusColors.greenAccent
+private fun getPriorityColor(priority: TaskPriority): Color {
+    return when (priority) {
+        TaskPriority.HIGH -> TudeeTheme.color.statusColors.pinkAccent
+        TaskPriority.MEDIUM -> TudeeTheme.color.statusColors.yellowAccent
+        TaskPriority.LOW -> TudeeTheme.color.statusColors.greenAccent
     }
 }
 
 @Composable
-private fun getStatusColor(status: String): Color {
-    return when (status.lowercase()) {
-        STATUS_TODO -> TudeeTheme.color.statusColors.yellowAccent
-        STATUS_IN_PROGRESS -> TudeeTheme.color.statusColors.purpleAccent
-        STATUS_DONE -> TudeeTheme.color.statusColors.greenAccent
-        else -> TudeeTheme.color.statusColors.yellowAccent
+private fun getStatusColor(status: TaskStatus): Color {
+    return when (status) {
+        TaskStatus.TODO -> TudeeTheme.color.statusColors.yellowAccent
+        TaskStatus.IN_PROGRESS -> TudeeTheme.color.statusColors.purpleAccent
+        TaskStatus.DONE -> TudeeTheme.color.statusColors.greenAccent
     }
 }
 
 @Composable
-private fun getStatusLabelColor(status: String): Color {
-    return when (status.lowercase()) {
-        STATUS_TODO -> TudeeTheme.color.statusColors.yellowVariant
-        STATUS_IN_PROGRESS -> TudeeTheme.color.statusColors.purpleVariant
-        STATUS_DONE -> TudeeTheme.color.statusColors.greenVariant
-        else -> TudeeTheme.color.statusColors.yellowVariant
+private fun getStatusLabelColor(status: TaskStatus): Color {
+    return when (status) {
+        TaskStatus.TODO -> TudeeTheme.color.statusColors.yellowVariant
+        TaskStatus.IN_PROGRESS -> TudeeTheme.color.statusColors.purpleVariant
+        TaskStatus.DONE -> TudeeTheme.color.statusColors.greenVariant
     }
 }
 
@@ -216,8 +205,8 @@ fun TaskDetailsScreenPreview() {
             title = "Study Jetpack Compose",
             description = "Finish the layout chapter and preview tips",
             categoryIconRes = R.drawable.ic_category_book_open,
-            priority = PRIORITY_HIGH,
-            status = STATUS_IN_PROGRESS,
+            priority = TaskPriority.HIGH,
+            status = TaskStatus.IN_PROGRESS,
         )
         TaskDetailsScreen(sampleTask)
     }
