@@ -27,6 +27,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.designsystem.theme.textstyle.TudeeTextStyle
+import com.example.tudee.naviagtion.Destination
 import com.example.tudee.presentation.components.BottomPageIndicator
 import com.example.tudee.presentation.components.OnBoardingPage
 import kotlinx.coroutines.CoroutineScope
@@ -68,7 +69,8 @@ fun OnBoardingScreen(
         pageState = onBoardingPageState,
         scope = coroutineScope,
         onBoardingPageUiModels = onboardingOnBoardingPageUiModels,
-        orientation = orientation
+        orientation = orientation,
+        navController = navController,
     )
 }
 
@@ -78,6 +80,7 @@ private fun OnBoardingContent(
     onBoardingPageUiModels: List<OnBoardingPageUiModel>,
     pageState: PagerState,
     scope: CoroutineScope,
+    navController: NavController,
     orientation: Int,
 ) {
     Box(
@@ -89,7 +92,7 @@ private fun OnBoardingContent(
         if (pageState.currentPage != Pages.ThirdPage.page)
             TextButton(
                 modifier = Modifier.align(alignment = Alignment.TopStart),
-                onClick = { /* TODO NAVIGATE TO HOME SCREEN */ },
+                onClick = { navController.navigate(Destination.HomeScreen.route) },
             ) {
                 Text(
                     stringResource(R.string.skip_button),
@@ -101,7 +104,7 @@ private fun OnBoardingContent(
         Image(
             modifier = Modifier.align(alignment = Alignment.TopEnd),
             painter = painterResource(R.drawable.background_ellipse),
-            contentDescription = "Back ground ellipse"
+            contentDescription = R.string.back_ground_ellipse.toString()
         )
         HorizontalPager(
             modifier = modifier
