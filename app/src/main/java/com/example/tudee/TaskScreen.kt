@@ -50,89 +50,22 @@ import kotlinx.datetime.LocalDate
 import org.koin.androidx.compose.koinViewModel
 
 
+// Sealed class for screen selection
+sealed class TaskScreenSelected {
+    object AddScreen : TaskScreenSelected()
+    object EditScreen : TaskScreenSelected()
+}
+
 @Composable
-fun TaskScreen() {
-    val viewModel: TaskViewModel = koinViewModel()
-    val taskScreenUiState by viewModel.uiState.collectAsState()
-    val isEditMode by viewModel.isEditMode.collectAsState()
-    val addButtonState by viewModel.isTaskValid.collectAsState()
-    val scope = rememberCoroutineScope()
-
-    // Use buttons to trigger Add or Edit mode
-    Column(modifier = Modifier.padding(50.dp)) {
-        // Test Add Button
-        Button(
-            onClick = {
-                Log.d("TaskScreen", "Add button clicked at 07:12 PM EEST, June 18, 2025")
-                viewModel.setEditMode(false) // Show Add screen with default values
-                scope.launch {
-                    // Simulate saving with default values
-                    val taskCreationRequest = taskScreenUiState.run {
-                        TaskCreationRequest(
-                            title = taskTitle,
-                            description = taskDescription,
-                            priority = selectedTaskPriority ?: TaskPriority.MEDIUM,
-                            categoryId = selectedCategoryId ?: 1L,
-                            status = TaskStatus.TODO,
-                            assignedDate = taskDueDate ?: LocalDate(2024, 1, 1)
-                        )
-                    }
-                    viewModel.onAddOrSaveClicked(taskCreationRequest)
-                }
-            },
-            modifier = Modifier.fillMaxWidth(),
-            enabled = true
-        ) {
-            Text("Test Add Task", color = TudeeTheme.color.textColors.onPrimary)
-        }
-
-        // Test Edit Button
-        Button(
-            onClick = {
-                Log.d("TaskScreen", "Edit button clicked at 07:12 PM EEST, June 18, 2025")
-                viewModel.onUpdateTaskTitle("Edite")
-                viewModel.onUpdateTaskDescription("Edite")
-                viewModel.onUpdateTaskPriority(TaskPriority.MEDIUM)
-                viewModel.onSelectTaskCategory(1L)
-                viewModel.onUpdateTaskDueDate(LocalDate(2024, 1, 1))
-                viewModel.setEditMode(true, 1L) // Show Edit screen with pre-filled "Edite" values
-                scope.launch {
-                    // Simulate saving with pre-filled values
-                    val taskCreationRequest = taskScreenUiState.run {
-                        TaskCreationRequest(
-                            title = taskTitle,
-                            description = taskDescription,
-                            priority = selectedTaskPriority ?: TaskPriority.MEDIUM,
-                            categoryId = selectedCategoryId ?: 1L,
-                            status = TaskStatus.TODO,
-                            assignedDate = taskDueDate ?: LocalDate(2024, 1, 1)
-                        )
-                    }
-                    viewModel.onAddOrSaveClicked(taskCreationRequest)
-                }
-            },
-            modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
-            enabled = true
-        ) {
-            Text("Test Edit Task", color = TudeeTheme.color.textColors.onPrimary)
-        }
-
-        // Render the TaskContent
-        TaskContent(
-            taskState = taskScreenUiState,
-            onTaskTitleChanged = viewModel::onUpdateTaskTitle,
-            onTaskDescriptionChanged = viewModel::onUpdateTaskDescription,
-            onUpdateTaskDueDate = viewModel::onUpdateTaskDueDate,
-            onUpdateTaskPriority = viewModel::onUpdateTaskPriority,
-            onSelectTaskCategory = viewModel::onSelectTaskCategory,
-            addButtonState = addButtonState,
-            onAddOrSaveButtonClicked = viewModel::onAddOrSaveClicked,
-            onDismissBottomSheet = viewModel::onDismissBottomSheet,
-            isEditMode = isEditMode,
-            setEditMode = viewModel::setEditMode,
-        )
+fun TaskScreen(selectedScreen: TaskScreenSelected) {
+    when (selectedScreen) {
+        is TaskScreenSelected.AddScreen -> AddScreen()
+        is TaskScreenSelected.EditScreen -> EditScreen()
     }
 }
+
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskContent(
@@ -146,7 +79,6 @@ fun TaskContent(
     onAddOrSaveButtonClicked: (TaskCreationRequest) -> Unit,
     onDismissBottomSheet: () -> Unit,
     isEditMode: Boolean,
-    setEditMode: (Boolean, Long?) -> Unit, // Updated to accept taskId
 ) {
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true,
@@ -154,7 +86,6 @@ fun TaskContent(
     val scope = rememberCoroutineScope()
 
 
-    // Animate show/hide of the sheet
     LaunchedEffect(taskState.showBottomSheet) {
         if (taskState.showBottomSheet)
             sheetState.show()
@@ -194,7 +125,6 @@ fun TaskContent(
             }
         }
 }
-//@Preview(showBackground = true, widthDp = 360, heightDp = 852)
 @Composable
 fun BottomSheetContent(
     taskState: TaskScreenState,
