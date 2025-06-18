@@ -1,13 +1,12 @@
 package com.example.tudee.presentation.screen.task_screen
 
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tudee.R
-import com.example.tudee.data.model.TaskCategoryEntity
 import com.example.tudee.domain.TaskService
 import com.example.tudee.domain.entity.Task
-import com.example.tudee.domain.entity.TaskCategory
 import com.example.tudee.domain.entity.TaskPriority
 import com.example.tudee.domain.entity.TaskStatus
 import com.example.tudee.presentation.components.TabBarItem
@@ -24,7 +23,6 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDate
 import kotlinx.datetime.toLocalDateTime
-import java.time.ZoneId
 
 class TasksScreenViewModel(
     private val taskService: TaskService
@@ -62,19 +60,16 @@ class TasksScreenViewModel(
                 )
             )
         }
-        viewModelScope.launch {
-            delay(500)
-            _taskScreenUiState.update { state ->
-                state.copy(
-                    listOfTasksUiState = state.listOfTasksUiState.filterNot { it.id == state.idOfTaskToBeDeleted },
-                    isBottomSheetVisible = false,
-                    deleteBottomSheetUiState = state.deleteBottomSheetUiState.copy(
-                        deleteButtonState = ButtonState.IDLE
-                    )
+        _taskScreenUiState.update { state ->
+            state.copy(
+                listOfTasksUiState = state.listOfTasksUiState.filterNot { it.id == state.idOfTaskToBeDeleted },
+                isBottomSheetVisible = false,
+                deleteBottomSheetUiState = state.deleteBottomSheetUiState.copy(
+                    deleteButtonState = ButtonState.IDLE
                 )
-            }
-            onSnackBarShown()
+            )
         }
+        showSnackBar()
 
     }
 
@@ -86,7 +81,9 @@ class TasksScreenViewModel(
 
     override fun onBottomSheetDismissed() {
         _taskScreenUiState.update {
-            viewModelScope.launch { delay(400) }
+            viewModelScope.launch {
+                delay(400)
+            }
             it.copy(isBottomSheetVisible = false)
         }
     }
@@ -126,6 +123,7 @@ class TasksScreenViewModel(
                 )
             }
     }
+
     override fun onDismissDatePicker() {
         _taskScreenUiState.update {
             it.copy(
@@ -143,21 +141,24 @@ class TasksScreenViewModel(
 
         _taskScreenUiState.update {
             it.copy(
-                datePickerUiState = it.datePickerUiState.copy(isVisible = false, selectedDate = date))
+                datePickerUiState = it.datePickerUiState.copy(
+                    isVisible = false,
+                    selectedDate = date
+                )
+            )
         }
 
     }
 
-    suspend fun onSnackBarShown() {
+    fun showSnackBar() {
         _taskScreenUiState.update {
             it.copy(isSnackBarVisible = true)
         }
+    }
 
-        delay(1000)
-
+    fun hideSnackBar() {
         _taskScreenUiState.update {
             it.copy(isSnackBarVisible = false)
-
         }
     }
 
@@ -165,7 +166,6 @@ class TasksScreenViewModel(
         _taskScreenUiState.update { uiState ->
             uiState.copy(
                 listOfTasksUiState = dummyTasks.filter { it.status == status.toUiState().status }
-
             )
         }
     }
@@ -181,7 +181,7 @@ data class TasksScreenUiState(
     val isLoading: Boolean = true,
     val isBottomSheetVisible: Boolean = false,
     val isSnackBarVisible: Boolean = false,
-    val datePickerUiState: DatePickerUiState =DatePickerUiState(),
+    val datePickerUiState: DatePickerUiState = DatePickerUiState(),
     val deleteBottomSheetUiState: DeleteBottomSheetUiState = DeleteBottomSheetUiState(),
     val idOfTaskToBeDeleted: Long? = null,
     val noCurrentTasks: Boolean = listOfTasksUiState.isEmpty()
@@ -196,14 +196,20 @@ data class TaskUiState(
     val id: Long,
     val title: String,
     val description: String,
-    val priority: String,
+
+    @StringRes
+    val priority: Int,
+    @StringRes
     val status: Int,
     val categoryTitle: String,
-    val categoryIcon: String 
-    )
+    @DrawableRes
+    val categoryIcon: Int
+)
 
 data class DateCardUiState(
-    val dayNumber: String, val dayName: String, val isSelected: Boolean
+    val dayNumber: String,
+    val dayName: String,
+    val isSelected: Boolean
 )
 
 
@@ -337,10 +343,10 @@ fun Task.taskToTaskUiState(): TaskUiState {
         id = id,
         title = title,
         description = description,
-        priority = priority.toString(),
+        priority = priority.toUiState().priority,
         status = status.toUiState().status,
-        categoryTitle ="",
-        categoryIcon = ""
+        categoryTitle = "",
+        categoryIcon = 0
     )
 }
 
@@ -386,8 +392,10 @@ enum class TaskStatusUiState(@StringRes var status: Int) {
     DONE(R.string.done)
 }
 
-enum class TaskPriorityUiState(@StringRes priority: Int) {
-    LOW(R.string.low), MEDIUM(R.string.medium), HIGH(R.string.high)
+enum class TaskPriorityUiState(@StringRes var priority: Int) {
+    LOW(R.string.low),
+    MEDIUM(R.string.medium),
+    HIGH(R.string.high)
 }
 
 fun TaskStatus.toUiState(): TaskStatusUiState = when (this) {
@@ -401,3 +409,17 @@ fun TaskStatusUiState.toDomain(): TaskStatus = when (this) {
     TaskStatusUiState.IN_PROGRESS -> TaskStatus.IN_PROGRESS
     TaskStatusUiState.DONE -> TaskStatus.DONE
 }
+
+fun TaskPriorityUiState.toDomain(): TaskPriority = when (this) {
+    TaskPriorityUiState.HIGH -> TaskPriority.HIGH
+    TaskPriorityUiState.MEDIUM -> TaskPriority.MEDIUM
+    TaskPriorityUiState.LOW -> TaskPriority.LOW
+}
+
+fun TaskPriority.toUiState(): TaskPriorityUiState = when (this) {
+    TaskPriority.HIGH -> TaskPriorityUiState.HIGH
+    TaskPriority.MEDIUM -> TaskPriorityUiState.MEDIUM
+    TaskPriority.LOW -> TaskPriorityUiState.LOW
+}
+
+

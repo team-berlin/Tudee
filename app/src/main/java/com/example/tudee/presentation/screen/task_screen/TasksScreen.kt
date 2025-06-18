@@ -1,8 +1,17 @@
 package com.example.tudee.presentation.screen.task_screen
 
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -42,7 +51,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -59,24 +67,30 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
+import com.example.tudee.naviagtion.Destination
+import com.example.tudee.presentation.components.BottomNavItem
 import com.example.tudee.presentation.components.CategoryTaskComponent
+import com.example.tudee.presentation.components.NavBar
 import com.example.tudee.presentation.components.SnackBarComponent
 import com.example.tudee.presentation.components.TabBarComponent
-import com.example.tudee.presentation.components.TabBarItem
 import com.example.tudee.presentation.components.TopAppBar
 import com.example.tudee.presentation.components.TudeeDayCard
+import com.example.tudee.presentation.components.TudeeScaffold
 import com.example.tudee.presentation.composables.buttons.ButtonState
+import com.example.tudee.presentation.composables.buttons.FabButton
 import com.example.tudee.presentation.composables.buttons.NegativeButton
 import com.example.tudee.presentation.composables.buttons.SecondaryButton
 import com.example.tudee.presentation.composables.buttons.TextButton
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import kotlin.math.roundToInt
 
 @Composable
-fun TasksScreen() {
+fun TasksScreen(navController: NavController) {
     val tasksScreenViewModel: TasksScreenViewModel = koinViewModel()
     val taskScreenUiState by tasksScreenViewModel.taskScreenUiState.collectAsState()
 
@@ -93,9 +107,10 @@ fun TasksScreen() {
         onDateCardClicked = tasksScreenViewModel::onDateCardClicked,
         onDismissDatePicker = tasksScreenViewModel::onDismissDatePicker,
         onConfirmDatePicker = tasksScreenViewModel::onConfirmDatePicker,
+        hideSnackBar = tasksScreenViewModel::hideSnackBar
 
 
-        )
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -113,78 +128,165 @@ fun TasksScreenContent(
     onDateCardClicked: () -> Unit,
     onConfirmDatePicker: (Long?) -> Unit,
     onDismissDatePicker: () -> Unit,
+    hideSnackBar: () -> Unit,
 
 
     ) {
+    val topAppBar = @Composable {
+        TopAppBar(
+            modifier = Modifier.background(TudeeTheme.color.surfaceHigh),
+            title = "Tasks", showBackButton = false
+        )
+    }
 
-    Box(
-        Modifier
-            .fillMaxSize()
-            .background(TudeeTheme.color.surfaceHigh),
+    val bottomBar = @Composable {
+        NavBar(
+            navDestinations = listOf(
+                BottomNavItem(
+                    icon = painterResource(id = R.drawable.home),
+                    selectedIcon = painterResource(id = R.drawable.home_select),
+                    route = Destination.HomeScreen.route
+                ),
+                BottomNavItem(
+                    icon = painterResource(id = R.drawable.task),
+                    selectedIcon = painterResource(id = R.drawable.task_select),
+                    route = Destination.TasksScreen.route
+                ),
+                BottomNavItem(
+                    icon = painterResource(id = R.drawable.category),
+                    selectedIcon = painterResource(id = R.drawable.category_select),
+                    route = Destination.CategoriesScreen.route
+                )
+            ),
+            currentRoute = Destination.TasksScreen.route,
+            onNavDestinationClicked = {}
+        )
+    }
+
+    val fabButton = @Composable {
+        FabButton(
+            onClick = {
+                onFloatingActionClicked()
+            },
+            content = {
+                Icon(
+                    painter = painterResource(R.drawable.note_add),
+                    contentDescription = null
+                )
+            }
+        )
+    }
+
+    TudeeScaffold(
+        showTopAppBar = true,
+        topAppBar = {
+            topAppBar()
+        },
+        showBottomBar = true,
+        bottomBarContent = bottomBar,
+        showFab = true,
+        floatingActionButton = fabButton
+    ) { paddingValues ->
+
+        Box(
+            Modifier
+                .fillMaxSize()
+                .background(TudeeTheme.color.surfaceHigh)
+                .padding(paddingValues)
+        ) {
+            DatePickerScreen(
+                uiState = taskScreenUiState.datePickerUiState,
+                onDismiss = onDismissDatePicker,
+                onConfirm = onConfirmDatePicker
+            )
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                HeadingDate(onDateCardClicked)
+
+                DaysRow(
+                    listOfDateCardUiState = taskScreenUiState.listOfDateCardUiState,
+                    onDayCardClicked = onDayCardClicked
+                )
+
+                TabBarComponent(
+                    selectedTabIndex = taskScreenUiState.selectedTabIndex,
+                    tabBarItems = taskScreenUiState.listOfTabBarItem,
+                    onTabSelected = onTabSelected
+                )
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(TudeeTheme.color.surface)
+                        .weight(1f)
+                ) {
+                    TasksListContent(
+                        listOfTasks = taskScreenUiState.listOfTasksUiState,
+                        onTaskCardClicked = onTaskCardClicked,
+                        onDeleteIconClick = onDeleteIconClicked,
+                        // selectedTabIndex = taskScreenUiState.selectedTabIndex
+
+                    )
+                }
+
+                BottomSheet(
+                    isBottomSheetVisible = taskScreenUiState.isBottomSheetVisible,
+                    title = taskScreenUiState.deleteBottomSheetUiState.title,
+                    subtitle = taskScreenUiState.deleteBottomSheetUiState.subtitle,
+                    onBottomSheetDismissed = onBottomSheetDismissed,
+                    onDeleteButtonClicked = onDeleteButtonClicked,
+                    onCancelButtonClicked = onCancelButtonClicked,
+                    deleteButtonUiState = taskScreenUiState.deleteBottomSheetUiState.deleteButtonState,
+                    cancelButtonUiState = taskScreenUiState.deleteBottomSheetUiState.cancelButtonState
+                )
+            }
+
+            SnackBarSection(
+                isSnackBarVisible = taskScreenUiState.isSnackBarVisible,
+                hideSnackBar = hideSnackBar
+            )
+
+        }
+    }
+}
+
+@Composable
+fun SnackBarSection(
+    isSnackBarVisible: Boolean,
+    hideSnackBar: () -> Unit
+) {
+    LaunchedEffect(isSnackBarVisible) {
+        delay(2000)
+        hideSnackBar()
+    }
+
+    AnimatedVisibility(
+        visible = isSnackBarVisible,
+        enter = slideInVertically(
+            initialOffsetY = { fullHeight -> -fullHeight },
+            animationSpec = spring(
+                stiffness = Spring.StiffnessLow,
+                dampingRatio = Spring.DampingRatioMediumBouncy
+            )
+        ) + fadeIn(),
+
+        exit = slideOutVertically(
+            targetOffsetY = { fullHeight -> fullHeight },
+            animationSpec = spring(
+                stiffness = Spring.StiffnessMedium,
+                dampingRatio = Spring.DampingRatioNoBouncy
+            )
+        ) + fadeOut()
     ) {
-
         Box(
             Modifier.padding(horizontal = 16.dp)
         ) {
-            if (taskScreenUiState.isSnackBarVisible) {
-                SnackBarComponent(
-                    message = stringResource(R.string.task_deleted_success),
-                    iconPainter = painterResource(R.drawable.check_mark_ic),
-                    iconBackgroundColor = TudeeTheme.color.statusColors.greenVariant
-                )
-            }
-        }
-
-        DatePickerScreen(
-            uiState = taskScreenUiState.datePickerUiState,
-            onDismiss = onDismissDatePicker,
-            onConfirm = onConfirmDatePicker
-        )
-        Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            TopAppBar(
-                modifier = Modifier,
-                title = "Tasks",
-                showBackButton = false,
-            )
-
-            HeadingDate(onDateCardClicked)
-
-            DaysRow(
-                listOfDateCardUiState = taskScreenUiState.listOfDateCardUiState,
-                onDayCardClicked = onDayCardClicked
-            )
-
-            TabBarComponent(
-                selectedTabIndex = taskScreenUiState.selectedTabIndex,
-                tabBarItems = taskScreenUiState.listOfTabBarItem,
-                onTabSelected = onTabSelected
-            )
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(TudeeTheme.color.surface)
-                    .weight(1f)
-            ) {
-                TasksListContent(
-
-                    listOfTasks = taskScreenUiState.listOfTasksUiState,
-                    onTaskCardClicked = onTaskCardClicked,
-                    onDeleteIconClick = onDeleteIconClicked,
-                )
-            }
-
-            BottomSheet(
-                isBottomSheetVisible = taskScreenUiState.isBottomSheetVisible,
-                title = taskScreenUiState.deleteBottomSheetUiState.title,
-                subtitle = taskScreenUiState.deleteBottomSheetUiState.subtitle,
-                onBottomSheetDismissed = onBottomSheetDismissed,
-                onDeleteButtonClicked = onDeleteButtonClicked,
-                onCancelButtonClicked = onCancelButtonClicked,
-                deleteButtonUiState = taskScreenUiState.deleteBottomSheetUiState.deleteButtonState,
-                cancelButtonUiState = taskScreenUiState.deleteBottomSheetUiState.cancelButtonState
+            SnackBarComponent(
+                message = stringResource(R.string.task_deleted_success),
+                iconPainter = painterResource(R.drawable.check_mark_ic),
+                iconTint = TudeeTheme.color.statusColors.greenAccent,
+                iconBackgroundColor = TudeeTheme.color.statusColors.greenVariant
             )
         }
     }
@@ -276,97 +378,75 @@ fun TasksListContent(
     modifier: Modifier = Modifier,
     listOfTasks: List<TaskUiState>,
     onTaskCardClicked: (Long) -> Unit,
-    onDeleteIconClick: (Long?) -> Unit
+    onDeleteIconClick: (Long?) -> Unit,
+    // selectedTabIndex:Int
 ) {
-    LazyColumn(
-        modifier.padding(
-            top = 12.dp, start = 16.dp, end = 16.dp
-        ), verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        items(
-            listOfTasks,
-            key = { it.id }
-        )
-        { task ->
-            SwipeableCardWrapper(onDeleteIconClick = { onDeleteIconClick(task.id) }) {
-                var priorityBackgroundColor = Color.Transparent
-                var priorityIcon = painterResource(R.drawable.ic_priority_medium)
-                when (task.priority) {
-                    "HIGH" -> {
-                        priorityBackgroundColor = TudeeTheme.color.statusColors.pinkAccent
-                        priorityIcon = painterResource(R.drawable.ic_priority_high)
-                    }
 
-                    "MEDIUM" -> {
-                        priorityBackgroundColor = TudeeTheme.color.statusColors.yellowAccent
-                        priorityIcon = painterResource(R.drawable.ic_priority_medium)
-                    }
+    AnimatedContent(
+        targetState = listOfTasks,
+        transitionSpec = {
+            fadeIn(tween(1000)) togetherWith fadeOut(tween(1000))
+            // Or add slideInHorizontally()/slideOutHorizontally() for swipe-like effect
+        },
+    )
+    { listOfTasks ->
+        LazyColumn(
+            modifier.padding(
+                top = 12.dp, start = 16.dp, end = 16.dp
+            ), verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(
+                listOfTasks,
+                key = { it.id }
+            )
+            { task ->
+                SwipeableCardWrapper(onDeleteIconClick = { onDeleteIconClick(task.id) }) {
+                    var priorityBackgroundColor = Color.Transparent
+                    var priorityIcon = painterResource(R.drawable.ic_priority_medium)
+                    when (task.priority) {
+                        "HIGH" -> {
+                            priorityBackgroundColor = TudeeTheme.color.statusColors.pinkAccent
+                            priorityIcon = painterResource(R.drawable.ic_priority_high)
+                        }
 
-                    "LOW" -> {
-                        priorityBackgroundColor = TudeeTheme.color.statusColors.greenAccent
-                        priorityIcon = painterResource(R.drawable.ic_priority_low)
+                        "MEDIUM" -> {
+                            priorityBackgroundColor = TudeeTheme.color.statusColors.yellowAccent
+                            priorityIcon = painterResource(R.drawable.ic_priority_medium)
+                        }
+
+                        "LOW" -> {
+                            priorityBackgroundColor = TudeeTheme.color.statusColors.greenAccent
+                            priorityIcon = painterResource(R.drawable.ic_priority_low)
+                        }
                     }
+                    Modifier
+                        .clip(RoundedCornerShape(16.dp))
+                    CategoryTaskComponent(
+                        modifier = Modifier.animateItem(
+                            fadeInSpec = tween(5000),
+                            fadeOutSpec = tween(5000),
+                            placementSpec = tween(5000)
+                        ),
+                        title = task.title,
+                        description = task.description,
+                        priority = task.priority,
+                        priorityBackgroundColor = priorityBackgroundColor,
+                        taskIcon = { },
+                        onClick = { },
+                        priorityIcon = priorityIcon,
+                    )
                 }
-                Modifier
-                    .clip(RoundedCornerShape(16.dp))
-                CategoryTaskComponent(
-                    modifier = Modifier.animateItem(
-                        fadeInSpec = tween(5000),
-                        fadeOutSpec = tween(5000),
-                        placementSpec = tween(5000)
-
-                    ),
-                    title = task.title,
-                    description = task.description,
-                    priority = task.priority,
-                    priorityBackgroundColor = priorityBackgroundColor,
-                    taskIcon = { },
-                    onClick = { },
-                    priorityIcon = priorityIcon,
-                )
             }
         }
     }
 }
 
-@Composable
-@Preview(showBackground = true)
-fun TasksScreenContentPreview() {
-    TudeeTheme
-    TasksScreenContent(
-        taskScreenUiState = TasksScreenUiState(),
-        onDayCardClicked = {},
-        onTabSelected = {},
-        onFloatingActionClicked = {},
-        onTaskCardClicked = {},
-        onDeleteIconClicked = { },
-        onDeleteButtonClicked = {},
-        onBottomSheetDismissed = {},
-        onCancelButtonClicked = {},
-        onDateCardClicked = {},
-        onConfirmDatePicker = {},
-        onDismissDatePicker = { }
-    )
-}
-
-val tesentreies = listOf(
-    TabBarItem(
-        title = "In progress", taskCount = "0", isSelected = true
-    ),
-    TabBarItem(
-        title = "To do", taskCount = "0", isSelected = false
-    ),
-    TabBarItem(
-        title = "Done", taskCount = "0", isSelected = false
-    ),
-)
 
 @Composable
 fun SwipeableCardWrapper(
     onDeleteIconClick: () -> Unit,
     content: @Composable () -> Unit
 ) {
-    var visible by remember { mutableStateOf(true) }
     var hiddenIconWidth by remember { mutableFloatStateOf(0f) }
     var neededOffset = remember { Animatable(initialValue = 0f) }
     val scope = rememberCoroutineScope()
@@ -555,7 +635,8 @@ fun BottomSheet(
             ) {
                 NegativeButton(
                     modifier = Modifier
-                        .fillMaxWidth(), onClick = {
+                        .fillMaxWidth(),
+                    onClick = {
 
                         onDeleteButtonClicked()
 
@@ -571,6 +652,27 @@ fun BottomSheet(
             }
         }
     }
+}
+
+@Composable
+@Preview(showBackground = true)
+fun TasksScreenContentPreview() {
+    TudeeTheme
+    TasksScreenContent(
+        taskScreenUiState = TasksScreenUiState(),
+        onDayCardClicked = {},
+        onTabSelected = {},
+        onFloatingActionClicked = {},
+        onTaskCardClicked = {},
+        onDeleteIconClicked = { },
+        onDeleteButtonClicked = {},
+        onBottomSheetDismissed = {},
+        onCancelButtonClicked = {},
+        onDateCardClicked = {},
+        onConfirmDatePicker = {},
+        onDismissDatePicker = { },
+        hideSnackBar = {}
+    )
 }
 
 

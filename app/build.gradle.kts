@@ -54,9 +54,15 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.compose)
+
+
+
+
+
     testImplementation(libs.junit)
     implementation(libs.koin.androidx.compose)
-    implementation(libs.koin.androidx.compose.navigation)
+
+
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
