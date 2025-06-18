@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
                         }
                     }) { innerPadding ->
                     TudeeNavGraph(navController)
-                    AddNewTaskScreen()
+                    TaskScreen()
                 }
             }
         }

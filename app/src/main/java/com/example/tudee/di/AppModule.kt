@@ -1,7 +1,7 @@
 package com.example.tudee.di
 
 import androidx.room.Room
-import com.example.tudee.AddNewTaskViewModel
+import com.example.tudee.TaskViewModel
 import com.example.tudee.data.dao.TaskCategoryDao
 import com.example.tudee.data.dao.TaskDao
 import com.example.tudee.data.database.AppDatabase
@@ -12,7 +12,6 @@ import com.example.tudee.domain.TaskService
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import org.koin.androidx.viewmodel.dsl.viewModelOf
-import org.koin.dsl.module
 
 val appModule = module {
     single<AppDatabase> {
@@ -30,5 +29,5 @@ val appModule = module {
     single<TaskService> { TaskServiceImpl(get()) }  // replace with your real implementation
     single<TaskCategoryService> { TaskCategoryServiceImpl(get()) }
 
-    viewModelOf(::AddNewTaskViewModel)
+    viewModelOf(::TaskViewModel)
 }

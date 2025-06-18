@@ -4,8 +4,8 @@ import com.example.tudee.domain.entity.TaskCategory
 import com.example.tudee.domain.entity.TaskPriority
 import kotlinx.datetime.LocalDate
 
-data class AddNewTaskScreenState(
-    val showBottomSheet: Boolean = true,
+data class TaskScreenState(
+    val showBottomSheet: Boolean = false,
     val taskTitle: String = "",
     val taskDescription: String = "",
     val taskDueDate: LocalDate? = null,
