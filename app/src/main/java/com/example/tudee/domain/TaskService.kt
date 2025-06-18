@@ -11,10 +11,10 @@ interface TaskService {
     suspend fun deleteTask(taskId: Long)
     suspend fun editTask(task: Task)
     suspend fun editTaskStatus(taskId: Long, status: TaskStatus)
-    fun getTasks(): Flow<List<Task>>
+    fun getTasks(): List<Task>
     suspend fun getTaskById(taskId: Long): Task
-    fun getTasksByCategoryId(categoryId: Long): Flow<List<Task>>
-    fun getTasksByStatus(status: TaskStatus): Flow<List<Task>>
-    fun getTasksByAssignedDate(date: LocalDate): Flow<List<Task>>
+    fun getTasksByCategoryId(categoryId: Long): List<Task>
+    fun getTasksByStatus(status: TaskStatus):List<Task>
+    fun getTasksByAssignedDate(date: LocalDate): List<Task>
     suspend fun getTasksCountByCategoryId(categoryId: Long): Long
 }
