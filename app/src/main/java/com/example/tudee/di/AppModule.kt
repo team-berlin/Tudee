@@ -1,10 +1,13 @@
 package com.example.tudee.di
 
 import androidx.room.Room
+import com.example.tudee.AddNewTaskViewModel
 import com.example.tudee.data.dao.TaskCategoryDao
 import com.example.tudee.data.dao.TaskDao
 import com.example.tudee.data.database.AppDatabase
 import org.koin.android.ext.koin.androidContext
+import org.koin.dsl.module
+import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
 
 val appModule = module{
@@ -20,4 +23,4 @@ val appModule = module{
     single<TaskCategoryDao> {
         get<AppDatabase>().taskCategoryDao()
     }
-}
+    viewModelOf(::AddNewTaskViewModel)}

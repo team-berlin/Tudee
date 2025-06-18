@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -47,19 +48,19 @@ import com.example.tudee.presentation.composables.buttons.ButtonState
 import com.example.tudee.presentation.composables.buttons.DefaultButton
 import com.example.tudee.presentation.composables.buttons.PrimaryButton
 import kotlinx.datetime.LocalDateTime
+import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
-fun AddNewTaskScreen(
-
-) {
-    val viewModel: AddNewTaskViewModel = viewModel()
+fun AddNewTaskScreen() {
+    val viewModel: AddNewTaskViewModel = koinViewModel()
     val taskScreenUiState by viewModel.taskState.collectAsState()
 
     val addButtonState by viewModel.isTaskValid.collectAsState()
 
-    Content(
+    AddNewTaskContent(
         taskState = taskScreenUiState,
+        addButtonState = addButtonState,
         onTaskTitleChanged = viewModel::onUpdateTaskTitle,
         onTaskDescriptionChanged = viewModel::onUpdateTaskDescription,
         onUpdateTaskDueDate = viewModel::onUpdateTaskDueDate,
@@ -67,7 +68,6 @@ fun AddNewTaskScreen(
         onSelectTaskCategory = viewModel::onSelectTaskCategory,
         onAddButtonClicked = viewModel::onAddClicked,
         onCancelButtonClicked = viewModel::onCancelClicked,
-        addButtonState = addButtonState,
     )
 }
 
@@ -75,7 +75,7 @@ fun AddNewTaskScreen(
 @Preview(showBackground = true, widthDp = 360, heightDp = 852)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Content(
+fun AddNewTaskContent(
     showSheetState: MutableState<Boolean> = mutableStateOf(true),
     taskState: AddNewTaskScreenState = AddNewTaskScreenState(
         taskTitle = "Task",
@@ -107,7 +107,11 @@ fun Content(
     onCancelButtonClicked: () -> Unit = {},
     addButtonState: Boolean = false,
 ) {
-    val sheetState = rememberModalBottomSheetState()
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = false,
+        confirmValueChange = { it != SheetValue.Hidden },
+//        initialValue = SheetValue.Expanded,
+    )
     val scope = rememberCoroutineScope()
     Column(
         modifier = Modifier
@@ -161,87 +165,104 @@ fun BottomSheetContent(
                 title = "Education",
                 image = "ic_education",
                 isPredefined = true
-            ),TaskCategory(
+            ),
+            TaskCategory(
                 id = 1L,
                 title = "Education",
                 image = "ic_education",
                 isPredefined = true
-            ),TaskCategory(
+            ),
+            TaskCategory(
                 id = 1L,
                 title = "Education",
                 image = "ic_education",
                 isPredefined = true
-            ),TaskCategory(
+            ),
+            TaskCategory(
                 id = 1L,
                 title = "Education",
                 image = "ic_education",
                 isPredefined = true
-            ),TaskCategory(
+            ),
+            TaskCategory(
                 id = 1L,
                 title = "Education",
                 image = "ic_education",
                 isPredefined = true
-            ),TaskCategory(
+            ),
+            TaskCategory(
                 id = 1L,
                 title = "Education",
                 image = "ic_education",
                 isPredefined = true
-            ),TaskCategory(
+            ),
+            TaskCategory(
                 id = 1L,
                 title = "Education",
                 image = "ic_education",
                 isPredefined = true
-            ),TaskCategory(
+            ),
+            TaskCategory(
                 id = 1L,
                 title = "Education",
                 image = "ic_education",
                 isPredefined = true
-            ),TaskCategory(
+            ),
+            TaskCategory(
                 id = 1L,
                 title = "Education",
                 image = "ic_education",
                 isPredefined = true
-            ),TaskCategory(
+            ),
+            TaskCategory(
                 id = 1L,
                 title = "Education",
                 image = "ic_education",
                 isPredefined = true
-            ),TaskCategory(
+            ),
+            TaskCategory(
                 id = 1L,
                 title = "Education",
                 image = "ic_education",
                 isPredefined = true
-            ),TaskCategory(
+            ),
+            TaskCategory(
                 id = 1L,
                 title = "Education",
                 image = "ic_education",
                 isPredefined = true
-            ),TaskCategory(
+            ),
+            TaskCategory(
                 id = 1L,
                 title = "Education",
                 image = "ic_education",
                 isPredefined = true
-            ),TaskCategory(
+            ),
+            TaskCategory(
                 id = 1L,
                 title = "Education",
                 image = "ic_education",
                 isPredefined = true
-            ),TaskCategory(
+            ),
+            TaskCategory(
                 id = 1L,
                 title = "Education",
                 image = "ic_education",
                 isPredefined = true
-            ),TaskCategory(
+            ),
+            TaskCategory(
                 id = 1L,
                 title = "Education",
                 image = "ic_education",
                 isPredefined = true
-            ),TaskCategory(
+            ),
+            TaskCategory(
                 id = 1L,
                 title = "Education",
                 image = "ic_education",
                 isPredefined = true
-            ),TaskCategory(
+            ),
+            TaskCategory(
                 id = 1L,
                 title = "Education",
                 image = "ic_education",
@@ -261,7 +282,11 @@ fun BottomSheetContent(
     onUpdateTaskDueDate: (LocalDateTime) -> Unit = {},
     onUpdateTaskPriority: (TaskPriority) -> Unit = {},
     onSelectTaskCategory: (Long) -> Unit = {},
-    priorities:List<TaskPriority> = listOf(TaskPriority.HIGH, TaskPriority.MEDIUM, TaskPriority.LOW)
+    priorities: List<TaskPriority> = listOf(
+        TaskPriority.HIGH,
+        TaskPriority.MEDIUM,
+        TaskPriority.LOW
+    ),
 ) {
     LazyColumn(
         modifier = Modifier
@@ -321,7 +346,7 @@ fun BottomSheetContent(
                 modifier = Modifier,
 //                    .align(Alignment.Start),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
+            ) {
                 priorities.forEach { taskPriority ->
                     val isSelected: Boolean = taskState.selectedTaskPriority == taskPriority
                     TudeeChip(
@@ -352,19 +377,20 @@ fun BottomSheetContent(
                 columns = GridCells.Adaptive(minSize = 104.dp),
                 modifier = Modifier
                     .height(400.dp)
-                    .fillMaxWidth(),
+                    .fillMaxWidth().padding(bottom = 148.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
-                items(taskState.categories) { category->
+                items(9) { category ->
                     CategoryComponent(
                         modifier = Modifier.clickable {
-                            onSelectTaskCategory(category.id)
+//                            onSelectTaskCategory(category.id)
                         },
                         categoryPainter = painterResource(R.drawable.ic_education),
                         categoryImageContentDescription = "Education Category",
                         categoryName = "Education",
-                        showCheckedIcon = category.id == taskState.selectedCategoryId,
+//                        showCheckedIcon = category.id == taskState.selectedCategoryId,
+                        showCheckedIcon = true
                     )
                 }
             }
@@ -391,7 +417,7 @@ fun AddOrCancelButtons(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
-            state = if (addButtonState)ButtonState.IDLE else ButtonState.DISABLED,
+            state = if (addButtonState) ButtonState.IDLE else ButtonState.DISABLED,
         ) {
             Text(
                 text = "Add",
