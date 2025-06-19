@@ -28,70 +28,37 @@ class CategoriesViewModel(
     private val _uiState = MutableStateFlow(CategoriesUiState())
     val uiState = _uiState.asStateFlow()
 
-    private fun getCategories(): Flow<List<TaskCategory>> {
-        return flow {
-            emit(
-                listOf(
-                    TaskCategory(
-                        id = 1234,
-                        title = "Category 1",
-                        image = "TODO()",
-                        isPredefined = true
-                    )
-                )
-            )
-        }
-    }
-
-    private fun getTasksById(id: Long): Flow<List<Task>> {
-        return flow {
-            emit(
-                listOf(
-                    Task(
-                        id = 112233,
-                        title = "Task1",
-                        description = "Task 1 Description",
-                        priority = TaskPriority.HIGH,
-                        categoryId = 1234,
-                        status = TaskStatus.IN_PROGRESS,
-                        assignedDate = LocalDate(2025, 1, 1)
-                    )
-                )
-            )
-        }
-    }
-
     fun loadCategories() {
         viewModelScope.launch {
             try {
-                val categories = getCategories().first()
+                val categories = taskCategoryService.getCategories().first()
 
-                val categoryTasksDeferred = categories.map { category ->
+                val categoriesWithCount = categories.map { category ->
                     async {
-                        category to getTasksById(category.id).first()
+                        val count = taskService.getTasksCountByCategoryId(category.id)
+                        category to count.toInt()
                     }
+                }.awaitAll()
+
+
+                val uiModels = categoriesWithCount.map { (category, count) ->
+                    category.toUiModel(count)
                 }
 
-                val categoriesWithTasks =
-                    categoryTasksDeferred.awaitAll().map { (category, categoryTasks) ->
-                        category.toUiModel(categoryTasks)
-                    }
+                _uiState.update { it.copy(categories = uiModels) }
 
-                _uiState.update { state ->
-                    state.copy(categories = categoriesWithTasks)
-                }
             } catch (e: Exception) {
-                e.printStackTrace()
+                _uiState.update { it.copy(error = e.message ?: "Unknown error") }
             }
         }
     }
 
     fun addCategory(name: String, iconUrl: String) {
-        // validate and add to DB
+        // TODO: Add validation and call taskCategoryService.createCategory()
     }
 
     fun onCategoryClicked(id: Long) {
-        // maybe emit navigation event if needed
+        // TODO: Emit navigation event or update state if needed
     }
 }
 

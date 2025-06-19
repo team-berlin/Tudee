@@ -6,7 +6,7 @@ import com.example.tudee.domain.entity.TaskCategory
 import com.example.tudee.presentation.categories.model.TaskCategoryUiModel
 import com.example.tudee.presentation.categories.model.UiImage
 
-fun TaskCategory.toUiModel(tasks: List<Task>): TaskCategoryUiModel {
+fun TaskCategory.toUiModel(taskCount: Int): TaskCategoryUiModel {
     val uiImage: UiImage = if (isPredefined) {
         // Safe fallback if key not found
         val resId = R.drawable.tudee //handle predefined categories
@@ -19,7 +19,7 @@ fun TaskCategory.toUiModel(tasks: List<Task>): TaskCategoryUiModel {
         id = id,
         name = title,
         iconResId = uiImage,
-        tasks = tasks,
+        tasksCount = taskCount,
         isPredefined = isPredefined
     )
 }
