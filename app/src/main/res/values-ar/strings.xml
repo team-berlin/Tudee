@@ -37,5 +37,13 @@
         أم صغيرًا.</string>
 
     <string name="skip_button">تخطي</string>
+    <string name="Title_Error">Title Not Valid</string>
+    <string name="task_title">Task title</string>
+    <string name="description">Description</string>
+    <string name="set_due_date">set due date</string>
+    <string name="priority">Priority</string>
+    <string name="category">Category</string>
+    <string name="cancel">Cancel</string>
+    <string name="add">Add</string>
 </resources>
 

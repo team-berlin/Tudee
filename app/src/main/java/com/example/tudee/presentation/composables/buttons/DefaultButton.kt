@@ -57,11 +57,11 @@ fun DefaultButton(
     }
     Box(
         modifier = modifier
-            .then(
-                if (isFabType) Modifier.size(ButtonDefaults.defaultFabSize) else Modifier.height(
-                    ButtonDefaults.defaultHeight
-                )
-            )
+//            .then(
+//                if (isFabType) Modifier.size(ButtonDefaults.defaultFabSize) else Modifier.height(
+//                    ButtonDefaults.defaultHeight
+//                )
+//            )
             .clip(shape)
             .then(
                 if (colors.backgroundGradient != null && state in listOf(
