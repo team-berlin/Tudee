@@ -31,4 +31,9 @@
     <string name="no_tasks">لا توجد مهام هنا!</string>
     <string name="add_first_task_hint">اضغط على زر + لإضافة أول مهمة.</string>
 
+    <string name="select_date">اختر التاريخ</string>
+    <string name="date_picker_clear_button_text">مسح</string>
+    <string name="date_picker_cancel_button_text">إلغاء</string>
+    <string name="date_picker_ok_button_text">موافق</string>
+
 </resources>
