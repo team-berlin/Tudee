@@ -50,7 +50,7 @@
     <string name="category">Category</string>
     <string name="cancel">Cancel</string>
     <string name="add">Add</string>
-    <string name="save">SAVE</string>
+    <string name="save" >SAVE</string>
     <string name="addNewTask">Add new task</string>
 
 
