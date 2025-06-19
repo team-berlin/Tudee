@@ -1,7 +1,7 @@
 package com.example.tudee.di
 
 import androidx.room.Room
-import com.example.tudee.TaskViewModel
+import com.example.tudee.presentation.screen.manipulateTask.TaskViewModel
 import com.example.tudee.data.dao.TaskCategoryDao
 import com.example.tudee.data.dao.TaskDao
 import com.example.tudee.data.database.AppDatabase

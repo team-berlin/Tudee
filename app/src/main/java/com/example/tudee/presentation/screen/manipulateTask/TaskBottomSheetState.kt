@@ -1,12 +1,12 @@
-package com.example.tudee
+package com.example.tudee.presentation.screen.manipulateTask
 
 import com.example.tudee.domain.entity.TaskCategory
 import com.example.tudee.domain.entity.TaskPriority
 import com.example.tudee.domain.entity.TaskStatus
 import kotlinx.datetime.LocalDate
 
-data class TaskScreenState(
-    val isButtonSheetVisibile: Boolean = false,
+data class TaskBottomSheetState(
+    val isButtonSheetVisible: Boolean = true,
     val taskId: Long? = null,
     val taskTitle: String = "",
     val taskDescription: String = "",
@@ -15,7 +15,6 @@ data class TaskScreenState(
     val taskStatus: TaskStatus? = null,
     val selectedCategoryId: Long? = null,
     val isEditMode: Boolean = false,
-    val avtioType: ButtonType = ButtonType.ADD,
 
     val categories: List<TaskCategory> = listOf<TaskCategory>(
         TaskCategory(
@@ -43,9 +42,3 @@ data class TaskScreenState(
         TaskPriority.LOW
     ),
 )
-
-enum class ButtonType {
-    ADD,
-    SAVE
-
-}

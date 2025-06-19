@@ -17,6 +17,8 @@ import com.example.tudee.naviagtion.Destination
 import com.example.tudee.naviagtion.Destination.CategoriesScreen
 import com.example.tudee.naviagtion.Destination.TasksScreen
 import com.example.tudee.naviagtion.TudeeNavGraph
+import com.example.tudee.presentation.screen.manipulateTask.addTask.AddTaskBottomSheet
+import com.example.tudee.presentation.screen.manipulateTask.editTask.EditTaskBottomSheet
 
 class MainActivity : ComponentActivity() {
     private val bottomBarRoutes =
@@ -39,8 +41,8 @@ class MainActivity : ComponentActivity() {
                         }
                     }) { innerPadding ->
                     TudeeNavGraph(navController)
-                    EditScreen(taskId = 3L)
-                    AddScreen()
+                    EditTaskBottomSheet(taskId = 3L)
+                    AddTaskBottomSheet()
                 }
             }
         }

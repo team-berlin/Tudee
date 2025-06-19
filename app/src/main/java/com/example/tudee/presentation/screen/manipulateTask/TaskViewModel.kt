@@ -1,4 +1,4 @@
-package com.example.tudee
+package com.example.tudee.presentation.screen.manipulateTask
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -23,9 +23,9 @@ class TaskViewModel(
     private val categoryService: TaskCategoryService,
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<TaskScreenState> =
-        MutableStateFlow(TaskScreenState())
-    val uiState: StateFlow<TaskScreenState> = _uiState.asStateFlow()
+    private val _uiState: MutableStateFlow<TaskBottomSheetState> =
+        MutableStateFlow(TaskBottomSheetState())
+    val uiState: StateFlow<TaskBottomSheetState> = _uiState.asStateFlow()
 
     val isTaskValid: StateFlow<Boolean> = _uiState
         .map { state ->
@@ -35,7 +35,7 @@ class TaskViewModel(
                     state.selectedCategoryId != null
         }.stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
+            started = SharingStarted.Companion.WhileSubscribed(5000),
             initialValue = false
         )
 
@@ -75,7 +75,7 @@ class TaskViewModel(
     }
 
     fun showButtonSheet() {
-        _uiState.update { it.copy(isButtonSheetVisibile = true) }
+        _uiState.update { it.copy(isButtonSheetVisible = true) }
     }
 
     fun getTaskInfoById(taskId: Long) {
@@ -83,8 +83,8 @@ class TaskViewModel(
             with(taskService.getTaskById(taskId)) {
                 _uiState.update {
                     it.copy(
-                        taskId = taskId,
                         isEditMode = true,
+                        taskId = taskId,
                         taskStatus = status,
                         taskTitle = title,
                         taskDescription = description,
@@ -121,7 +121,7 @@ class TaskViewModel(
     fun hideButtonSheet() {
         _uiState.update {
             it.copy(
-                isButtonSheetVisibile = false,
+                isButtonSheetVisible = false,
                 isEditMode = false,
                 taskTitle = "",
                 taskDescription = "",
@@ -129,5 +129,6 @@ class TaskViewModel(
                 selectedCategoryId = null,
                 taskDueDate = null
             )
-        }    }
+        }
+    }
 }
