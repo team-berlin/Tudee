@@ -1,5 +1,6 @@
 package com.example.tudee.presentation.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -38,6 +39,7 @@ fun TopAppBar(
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .background(TudeeTheme.color.surfaceHigh)
             .padding(vertical = 12.dp, horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)

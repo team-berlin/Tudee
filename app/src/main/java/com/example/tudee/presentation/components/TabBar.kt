@@ -89,7 +89,7 @@ private fun TabIndicatorScope.DefaultTabIndicator(selectedTabIndex: Int, modifie
     )
 
 @Composable
-private fun DefaultTabContent(
+fun DefaultTabContent(
     modifier: Modifier = Modifier,
     tabBarItem: TabBarItem,
 

@@ -10,6 +10,6 @@ fun NavGraphBuilder.onBoardingRoute (
     navController: NavController
 ) {
     composable(route = Destination.OnBoardingScreen.route) {
-            OnBoardingScreen(navController = navController)
+//            OnBoardingScreen(navController = navController)
     }
 }
