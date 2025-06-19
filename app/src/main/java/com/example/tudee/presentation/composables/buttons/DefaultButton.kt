@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Icon
@@ -57,11 +58,6 @@ fun DefaultButton(
     }
     Box(
         modifier = modifier
-            .then(
-                if (isFabType) Modifier.size(ButtonDefaults.defaultFabSize) else Modifier.height(
-                    ButtonDefaults.defaultHeight
-                )
-            )
             .clip(shape)
             .then(
                 if (colors.backgroundGradient != null && state in listOf(
