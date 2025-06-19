@@ -39,7 +39,6 @@ fun CategoryTaskComponent(
     dateText: String? = null,
     onClick: () -> Unit,
 ) {
-
     Column(
         modifier = modifier
             .fillMaxWidth()

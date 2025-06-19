@@ -45,5 +45,8 @@
     <string name="category">Category</string>
     <string name="cancel">Cancel</string>
     <string name="add">Add</string>
+    <string name="task_details">تفاصيل المهمه</string>
+    <string name="add_task_title">اضف مهمة جديدة</string>
+    <string name="move_to_done">نقل الى تم</string>
+    <string name="move_to_in_progress">نقل الى قيد التنفيذ</string>
 </resources>
-
