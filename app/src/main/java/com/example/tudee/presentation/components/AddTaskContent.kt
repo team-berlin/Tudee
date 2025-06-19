@@ -57,7 +57,7 @@ fun AddTaskContent(
         )
     )
 
-    Box() {
+    Box {
         Column(
             modifier = modifier
                 .fillMaxWidth()
@@ -147,7 +147,7 @@ fun AddTaskContent(
                 items(categories) { categories ->
                     CategoryItemWithBadge(
                         categoryPainter = painterResource(
-                            id = categories.image.toIntOrNull()
+                            id = categories.image
                                 ?: R.drawable.category
                         ),
                         categoryName = categories.title,
@@ -198,32 +198,32 @@ private fun AddTaskContentPreview() {
             CategoryUiState(
                 id = "1",
                 title = "Education",
-                image = R.drawable.ic_education.toString()
+                image = R.drawable.ic_education
             ),
             CategoryUiState(
                 id = "2",
                 title = "Work",
-                image = R.drawable.ic_education.toString()
+                image = R.drawable.ic_education
             ),
             CategoryUiState(
                 id = "3",
                 title = "Personal",
-                image = R.drawable.ic_education.toString()
+                image = R.drawable.ic_education
             ),
             CategoryUiState(
                 id = "1",
                 title = "Education",
-                image = R.drawable.ic_education.toString()
+                image = R.drawable.ic_education
             ),
             CategoryUiState(
                 id = "2",
                 title = "Work",
-                image = R.drawable.ic_education.toString()
+                image = R.drawable.ic_education
             ),
             CategoryUiState(
                 id = "3",
                 title = "Personal",
-                image = R.drawable.ic_education.toString()
+                image = R.drawable.ic_education
             )
         )
 
