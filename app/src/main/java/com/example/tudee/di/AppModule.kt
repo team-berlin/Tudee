@@ -8,10 +8,12 @@ import com.example.tudee.data.service.TaskCategoryServiceImpl
 import com.example.tudee.data.service.TaskServiceImpl
 import com.example.tudee.domain.TaskCategoryService
 import com.example.tudee.domain.TaskService
+
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
+import org.koin.androidx.viewmodel.dsl.viewModelOf
 
-val appModule = module{
+val appModule = module {
     single<AppDatabase> {
         Room.databaseBuilder(
             androidContext(),
@@ -24,6 +26,9 @@ val appModule = module{
     single<TaskCategoryDao> {
         get<AppDatabase>().taskCategoryDao()
     }
+    single<TaskService> { TaskServiceImpl(get()) }  // replace with your real implementation
+    single<TaskCategoryService> { TaskCategoryServiceImpl(get()) }
+
     single<TaskService> {
         TaskServiceImpl(get())
     }

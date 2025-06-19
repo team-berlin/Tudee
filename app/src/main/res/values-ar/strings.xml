@@ -16,15 +16,15 @@
     <string name="back_button">زر العودة</string>
 
 
-        <!-- Task Status -->
-        <string name="todo">قيد التنفيذ</string>
-        <string name="in_progress">جارٍ العمل</string>
-        <string name="done">منجز</string>
+    <!-- Task Status -->
+    <string name="todo">قيد التنفيذ</string>
+    <string name="in_progress">جارٍ العمل</string>
+    <string name="done">منجز</string>
 
-        <!-- Task Priority -->
-        <string name="low">منخفض</string>
-        <string name="medium">متوسط</string>
-        <string name="high">مرتفع</string>
+    <!-- Task Priority -->
+    <string name="low">منخفض</string>
+    <string name="medium">متوسط</string>
+    <string name="high">مرتفع</string>
 
     <string name="task_deleted_success">تم حذف المهمة بنجاح.</string>
 
@@ -35,5 +35,49 @@
     <string name="date_picker_clear_button_text">مسح</string>
     <string name="date_picker_cancel_button_text">إلغاء</string>
     <string name="date_picker_ok_button_text">موافق</string>
+    <string name="snack_bar_error_message">حدث خطأ ما</string>
+    <string name="snack_bar_success_message">تم بنجاح.</string>
+    <string name="app_name">تودي</string>
+    <string name="tudee_description">مساعدك اللطيف لكل مهمة</string>
+
+    <string name="default_task_title">تنظيم مكتب الدراسة</string>
+    <string name="default_task_description">راجع بنية الخلية ووظائفها للغد...</string>
+    <string name="default_priority">متوسطة</string>
+
+
+    <string name="stay_working">واصل العمل!</string>
+    <string name="you_ve_completed_3_out_of_10_tasks_keep_going">لقد أنجزت 3 من أصل 10 مهام، واصل التقدم!</string>
+
+    <string name="back_button">زر العودة</string>
+
+    <!--    content description -->
+    <string name="switch_sun_icon_content_description">شمس</string>
+    <string name="switch_moon_icon_content_description">قمر</string>
+    <string name="switch_stars_icon_content_description">نجوم</string>
+    <string name="back_ground_ellipse">خلفيه</string>
+    <string name="double_arrow_icon">ايقونه سهم</string>
+
+    // ON BOARDING SCREEN
+    <string name="on_boarding_title1">هل تشعر بالإرهاق بسبب كثرة المهام؟</string>
+    <string name="on_boarding_title2">آه لا! هل تؤجل المهام مرة أخرى؟</string>
+    <string name="on_boarding_title3">لنكمل المهام ونحتفل
+        معًا!</string>
+    <string name="on_boarding_description1">لنضع بعض النظام في هذه الفوضى.
+تودي هنا لمساعدتك في الترتيب، التخطيط، والتنفس بسهولة.</string>
+    <string name="on_boarding_description2">تودي ليست غاضبة… لكنها محبطة قليلاً. لنعد إلى المسار الصحيح
+        معًا.</string>
+    <string name="on_boarding_description3">التقدم هو تقدم. تودي ستحتفل معك بكل إنجاز، كبيرًا كان
+        أم صغيرًا.</string>
+
+    <string name="skip_button">تخطي</string>
+    <string name="Title_Error">غير مسموح بنص فارغ</string>
+    <string name="task_title">عنوان المهمة</string>
+    <string name="description">وصف المهمة</string>
+    <string name="set_due_date">تاريخ الإنتهاء</string>
+    <string name="priority">الأولوية</string>
+    <string name="category">الفئة</string>
+    <string name="cancel">إلغاء</string>
+    <string name="add">إضافة</string>
+    <string name="addNewTask">إضافة مهمة جديدة</string>
 
 </resources>

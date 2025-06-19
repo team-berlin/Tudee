@@ -17,15 +17,15 @@
     <string name="back_button">Back Button</string>
 
 
-        <!-- Task Status -->
-        <string name="todo">To Do</string>
-        <string name="in_progress">In Progress</string>
-        <string name="done">Done</string>
+    <!-- Task Status -->
+    <string name="todo">To Do</string>
+    <string name="in_progress">In Progress</string>
+    <string name="done">Done</string>
 
-        <!-- Task Priority -->
-        <string name="low">Low</string>
-        <string name="medium">Medium</string>
-        <string name="high">High</string>
+    <!-- Task Priority -->
+    <string name="low">Low</string>
+    <string name="medium">Medium</string>
+    <string name="high">High</string>
 
     <string name="task_deleted_success">Deleted task successfully.</string>
 
@@ -36,5 +36,56 @@
     <string name="date_picker_clear_button_text">Clear</string>
     <string name="date_picker_cancel_button_text">Cancel</string>
     <string name="date_picker_ok_button_text">OK</string>
+    <string name="app_name">Tudee</string>
 
+    <string name="snack_bar_error_message">Some error occurred</string>
+    <string name="snack_bar_success_message">Successfully.</string>
+
+
+    <string name="tudee_description">Your cute Helper for Every Task</string>
+
+    <string name="default_task_title">Organize Study Desk</string>
+    <string name="default_task_description">Review cell structure and functions for tomorrow...</string>
+    <string name="default_priority">Medium</string>
+
+    <string name="stay_working">Stay working!</string>
+    <string name="you_ve_completed_3_out_of_10_tasks_keep_going">You\'ve completed 3 out of 10 tasks Keep going!</string>
+    <string name="back_button">Back Button</string>
+
+    <!--    content description -->
+    <string name="switch_sun_icon_content_description">Sun</string>
+    <string name="switch_moon_icon_content_description">Moon</string>
+    <string name="switch_stars_icon_content_description">stars</string>
+    <string name="back_ground_ellipse">Back ground ellipse</string>
+    <string name="double_arrow_icon">Double arrow Icon </string>
+
+    // ON BOARDING SCREEN
+    <string name="on_boarding_title1">Overwhelmed with tasks ?</string>
+    <string name="on_boarding_title2">Uh-oh! Procrastinating again</string>
+    <string name="on_boarding_title3">Let\'s complete task and celebrate together.</string>
+
+    <string name="on_boarding_description1">Let\'s bring some order to the chaos.
+        Tudee is here to help you sort, plan, and
+        breathe easier.</string>
+
+    <string name="on_boarding_description2">Tudee not mad… just a little
+        disappointed, Let\'s get back on track
+        together.</string>
+
+    <string name="on_boarding_description3">Progress is progress. Tudee will
+        celebrate you on for every win, big or
+        small.</string>
+
+    <string name="skip_button">Skip</string>
+
+    <string name="Title_Error">Title Not Valid</string>
+    <string name="task_title">Task title</string>
+    <string name="description">Description</string>
+    <string name="set_due_date">set due date</string>
+    <string name="priority">Priority</string>
+    <string name="category">Category</string>
+    <string name="cancel">Cancel</string>
+    <string name="add">Add</string>
+    <string name="save">SAVE</string>
+    <string name="addNewTask">Add new task</string>
 </resources>
