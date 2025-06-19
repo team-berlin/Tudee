@@ -1,7 +1,6 @@
 package com.example.tudee.di
 
 import androidx.room.Room
-import com.example.tudee.presentation.screen.manipulateTask.TaskViewModel
 import com.example.tudee.data.dao.TaskCategoryDao
 import com.example.tudee.data.dao.TaskDao
 import com.example.tudee.data.database.AppDatabase
@@ -9,6 +8,7 @@ import com.example.tudee.data.service.TaskCategoryServiceImpl
 import com.example.tudee.data.service.TaskServiceImpl
 import com.example.tudee.domain.TaskCategoryService
 import com.example.tudee.domain.TaskService
+import com.example.tudee.presentation.viewmodel.TaskViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import org.koin.androidx.viewmodel.dsl.viewModelOf

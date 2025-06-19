@@ -1,4 +1,4 @@
-package com.example.tudee.presentation.screen.manipulateTask
+package com.example.tudee.presentation.viewmodel.uistate
 
 import com.example.tudee.domain.entity.TaskCategory
 import com.example.tudee.domain.entity.TaskPriority
@@ -6,7 +6,7 @@ import com.example.tudee.domain.entity.TaskStatus
 import kotlinx.datetime.LocalDate
 
 data class TaskBottomSheetState(
-    val isButtonSheetVisible: Boolean = true,
+    val isButtonSheetVisible: Boolean = false,
     val taskId: Long? = null,
     val taskTitle: String = "",
     val taskDescription: String = "",
@@ -15,6 +15,7 @@ data class TaskBottomSheetState(
     val taskStatus: TaskStatus? = null,
     val selectedCategoryId: Long? = null,
     val isEditMode: Boolean = false,
+    val snackBarMessage: Boolean? = null,
 
     val categories: List<TaskCategory> = listOf<TaskCategory>(
         TaskCategory(
@@ -41,4 +42,8 @@ data class TaskBottomSheetState(
         TaskPriority.MEDIUM,
         TaskPriority.LOW
     ),
+
 )
+
+
+

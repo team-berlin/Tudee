@@ -1,4 +1,4 @@
-package com.example.tudee.presentation.screen.manipulateTask
+package com.example.tudee.presentation.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -8,6 +8,8 @@ import com.example.tudee.domain.TaskService
 import com.example.tudee.domain.entity.Task
 import com.example.tudee.domain.entity.TaskPriority
 import com.example.tudee.domain.request.TaskCreationRequest
+import com.example.tudee.presentation.viewmodel.uistate.TaskBottomSheetState
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -39,9 +41,9 @@ class TaskViewModel(
             initialValue = false
         )
 
-    init {
-//        observeCategories()
-    }
+//    init {
+//         observeCategories()
+//    }
 
     private fun observeCategories() {
         viewModelScope.launch {
@@ -99,17 +101,35 @@ class TaskViewModel(
 
     fun onAddNewTaskClicked(taskCreationRequest: TaskCreationRequest) {
         viewModelScope.launch {
-            taskService.createTask(taskCreationRequest)
-            Log.d("TaskViewModel", "Task created: $taskCreationRequest")
+            try {
+                taskService.createTask(taskCreationRequest)
+                hideButtonSheet()
+                _uiState.update { it.copy(snackBarMessage = true) }
+                delay(4000)
+                clearSnackBarMessage()
+            } catch (e: Exception) {
+                hideButtonSheet()
+                _uiState.update { it.copy(snackBarMessage = false) }
+                delay(4000)
+                clearSnackBarMessage()
+            }
         }
-//        _uiState.update { it.copy(showBottomSheet = true, isEditMode = false) }
     }
 
     fun onSaveClicked(editedTask: Task) {
         viewModelScope.launch {
-            taskService.editTask(editedTask)
-            hideButtonSheet()
-            Log.d("TaskViewModel", "Task saved: $editedTask")
+            try {
+                taskService.editTask(editedTask)
+                hideButtonSheet()
+                _uiState.update { it.copy(snackBarMessage = true) }
+                delay(4000)
+                clearSnackBarMessage()
+            } catch (e: Exception) {
+                hideButtonSheet()
+                _uiState.update { it.copy(snackBarMessage = false) }
+                delay(4000)
+                clearSnackBarMessage()
+            }
         }
     }
 
@@ -127,8 +147,13 @@ class TaskViewModel(
                 taskDescription = "",
                 selectedTaskPriority = null,
                 selectedCategoryId = null,
-                taskDueDate = null
+                taskDueDate = null,
+                snackBarMessage = null
             )
         }
+    }
+
+    fun clearSnackBarMessage() {
+        _uiState.update { it.copy(snackBarMessage = null) }
     }
 }
