@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -24,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
+import com.example.tudee.presentation.components.AppBar
 import com.example.tudee.presentation.components.TudeeScaffold
 import com.example.tudee.presentation.composables.buttons.FabButton
 import com.example.tudee.presentation.home.components.TasksSection
@@ -60,12 +63,13 @@ fun HomeScreen(
             viewModel.resetStatus()
         }
     }
-
-    HomeContent(
-        modifier = modifier,
-        state = state,
-        actions = viewModel::handleActions,
-    )
+    TudeeTheme(isDarkTheme = state.isDarkMode) {
+        HomeContent(
+            modifier = modifier,
+            state = state,
+            actions = viewModel::handleActions,
+        )
+    }
 }
 
 @Composable
@@ -74,8 +78,19 @@ fun HomeContent(
     state: HomeUiState,
     actions: (HomeActions) -> Unit = {}
 ) {
+
     TudeeScaffold(
         showTopAppBar = true,
+        topAppBar = {
+            AppBar(
+                isDarkMode = state.isDarkMode,
+                onThemeChanged = {
+                    actions(
+                        HomeActions.OnThemeChanged(it)
+                    )
+                }
+            )
+        },
         showFab = true,
         floatingActionButton = {
             FabButton(
@@ -95,15 +110,16 @@ fun HomeContent(
         Box(
             modifier = modifier
                 .fillMaxSize()
+                .padding(it)
                 .background(color = TudeeTheme.color.surface)
-        )
-        {
+
+        ) {
             BackgroundBlueCard()
             Column(
                 modifier = modifier
                     .verticalScroll(rememberScrollState())
                     .fillMaxSize()
-                    .padding(top = 72.dp)
+//                    .padding(top = 72.dp)
                     .padding(
                         horizontal = 16.dp
                     )
@@ -160,7 +176,7 @@ fun BackgroundBlueCard(modifier: Modifier = Modifier) {
     )
 }
 
-@Preview
+@Preview(showSystemUi = true, showBackground = true)
 @Composable
 private fun HomeScreenPreview() {
     TudeeTheme {

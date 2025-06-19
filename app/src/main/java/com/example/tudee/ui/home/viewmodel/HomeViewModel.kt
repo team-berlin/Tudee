@@ -48,6 +48,7 @@ class HomeViewModel(val taskService: TaskService) : ViewModel() {
             HomeActions.OnFabClicked -> onFabClicked()
             is HomeActions.OnTaskCardClicked -> onTaskCardClicked(actions.taskUiState)
             is HomeActions.OnTaskStatusChanged -> onTaskStatusChanged(actions.status)
+            is HomeActions.OnThemeChanged -> onThemeChanged(actions.isDarkMode)
         }
     }
 
@@ -337,6 +338,14 @@ class HomeViewModel(val taskService: TaskService) : ViewModel() {
 
     private fun filterTasksByStatus(taskStatus: TaskStatus, taskList: List<Task>): List<Task> {
         return taskList.filter { it.status == taskStatus }
+    }
+
+    private fun onThemeChanged(isDarkMode: Boolean) {
+        _homeUiState.update { oldValue ->
+            oldValue.copy(
+                isDarkMode = isDarkMode
+            )
+        }
     }
 
     fun resetStatus() {

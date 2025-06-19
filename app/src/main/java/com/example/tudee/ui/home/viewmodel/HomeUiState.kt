@@ -5,7 +5,7 @@ import androidx.annotation.StringRes
 
 
 data class HomeUiState(
-    //TODO : Ask about theme mode switch
+    val isDarkMode: Boolean = false,
     val taskUiState: TaskUiState = TaskUiState(),
     val taskTodayDateUiState: TaskTodayDateUiState = TaskTodayDateUiState(),
     val sliderUiState: SliderUiState = SliderUiState(),
@@ -56,4 +56,3 @@ data class TaskTodayDateUiState(
     val month: String = "",
     val year: String = "",
 )
-

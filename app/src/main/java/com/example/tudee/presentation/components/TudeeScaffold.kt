@@ -39,9 +39,7 @@ fun TudeeScaffold(
         containerColor = TudeeTheme.color.surface,
         topBar = {
             if (showTopAppBar && topAppBar != null) {
-                Box(Modifier.systemBarsPadding()) {
-                    topAppBar()
-                }
+                topAppBar()
             }
         },
         bottomBar = {
