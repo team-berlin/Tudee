@@ -41,9 +41,7 @@ fun CategoryItemWithBadge(
     badgeCount: Int? = null
 ) {
     Column(
-        modifier = modifier
-            .width(104.dp)
-            .height(102.dp),
+        modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -58,7 +56,8 @@ fun CategoryItemWithBadge(
                 contentAlignment = Alignment.Center,
             ) {
                 Image(
-                    categoryPainter,
+                    modifier = Modifier.size(32.dp),
+                    painter = categoryPainter,
                     contentDescription = categoryImageContentDescription,
                 )
             }
