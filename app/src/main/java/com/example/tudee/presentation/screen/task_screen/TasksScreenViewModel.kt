@@ -4,11 +4,14 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.room.util.copy
 import com.example.tudee.R
+import com.example.tudee.domain.TaskCategoryService
 import com.example.tudee.domain.TaskService
 import com.example.tudee.domain.entity.Task
 import com.example.tudee.domain.entity.TaskPriority
 import com.example.tudee.domain.entity.TaskStatus
+import com.example.tudee.domain.request.TaskCreationRequest
 import com.example.tudee.presentation.components.TabBarItem
 import com.example.tudee.presentation.composables.buttons.ButtonState
 import kotlinx.coroutines.delay
@@ -21,18 +24,106 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
-import kotlinx.datetime.toLocalDate
 import kotlinx.datetime.toLocalDateTime
 
 class TasksScreenViewModel(
-    private val taskService: TaskService
+    private val taskService: TaskService,
+    private val categoryService: TaskCategoryService
 ) : ViewModel(), TaskScreenInteractor {
     private val _taskScreenUiState = MutableStateFlow(TasksScreenUiState())
     val taskScreenUiState = _taskScreenUiState
 
     init {
         viewModelScope.launch {
-            getTasksByStatus(TaskStatus.TODO)
+            taskService.createTask(
+                TaskCreationRequest(
+                    title = "First Task",
+                    description = "Finish the initial UI design",
+                    priority = TaskPriority.LOW,
+                    categoryId = 1,
+                    status = TaskStatus.TODO,
+                    assignedDate = LocalDate(2023, 12, 12)
+                )
+            )
+
+            taskService.createTask(
+                TaskCreationRequest(
+                    title = "Second Task",
+                    description = "Set up authentication module",
+                    priority = TaskPriority.MEDIUM,
+                    categoryId = 1,
+                    status = TaskStatus.IN_PROGRESS,
+                    assignedDate = LocalDate(2023, 12, 13)
+                )
+            )
+
+            taskService.createTask(
+                TaskCreationRequest(
+                    title = "Third Task",
+                    description = "Write unit tests for login",
+                    priority = TaskPriority.HIGH,
+                    categoryId = 1,
+                    status = TaskStatus.TODO,
+                    assignedDate = LocalDate(2023, 12, 14)
+                )
+            )
+
+            taskService.createTask(
+                TaskCreationRequest(
+                    title = "Fourth Task",
+                    description = "Deploy to staging environment",
+                    priority = TaskPriority.MEDIUM,
+                    categoryId = 1,
+                    status = TaskStatus.DONE,
+                    assignedDate = LocalDate(2023, 12, 15)
+                )
+            )
+            taskService.createTask(
+                TaskCreationRequest(
+                    title = "First Task",
+                    description = "Finish the initial UI design",
+                    priority = TaskPriority.LOW,
+                    categoryId = 1,
+                    status = TaskStatus.TODO,
+                    assignedDate = LocalDate(2023, 12, 12)
+                )
+            )
+
+            taskService.createTask(
+                TaskCreationRequest(
+                    title = "Second Task",
+                    description = "Set up authentication module",
+                    priority = TaskPriority.MEDIUM,
+                    categoryId = 1,
+                    status = TaskStatus.IN_PROGRESS,
+                    assignedDate = LocalDate(2023, 12, 13)
+                )
+            )
+
+            taskService.createTask(
+                TaskCreationRequest(
+                    title = "Third Task",
+                    description = "Write unit tests for login",
+                    priority = TaskPriority.HIGH,
+                    categoryId = 1,
+                    status = TaskStatus.TODO,
+                    assignedDate = LocalDate(2023, 12, 14)
+                )
+            )
+
+            taskService.createTask(
+                TaskCreationRequest(
+                    title = "Fourth Task",
+                    description = "Deploy to staging environment",
+                    priority = TaskPriority.MEDIUM,
+                    categoryId = 1,
+                    status = TaskStatus.DONE,
+                    assignedDate = LocalDate(2023, 12, 15)
+                )
+            )
+            _taskScreenUiState.update { it.copy(isLoading = true) }
+            //getTasksByStatus(TaskStatus.TODO)
+            _taskScreenUiState.update { it.copy(isLoading = false) }
         }
     }
 
@@ -46,7 +137,7 @@ class TasksScreenViewModel(
 
     }
 
-    override fun onDeleteIconClicked(idOfTaskToBeDeleted: Long?) {
+    override fun onDeleteIconClicked(idOfTaskToBeDeleted: Long) {
         _taskScreenUiState.update {
             it.copy(isBottomSheetVisible = true, idOfTaskToBeDeleted = idOfTaskToBeDeleted)
         }
@@ -60,17 +151,18 @@ class TasksScreenViewModel(
                 )
             )
         }
-        _taskScreenUiState.update { state ->
-            state.copy(
-                listOfTasksUiState = state.listOfTasksUiState.filterNot { it.id == state.idOfTaskToBeDeleted },
-                isBottomSheetVisible = false,
-                deleteBottomSheetUiState = state.deleteBottomSheetUiState.copy(
-                    deleteButtonState = ButtonState.IDLE
+        viewModelScope.launch {
+            taskService.deleteTask(_taskScreenUiState.value.idOfTaskToBeDeleted.toLong())
+            _taskScreenUiState.update { state ->
+                state.copy(
+                    isBottomSheetVisible = false,
+                    deleteBottomSheetUiState = state.deleteBottomSheetUiState.copy(
+                        deleteButtonState = ButtonState.IDLE
+                    )
                 )
-            )
+            }
+            showSnackBar()
         }
-        showSnackBar()
-
     }
 
     override fun onCancelButtonClicked() {
@@ -89,23 +181,35 @@ class TasksScreenViewModel(
     }
 
     override fun onTabSelected(tabIndex: Int) {
-        _taskScreenUiState.update { taskScreenUiState ->
-            taskScreenUiState.copy(
-                selectedTabIndex = tabIndex,
-                listOfTasksUiState = dummyTasks.filter {
-                    it.status.toString() == taskScreenUiState.listOfTabBarItem[tabIndex].title
-                },
-                listOfTabBarItem = taskScreenUiState.listOfTabBarItem.mapIndexed { index, tabItem ->
-                    tabItem.copy(
-                        taskCount = dummyTasks.filter {
-                            it.status.toString() == taskScreenUiState.listOfTabBarItem[tabIndex].title
-                        }.size.toString(), isSelected = tabIndex == index
-                    )
-                },
+        val statusUiState = TaskStatusUiState.entries[tabIndex]
+        val status = statusUiState.toDomain()
 
-                )
+        viewModelScope.launch {
+            taskService.getTasksByStatus(status).collect { tasks ->
+                val mappedTasks = tasks.map {
+                    val icon = getCategoryIconById(it.categoryId)
+                    it.taskToTaskUiState(icon.toInt())
+                }
+
+                _taskScreenUiState.update { taskScreenUiState ->
+                    taskScreenUiState.copy(
+                        selectedTabIndex = tabIndex,
+                        listOfTasksUiState = mappedTasks,
+                        listOfTabBarItem = taskScreenUiState.listOfTabBarItem.mapIndexed { index, tabItem ->
+                            tabItem.copy(
+                                isSelected = index == tabIndex,
+                                taskCount = mappedTasks.count {
+                                    it.status == statusUiState.status
+                                }.toString()
+                            )
+                        }
+                    )
+                }
+            }
         }
     }
+
+
 
     override fun onFloatingActionClicked() {
 
@@ -163,11 +267,17 @@ class TasksScreenViewModel(
     }
 
     private suspend fun getTasksByStatus(status: TaskStatus) {
-        _taskScreenUiState.update { uiState ->
-            uiState.copy(
-                listOfTasksUiState = dummyTasks.filter { it.status == status.toUiState().status }
-            )
+        taskService.getTasksByStatus(status).collect {
+            val result = it.map {
+                val categoryIcon = getCategoryIconById(it.categoryId)
+                it.taskToTaskUiState(categoryIcon.toInt())
+            }
+            _taskScreenUiState.update { it.copy(listOfTasksUiState = result) }
         }
+    }
+
+    private suspend fun getCategoryIconById(categoryId: Long): String {
+        return categoryService.getCategoryIconById(categoryId)
     }
 }
 
@@ -183,7 +293,7 @@ data class TasksScreenUiState(
     val isSnackBarVisible: Boolean = false,
     val datePickerUiState: DatePickerUiState = DatePickerUiState(),
     val deleteBottomSheetUiState: DeleteBottomSheetUiState = DeleteBottomSheetUiState(),
-    val idOfTaskToBeDeleted: Long? = null,
+    val idOfTaskToBeDeleted: Long=0,
     val noCurrentTasks: Boolean = listOfTasksUiState.isEmpty()
 )
 
@@ -213,132 +323,7 @@ data class DateCardUiState(
 )
 
 
-private val dummyTasks = listOf(
-    Task(
-        1L,
-        "Design Login UI",
-        "Create a clean login screen",
-        TaskPriority.HIGH,
-        101L,
-        TaskStatus.TODO,
-        "2025-06-16".toLocalDate()
-    ), Task(
-        2L,
-        "Write Unit Tests",
-        "Cover the authentication module",
-        TaskPriority.MEDIUM,
-        102L,
-        TaskStatus.IN_PROGRESS,
-        "2025-06-15".toLocalDate()
-    ), Task(
-        3L,
-        "Fix Navigation Bug",
-        "App crashes on back press",
-        TaskPriority.HIGH,
-        103L,
-        TaskStatus.TODO,
-        "2025-06-14".toLocalDate()
-    ), Task(
-        4L,
-        "Optimize DB Queries",
-        "Improve Room performance",
-        TaskPriority.LOW,
-        104L,
-        TaskStatus.DONE,
-        "2025-06-12".toLocalDate()
-    ), Task(
-        5L,
-        "Refactor ViewModel",
-        "Split into smaller modules",
-        TaskPriority.MEDIUM,
-        101L,
-        TaskStatus.IN_PROGRESS,
-        "2025-06-11".toLocalDate()
-    ), Task(
-        6L,
-        "Update Dependencies",
-        "Bring all libs to latest stable",
-        TaskPriority.LOW,
-        105L,
-        TaskStatus.TODO,
-        "2025-06-10".toLocalDate()
-    ), Task(
-        7L,
-        "Write Docs",
-        "Document public APIs",
-        TaskPriority.MEDIUM,
-        102L,
-        TaskStatus.DONE,
-        "2025-06-09".toLocalDate()
-    ), Task(
-        8L,
-        "Setup CI",
-        "Configure GitHub Actions",
-        TaskPriority.HIGH,
-        106L,
-        TaskStatus.IN_PROGRESS,
-        "2025-06-08".toLocalDate()
-    ), Task(
-        9L,
-        "Design Settings Page",
-        "Include themes, preferences",
-        TaskPriority.MEDIUM,
-        103L,
-        TaskStatus.TODO,
-        "2025-06-07".toLocalDate()
-    ), Task(
-        10L,
-        "Implement Logout",
-        "Clear session, redirect user",
-        TaskPriority.LOW,
-        104L,
-        TaskStatus.DONE,
-        "2025-06-06".toLocalDate()
-    ), Task(
-        11L,
-        "Create Splash Screen",
-        "Add branding and loader",
-        TaskPriority.MEDIUM,
-        105L,
-        TaskStatus.TODO,
-        "2025-06-05".toLocalDate()
-    ), Task(
-        12L,
-        "Improve Animations",
-        "Add transitions to views",
-        TaskPriority.LOW,
-        106L,
-        TaskStatus.IN_PROGRESS,
-        "2025-06-04".toLocalDate()
-    ), Task(
-        13L,
-        "Fix Dark Mode Bugs",
-        "Icons invisible in dark mode",
-        TaskPriority.HIGH,
-        101L,
-        TaskStatus.TODO,
-        "2025-06-03".toLocalDate()
-    ), Task(
-        14L,
-        "Create User Profile",
-        "UI for name, avatar, bio",
-        TaskPriority.MEDIUM,
-        102L,
-        TaskStatus.IN_PROGRESS,
-        "2025-06-02".toLocalDate()
-    ), Task(
-        15L,
-        "Enable Push Notifications",
-        "Notify on important events",
-        TaskPriority.HIGH,
-        103L,
-        TaskStatus.DONE,
-        "2025-06-01".toLocalDate()
-    )
-).map { it.taskToTaskUiState() }
-
-
-fun Task.taskToTaskUiState(): TaskUiState {
+fun Task.taskToTaskUiState(categoryIcon: Int): TaskUiState {
     return TaskUiState(
         id = id,
         title = title,
@@ -346,7 +331,7 @@ fun Task.taskToTaskUiState(): TaskUiState {
         priority = priority.toUiState().priority,
         status = status.toUiState().status,
         categoryTitle = "",
-        categoryIcon = 0
+        categoryIcon = categoryIcon
     )
 }
 
@@ -368,13 +353,13 @@ fun getNextSevenDays(): List<DateCardUiState> {
 
 val defaultTabBarItem = listOf(
     TabBarItem(
-        title = TaskStatusUiState.IN_PROGRESS.status.toString(), taskCount = "0", isSelected = false
+        title = TaskStatusUiState.IN_PROGRESS.status, taskCount = "0", isSelected = true
     ),
     TabBarItem(
-        title = TaskStatusUiState.TODO.status.toString(), taskCount = "0", isSelected = false
+        title = TaskStatusUiState.TODO.status, taskCount = "0", isSelected = false
     ),
     TabBarItem(
-        title = TaskStatusUiState.DONE.status.toString(), taskCount = "0", isSelected = false
+        title = TaskStatusUiState.DONE.status, taskCount = "0", isSelected = false
     ),
 
     )
@@ -391,6 +376,7 @@ enum class TaskStatusUiState(@StringRes var status: Int) {
     IN_PROGRESS(R.string.in_progress),
     DONE(R.string.done)
 }
+
 
 enum class TaskPriorityUiState(@StringRes var priority: Int) {
     LOW(R.string.low),

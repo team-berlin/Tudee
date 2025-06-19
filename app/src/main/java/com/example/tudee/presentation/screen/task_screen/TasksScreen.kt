@@ -121,7 +121,7 @@ fun TasksScreenContent(
     onTabSelected: (Int) -> Unit,
     onFloatingActionClicked: () -> Unit,
     onTaskCardClicked: (Long) -> Unit,
-    onDeleteIconClicked: (Long?) -> Unit,
+    onDeleteIconClicked: (Long) -> Unit,
     onDeleteButtonClicked: () -> Unit,
     onBottomSheetDismissed: () -> Unit,
     onCancelButtonClicked: () -> Unit,
@@ -378,7 +378,7 @@ fun TasksListContent(
     modifier: Modifier = Modifier,
     listOfTasks: List<TaskUiState>,
     onTaskCardClicked: (Long) -> Unit,
-    onDeleteIconClick: (Long?) -> Unit,
+    onDeleteIconClick: (Long) -> Unit,
     // selectedTabIndex:Int
 ) {
 
@@ -404,17 +404,17 @@ fun TasksListContent(
                     var priorityBackgroundColor = Color.Transparent
                     var priorityIcon = painterResource(R.drawable.ic_priority_medium)
                     when (task.priority) {
-                        "HIGH" -> {
+                        TaskPriorityUiState.HIGH.priority -> {
                             priorityBackgroundColor = TudeeTheme.color.statusColors.pinkAccent
                             priorityIcon = painterResource(R.drawable.ic_priority_high)
                         }
 
-                        "MEDIUM" -> {
+                        TaskPriorityUiState.MEDIUM.priority -> {
                             priorityBackgroundColor = TudeeTheme.color.statusColors.yellowAccent
                             priorityIcon = painterResource(R.drawable.ic_priority_medium)
                         }
 
-                        "LOW" -> {
+                        TaskPriorityUiState.LOW.priority -> {
                             priorityBackgroundColor = TudeeTheme.color.statusColors.greenAccent
                             priorityIcon = painterResource(R.drawable.ic_priority_low)
                         }
@@ -422,14 +422,10 @@ fun TasksListContent(
                     Modifier
                         .clip(RoundedCornerShape(16.dp))
                     CategoryTaskComponent(
-                        modifier = Modifier.animateItem(
-                            fadeInSpec = tween(5000),
-                            fadeOutSpec = tween(5000),
-                            placementSpec = tween(5000)
-                        ),
+
                         title = task.title,
                         description = task.description,
-                        priority = task.priority,
+                        priority = stringResource(task.priority),
                         priorityBackgroundColor = priorityBackgroundColor,
                         taskIcon = { },
                         onClick = { },

@@ -4,7 +4,9 @@ import androidx.room.Room
 import com.example.tudee.data.dao.TaskCategoryDao
 import com.example.tudee.data.dao.TaskDao
 import com.example.tudee.data.database.AppDatabase
+import com.example.tudee.data.service.TaskCategoryServiceImpl
 import com.example.tudee.data.service.TaskServiceImpl
+import com.example.tudee.domain.TaskCategoryService
 import com.example.tudee.domain.TaskService
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
@@ -24,6 +26,9 @@ val appModule = module{
     }
     single<TaskService> {
         TaskServiceImpl(get())
+    }
+    single< TaskCategoryService> {
+        TaskCategoryServiceImpl(get())
     }
 
 

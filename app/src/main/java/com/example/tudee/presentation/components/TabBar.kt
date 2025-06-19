@@ -29,7 +29,7 @@ import com.example.tudee.designsystem.theme.TudeeTheme
 
 
 data class TabBarItem(
-    val title: String,
+    val title: Int,
     val taskCount: String,
     val isSelected: Boolean,
 )
@@ -136,17 +136,17 @@ private fun TabBarHorizontalDivider() {
 fun TabBarComponentPreview() {
     val defaultTabBarHeaders = listOf<TabBarItem>(
         TabBarItem(
-            title = "In Progress",
+            title = 0,
             taskCount = "0",
             isSelected = true
         ),
         TabBarItem(
-            title = "To DO",
+            title = 0,
             taskCount = "0",
             isSelected = false
         ),
         TabBarItem(
-            title = "Done",
+            title = 0,
             taskCount = "0",
             isSelected = false
         ),
@@ -165,14 +165,14 @@ fun TabBarComponentPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun DefaultTabContentPreview(
-    tabBarItem: TabBarItem = TabBarItem("tesPreview", "2", true)
+    tabBarItem: TabBarItem = TabBarItem(0, "2", true)
 ) {
     TudeeTheme {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = tabBarItem.title,
+                text = stringResource(tabBarItem.title),
                 modifier = Modifier.padding(end = 4.dp),
                 style = if (tabBarItem.isSelected) TudeeTheme.textStyle.label.medium else TudeeTheme.textStyle.label.small,
                 color = if (tabBarItem.isSelected) TudeeTheme.color.textColors.title else TudeeTheme.color.textColors.hint
