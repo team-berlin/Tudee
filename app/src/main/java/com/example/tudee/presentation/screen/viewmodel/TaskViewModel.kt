@@ -22,11 +22,10 @@ import kotlinx.datetime.LocalDate
 
 class TaskViewModel(
     private val taskService: TaskService,
-    private val categoryService: TaskCategoryService,
+    private val categoryService: TaskCategoryService
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<TaskBottomSheetState> =
-        MutableStateFlow(TaskBottomSheetState())
+    private val _uiState: MutableStateFlow<TaskBottomSheetState> = MutableStateFlow(TaskBottomSheetState())
     val uiState: StateFlow<TaskBottomSheetState> = _uiState.asStateFlow()
 
     val isTaskValid: StateFlow<Boolean> = _uiState
@@ -37,25 +36,11 @@ class TaskViewModel(
                     state.selectedCategoryId != null
         }.stateIn(
             scope = viewModelScope,
-            started = SharingStarted.Companion.WhileSubscribed(5000),
+            started = SharingStarted.WhileSubscribed(5000),
             initialValue = false
         )
 
-//    init {
-//         observeCategories()
-//    }
-
-    private fun observeCategories() {
-        viewModelScope.launch {
-            categoryService.getCategories()
-                .collect { list ->
-                    _uiState.update { it.copy(categories = list) }
-                }
-        }
-    }
-
     fun onUpdateTaskTitle(newTitle: String) {
-        Log.d("TaskViewModel", "Updating task title to: $newTitle")
         _uiState.update { it.copy(taskTitle = newTitle) }
     }
 
@@ -68,74 +53,15 @@ class TaskViewModel(
     }
 
     fun onSelectTaskPriority(newPriority: TaskPriority) {
-        Log.d("TaskViewModel", "Updating task priority to: $newPriority")
         _uiState.update { it.copy(selectedTaskPriority = newPriority) }
     }
 
-    fun onSelectTaskCategory(selectedCategoryID: Long) {
-        _uiState.update { it.copy(selectedCategoryId = selectedCategoryID) }
+    fun onSelectTaskCategory(selectedCategoryId: Long) {
+        _uiState.update { it.copy(selectedCategoryId = selectedCategoryId) }
     }
 
     fun showButtonSheet() {
         _uiState.update { it.copy(isButtonSheetVisible = true) }
-    }
-
-    fun getTaskInfoById(taskId: Long) {
-        viewModelScope.launch {
-            with(taskService.getTaskById(taskId)) {
-                _uiState.update {
-                    it.copy(
-                        isEditMode = true,
-                        taskId = taskId,
-                        taskStatus = status,
-                        taskTitle = title,
-                        taskDescription = description,
-                        selectedTaskPriority = priority,
-                        selectedCategoryId = categoryId,
-                        taskDueDate = assignedDate,
-                    )
-                }
-            }
-        }
-    }
-
-    fun onAddNewTaskClicked(taskCreationRequest: TaskCreationRequest) {
-        viewModelScope.launch {
-            try {
-                taskService.createTask(taskCreationRequest)
-                hideButtonSheet()
-                _uiState.update { it.copy(snackBarMessage = true) }
-                delay(4000)
-                clearSnackBarMessage()
-            } catch (e: Exception) {
-                hideButtonSheet()
-                _uiState.update { it.copy(snackBarMessage = false) }
-                delay(4000)
-                clearSnackBarMessage()
-            }
-        }
-    }
-
-    fun onSaveClicked(editedTask: Task) {
-        viewModelScope.launch {
-            try {
-                taskService.editTask(editedTask)
-                hideButtonSheet()
-                _uiState.update { it.copy(snackBarMessage = true) }
-                delay(4000)
-                clearSnackBarMessage()
-            } catch (e: Exception) {
-                hideButtonSheet()
-                _uiState.update { it.copy(snackBarMessage = false) }
-                delay(4000)
-                clearSnackBarMessage()
-            }
-        }
-    }
-
-    fun onCancelClicked() {
-        hideButtonSheet()
-        Log.d("TaskViewModel", "Edit cancelled")
     }
 
     fun hideButtonSheet() {
@@ -153,7 +79,60 @@ class TaskViewModel(
         }
     }
 
-    fun clearSnackBarMessage() {
-        _uiState.update { it.copy(snackBarMessage = null) }
+    fun getTaskInfoById(taskId: Long) {
+        viewModelScope.launch {
+            try {
+                with(taskService.getTaskById(taskId)) {
+                    _uiState.update {
+                        it.copy(
+                            isEditMode = true,
+                            taskId = taskId,
+                            taskStatus = status,
+                            taskTitle = title,
+                            taskDescription = description,
+                            selectedTaskPriority = priority,
+                            selectedCategoryId = categoryId,
+                            taskDueDate = assignedDate
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("TaskViewModel", "Error fetching task: ${e.message}")
+            }
+        }
+    }
+
+    fun onAddNewTaskClicked(taskCreationRequest: TaskCreationRequest) {
+        viewModelScope.launch {
+            try {
+                taskService.createTask(taskCreationRequest)
+                _uiState.update { it.copy(snackBarMessage = true) }
+                delay(2000)
+                hideButtonSheet()
+            } catch (e: Exception) {
+                _uiState.update { it.copy(snackBarMessage = false) }
+                delay(2000)
+                hideButtonSheet()
+            }
+        }
+    }
+
+    fun onSaveClicked(editedTask: Task) {
+        viewModelScope.launch {
+            try {
+                taskService.editTask(editedTask)
+                _uiState.update { it.copy(snackBarMessage = true) }
+                delay(2000)
+                hideButtonSheet()
+            } catch (e: Exception) {
+                _uiState.update { it.copy(snackBarMessage = false) }
+                delay(2000)
+                hideButtonSheet()
+            }
+        }
+    }
+
+    fun onCancelClicked() {
+        hideButtonSheet()
     }
 }
