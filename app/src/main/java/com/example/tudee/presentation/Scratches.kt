@@ -48,15 +48,16 @@ fun TapBarDivider(
                 .height(48.dp),
             verticalAlignment = Alignment.CenterVertically,
 
-
         ) {
             var boxWodth by remember { mutableFloatStateOf(0f) }
             Box(
-                Modifier.fillMaxHeight()
-                    .onSizeChanged{boxWodth=it.width.toFloat()},
+                Modifier.fillMaxHeight(),
                 contentAlignment = Alignment.Center
             ) {
-                Text("In progress")
+                Text(
+                    modifier = Modifier.onSizeChanged{
+                       boxWodth=it.width.toFloat()},
+                    text = "In progress")
 
                 TabBarIndicator(
                     Modifier
@@ -96,39 +97,39 @@ fun TabBarIndicator(modifier: Modifier= Modifier) {
             .background(TudeeTheme.color.secondary)
     )
 }
-@Preview(showBackground = true)
-@Composable
-fun TabBar(selectedIndex: Int=0) {
-    val tabs = listOf("All", "In Progress", "Completed")
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        horizontalArrangement = Arrangement.SpaceEvenly,
-        verticalAlignment = Alignment.Bottom
-    ) {
-        tabs.forEachIndexed { index, label ->
-            Column(
-                modifier = Modifier.wrapContentWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = label,
-                    color = if (index == selectedIndex) Color.Black else Color.Gray
-                )
-
-                if (index == selectedIndex) {
-                    Box(
-                        modifier = Modifier
-                            .padding(top = 4.dp)
-                            .height(3.dp)
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp))
-                            .background(Color(0xFFFF9800)) // Orange indicator
-                    )
-                }
-            }
-        }
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun TabBar(selectedIndex: Int=0) {
+//    val tabs = listOf("All", "In Progress", "Completed")
+//
+//    Row(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .padding(vertical = 8.dp),
+//        horizontalArrangement = Arrangement.SpaceEvenly,
+//        verticalAlignment = Alignment.Bottom
+//    ) {
+//        tabs.forEachIndexed { index, label ->
+//            Column(
+//                modifier = Modifier.wrapContentWidth(),
+//                horizontalAlignment = Alignment.CenterHorizontally
+//            ) {
+//                Text(
+//                    text = label,
+//                    color = if (index == selectedIndex) Color.Black else Color.Gray
+//                )
+//
+//                if (index == selectedIndex) {
+//                    Box(
+//                        modifier = Modifier
+//                            .padding(top = 4.dp)
+//                            .height(3.dp)
+//                            .fillMaxWidth()
+//                            .clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp))
+//                            .background(Color(0xFFFF9800)) // Orange indicator
+//                    )
+//                }
+//            }
+//        }
+//    }
+//}

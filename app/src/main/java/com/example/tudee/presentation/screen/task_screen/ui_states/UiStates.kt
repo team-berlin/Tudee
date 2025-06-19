@@ -16,6 +16,7 @@ data class TasksScreenUiState(
     val listOfTasksUiState: List<TaskUiState> = emptyList(),
     val isLoading: Boolean = true,
     val isBottomSheetVisible: Boolean = false,
+    val isAddBottomSheetVisible: Boolean = false,
     val isSnackBarVisible: Boolean = false,
     val datePickerUiState: DatePickerUiState = DatePickerUiState(),
     val deleteBottomSheetUiState: DeleteBottomSheetUiState = DeleteBottomSheetUiState(),

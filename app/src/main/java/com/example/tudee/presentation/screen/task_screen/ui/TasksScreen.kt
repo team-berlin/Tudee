@@ -89,6 +89,9 @@ import com.example.tudee.presentation.screen.task_screen.ui_states.DatePickerUiS
 import com.example.tudee.presentation.screen.task_screen.ui_states.TaskUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.TasksScreenUiState
 import com.example.tudee.presentation.screen.task_screen.viewmodel.TasksScreenViewModel
+import com.example.tudee.presentation.screen.taskscreen.addTask.AddBottomSheet
+import com.example.tudee.presentation.viewmodel.AddTaskBottomSheetViewModel
+import com.example.tudee.presentation.viewmodel.uistate.TaskBottomSheetState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -99,7 +102,14 @@ fun TasksScreen(navController: NavController) {
     val tasksScreenViewModel: TasksScreenViewModel = koinViewModel()
     val taskScreenUiState by tasksScreenViewModel.taskScreenUiState.collectAsState()
 
+    val addTaskBottomSheetViewModel: AddTaskBottomSheetViewModel = koinViewModel()
+    val addTaskBottomSheetUiState by addTaskBottomSheetViewModel.uiState.collectAsState()
+
+    val addButtonState by addTaskBottomSheetViewModel.isTaskValid.collectAsState()
     TasksScreenContent(
+        addTaskBottomSheetUiState=addTaskBottomSheetUiState,
+        addTaskBottomSheetViewModel=addTaskBottomSheetViewModel,
+        addButtonState=addButtonState,
         taskScreenUiState = taskScreenUiState,
         onTabSelected = tasksScreenViewModel::onTabSelected,
         onFloatingActionClicked = tasksScreenViewModel::onFloatingActionClicked,
@@ -134,6 +144,9 @@ fun TasksScreenContent(
     onConfirmDatePicker: (Long?) -> Unit,
     onDismissDatePicker: () -> Unit,
     hideSnackBar: () -> Unit,
+    addTaskBottomSheetUiState: TaskBottomSheetState,
+    addTaskBottomSheetViewModel: AddTaskBottomSheetViewModel,
+    addButtonState: Boolean,
 
     ) {
 
@@ -143,7 +156,11 @@ fun TasksScreenContent(
         showBottomBar = true,
         bottomBarContent = { TaskScreenBottomAppBar() },
         showFab = true,
-        floatingActionButton = { TaskScreenFloatingActionButton { onFloatingActionClicked } })
+        floatingActionButton = {
+            TaskScreenFloatingActionButton {
+                addTaskBottomSheetViewModel.showButtonSheet()
+            }
+        })
     { paddingValues ->
 
         Box(
@@ -152,6 +169,12 @@ fun TasksScreenContent(
                 .background(TudeeTheme.color.surfaceHigh)
                 .padding(paddingValues)
         ) {
+            if (addTaskBottomSheetUiState.isButtonSheetVisible) {
+                AddBottomSheet()
+            }
+
+
+
             DatePickerScreen(
                 uiState = taskScreenUiState.datePickerUiState,
                 onDismiss = onDismissDatePicker,
@@ -618,7 +641,7 @@ private fun TaskScreenBottomAppBar() {
 
 
 @Composable
-private fun TaskScreenFloatingActionButton(onFloatingActionClicked: () -> Unit) {
+private fun TaskScreenFloatingActionButton( onFloatingActionClicked: () -> Unit) {
     FabButton(onClick = {
         onFloatingActionClicked()
     }, content = {
@@ -628,24 +651,28 @@ private fun TaskScreenFloatingActionButton(onFloatingActionClicked: () -> Unit) 
     })
 }
 
-@Composable
-@Preview(showBackground = true)
-fun TasksScreenContentPreview() {
-    TudeeTheme
-    TasksScreenContent(
-        taskScreenUiState = TasksScreenUiState(),
-        onDayCardClicked = {},
-        onTabSelected = {},
-        onFloatingActionClicked = {},
-        onTaskCardClicked = {},
-        onDeleteIconClicked = { },
-        onDeleteButtonClicked = {},
-        onBottomSheetDismissed = {},
-        onCancelButtonClicked = {},
-        onDateCardClicked = {},
-        onConfirmDatePicker = {},
-        onDismissDatePicker = { },
-        hideSnackBar = {})
-}
+//@Composable
+//@Preview(showBackground = true)
+//fun TasksScreenContentPreview() {
+//    TudeeTheme
+//    TasksScreenContent(
+//        taskScreenUiState = TasksScreenUiState(),
+//        onDayCardClicked = {},
+//        onTabSelected = {},
+//        onFloatingActionClicked = {},
+//        onTaskCardClicked = {},
+//        onDeleteIconClicked = { },
+//        onDeleteButtonClicked = {},
+//        onBottomSheetDismissed = {},
+//        onCancelButtonClicked = {},
+//        onDateCardClicked = {},
+//        onConfirmDatePicker = {},
+//        onDismissDatePicker = { },
+//        hideSnackBar = {},
+//        addTaskBottomSheetUiState = TaskBottomSheetState(),
+//        addTaskBottomSheetViewModel = addTaskBottomSheetViewModel,
+//        addButtonState = {}
+//    )
+//}
 
 

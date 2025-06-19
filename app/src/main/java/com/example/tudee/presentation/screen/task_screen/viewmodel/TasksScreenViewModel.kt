@@ -103,7 +103,7 @@ class TasksScreenViewModel(
     }
 
     override fun onFloatingActionClicked() {
-
+        _taskScreenUiState.update { it.copy(isAddBottomSheetVisible = true) }
     }
 
     override fun onTaskCardClicked(taskId: Long) {

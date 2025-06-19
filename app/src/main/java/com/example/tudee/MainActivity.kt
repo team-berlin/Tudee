@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -19,6 +20,7 @@ import com.example.tudee.naviagtion.Destination
 import com.example.tudee.naviagtion.Destination.CategoriesScreen
 import com.example.tudee.naviagtion.Destination.TasksScreen
 import com.example.tudee.naviagtion.TudeeNavGraph
+import com.example.tudee.presentation.screen.task_screen.ui.TasksScreen
 
 class MainActivity : ComponentActivity() {
     private val bottomBarRoutes =
@@ -35,15 +37,15 @@ class MainActivity : ComponentActivity() {
 
             TudeeTheme {
 
-                com.example.tudee.presentation.screen.task_screen.ui.TasksScreen(navController)
+               TasksScreen(navController)
 
-            Column(Modifier.padding(50.dp)){
-             //   EditeBottomSheet(taskId = 1L)
-               // AddBottomSheet()
+                Column(Modifier.padding(50.dp)) {
+                    //   EditeBottomSheet(taskId = 1L)
+                    // AddBottomSheet()
+                }
             }
         }
     }
-}
 }
 
 @Preview(showBackground = true)

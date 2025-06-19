@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 
-class TaskViewModel(
+class AddTaskBottomSheetViewModel(
     private val taskService: TaskService,
     private val categoryService: TaskCategoryService
 ) : ViewModel() {

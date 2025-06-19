@@ -12,14 +12,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.tudee.presentation.viewmodel.TaskViewModel
+import com.example.tudee.presentation.viewmodel.AddTaskBottomSheetViewModel
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.presentation.screen.TaskContent
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun EditeBottomSheet(taskId: Long = 1L) {
-    val viewModel: TaskViewModel = koinViewModel()
+    val viewModel: AddTaskBottomSheetViewModel = koinViewModel()
     val taskScreenUiState by viewModel.uiState.collectAsState()
     val addButtonState by viewModel.isTaskValid.collectAsState()
 

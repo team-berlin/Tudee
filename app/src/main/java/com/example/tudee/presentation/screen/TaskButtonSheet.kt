@@ -135,6 +135,9 @@ fun BottomSheetContent(
             .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        item{
+            AddNewTaskText()
+        }
         item {
             TudeeTextField(
                 value = taskState.taskTitle,
@@ -229,7 +232,7 @@ fun BottomSheetContent(
                 modifier = Modifier
                     .height(400.dp)
                     .fillMaxWidth()
-                    .padding(bottom = 148.dp),
+                    .padding(bottom = 160.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
@@ -247,6 +250,14 @@ fun BottomSheetContent(
     }
 }
 
+@Composable
+private fun AddNewTaskText() {
+    Text(
+        text = stringResource(R.string.addNewTask),
+        style = TudeeTheme.textStyle.title.large,
+        color = TudeeTheme.color.textColors.title
+    )
+}
 @Composable
 fun AddOrSaveButtons(
     modifier: Modifier = Modifier,

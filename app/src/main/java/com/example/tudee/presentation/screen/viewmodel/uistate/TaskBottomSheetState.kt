@@ -35,7 +35,109 @@ data class TaskBottomSheetState(
             title = "Shopping",
             isPredefined = true,
             image = "drawable/ic_shopping"
-        )
+        ),TaskCategory(
+            id = 0L,
+            title = "Work",
+            isPredefined = true,
+            image = "drawable/ic_work"
+        ),
+        TaskCategory(
+            id = 1L,
+            title = "Personal",
+            isPredefined = true,
+            image = "drawable/ic_personal"
+        ),
+        TaskCategory(
+            id = 2L,
+            title = "Shopping",
+            isPredefined = true,
+            image = "drawable/ic_shopping"
+        ),TaskCategory(
+            id = 0L,
+            title = "Work",
+            isPredefined = true,
+            image = "drawable/ic_work"
+        ),
+        TaskCategory(
+            id = 1L,
+            title = "Personal",
+            isPredefined = true,
+            image = "drawable/ic_personal"
+        ),
+        TaskCategory(
+            id = 2L,
+            title = "Shopping",
+            isPredefined = true,
+            image = "drawable/ic_shopping"
+        ),TaskCategory(
+            id = 0L,
+            title = "Work",
+            isPredefined = true,
+            image = "drawable/ic_work"
+        ),
+        TaskCategory(
+            id = 1L,
+            title = "Personal",
+            isPredefined = true,
+            image = "drawable/ic_personal"
+        ),
+        TaskCategory(
+            id = 2L,
+            title = "Shopping",
+            isPredefined = true,
+            image = "drawable/ic_shopping"
+        ),TaskCategory(
+            id = 0L,
+            title = "Work",
+            isPredefined = true,
+            image = "drawable/ic_work"
+        ),
+        TaskCategory(
+            id = 1L,
+            title = "Personal",
+            isPredefined = true,
+            image = "drawable/ic_personal"
+        ),
+        TaskCategory(
+            id = 2L,
+            title = "Shopping",
+            isPredefined = true,
+            image = "drawable/ic_shopping"
+        ),TaskCategory(
+            id = 0L,
+            title = "Work",
+            isPredefined = true,
+            image = "drawable/ic_work"
+        ),
+        TaskCategory(
+            id = 1L,
+            title = "Personal",
+            isPredefined = true,
+            image = "drawable/ic_personal"
+        ),
+        TaskCategory(
+            id = 2L,
+            title = "Shopping",
+            isPredefined = true,
+            image = "drawable/ic_shopping"
+        ),TaskCategory(
+            id = 0L,
+            title = "Work",
+            isPredefined = true,
+            image = "drawable/ic_work"
+        ),
+        TaskCategory(
+            id = 1L,
+            title = "Personal",
+            isPredefined = true,
+            image = "drawable/ic_personal"
+        ),
+        TaskCategory(
+            id = 2L,
+            title = "Shopping",
+            isPredefined = true,
+            image = "drawable/ic_shopping"
+        ),
     ),
     val taskPriorities: List<TaskPriority> = listOf(
         TaskPriority.HIGH,
