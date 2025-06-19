@@ -2,6 +2,7 @@ package com.example.tudee.ui.home.viewmodel
 
 import androidx.annotation.StringRes
 import com.example.tudee.R
+import com.example.tudee.domain.entity.TaskStatus
 import kotlinx.datetime.LocalDate
 
 data class TaskUiState(
