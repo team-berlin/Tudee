@@ -1,9 +1,11 @@
-package com.example.tudee.presentation.screen.category
+package com.example.tudee.presentation.screen.category.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tudee.domain.TaskCategoryService
 import com.example.tudee.domain.TaskService
+import com.example.tudee.presentation.screen.category.mapper.toUiModel
+import com.example.tudee.presentation.screen.category.model.CategoriesUiState
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow

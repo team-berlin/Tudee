@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -21,26 +23,29 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import com.example.tudee.presentation.components.CategoryItemWithBadge
-import org.koin.androidx.compose.koinViewModel
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.naviagtion.Destination
 import com.example.tudee.presentation.components.BottomNavItem
+import com.example.tudee.presentation.components.CategoryItemWithBadge
 import com.example.tudee.presentation.components.NavBar
 import com.example.tudee.presentation.components.TopAppBar
 import com.example.tudee.presentation.composables.buttons.ButtonDefaults
 import com.example.tudee.presentation.composables.buttons.ButtonState
 import com.example.tudee.presentation.composables.buttons.FabButton
+import com.example.tudee.presentation.screen.category.model.CategoriesUiState
+import com.example.tudee.presentation.screen.category.model.TaskCategoryUiModel
+import com.example.tudee.presentation.screen.category.model.UiImage
+import com.example.tudee.presentation.screen.category.model.asPainter
+import com.example.tudee.presentation.screen.category.viewmodel.CategoriesViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun CategoriesScreen(
@@ -74,10 +79,12 @@ fun CategoriesScreenContent(
             CategoriesFab(onAddCategoryClick)
         },
         topBar = {
-            TopAppBar(title = "Categories",
+            TopAppBar(
+                title = "Categories",
                 showBackButton = false,
                 modifier = Modifier.background(TudeeTheme.color.surfaceHigh),
-                titleStyle = TudeeTheme.textStyle.title.large)
+                titleStyle = TudeeTheme.textStyle.title.large
+            )
         },
         bottomBar = {
             NavBar(
@@ -147,7 +154,8 @@ fun CategoriesScreenContent(
                     modifier = Modifier.padding(padding)
                 ) {
                     items(
-                        items = state.categories) { category ->
+                        items = state.categories
+                    ) { category ->
                         CategoryItemWithBadge(
                             categoryPainter = category.iconResId.asPainter(),
                             categoryName = category.name,

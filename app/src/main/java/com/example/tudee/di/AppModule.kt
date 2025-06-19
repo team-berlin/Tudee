@@ -8,7 +8,7 @@ import com.example.tudee.data.service.TaskCategoryServiceImpl
 import com.example.tudee.data.service.TaskServiceImpl
 import com.example.tudee.domain.TaskCategoryService
 import com.example.tudee.domain.TaskService
-import com.example.tudee.presentation.screen.categorytasks.CategoryTasksViewModel
+import com.example.tudee.presentation.screen.category.tasks.CategoryTasksViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 

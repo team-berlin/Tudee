@@ -67,7 +67,7 @@ fun CategoryTasksScreen(
             modifier = modifier,
             categoryTaskUIState = uiState,
             onBackClick = { navController.navigateUp() },
-            onEditIconClick = {  }
+            onEditIconClick = { }
         )
 
         if (showSnackBar.value) {
