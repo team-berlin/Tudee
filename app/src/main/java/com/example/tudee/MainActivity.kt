@@ -30,7 +30,16 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         setContent {
+            val navController = rememberNavController()
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            val currentRoute = navBackStackEntry?.destination?.route
+
+            TudeeTheme {
+
+                com.example.tudee.presentation.screen.task_screen.ui.TasksScreen(navController)
+
             Column(Modifier.padding(50.dp)){
              //   EditeBottomSheet(taskId = 1L)
                 AddBottomSheet()

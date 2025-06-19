@@ -4,7 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.example.tudee.naviagtion.Destination
-import com.example.tudee.presentation.screen.SplashScreen
+import com.example.tudee.presentation.screen.task_screen.SplashScreen
 
 fun NavGraphBuilder.splashRoute (
     navController: NavController

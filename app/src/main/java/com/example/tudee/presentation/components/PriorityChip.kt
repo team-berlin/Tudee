@@ -50,7 +50,6 @@ fun TudeeChip(
                     modifier = Modifier.size(iconSize)
                 )
             }
-
             Text(
                 text = label,
                 color = labelColor,

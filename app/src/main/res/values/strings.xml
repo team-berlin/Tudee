@@ -52,4 +52,26 @@
     <string name="add">Add</string>
     <string name="save">SAVE</string>
     <string name="addNewTask">Add new task</string>
+
+
+        <!-- Task Status -->
+        <string name="todo">To Do</string>
+        <string name="in_progress">In Progress</string>
+        <string name="done">Done</string>
+
+        <!-- Task Priority -->
+        <string name="low">Low</string>
+        <string name="medium">Medium</string>
+        <string name="high">High</string>
+
+    <string name="task_deleted_success">Deleted task successfully.</string>
+
+    <string name="no_tasks">No tasks here!</string>
+    <string name="add_first_task_hint">Tap the + button to add your first one.</string>
+
+    <string name="select_date">Select date</string>
+    <string name="date_picker_clear_button_text">Clear</string>
+    <string name="date_picker_cancel_button_text">Cancel</string>
+    <string name="date_picker_ok_button_text">OK</string>
+
 </resources>
