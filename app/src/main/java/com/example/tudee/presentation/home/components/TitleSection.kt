@@ -1,4 +1,4 @@
-package com.example.tudee.presentation.screens.home.components
+package com.example.tudee.presentation.home.components
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
