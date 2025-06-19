@@ -21,7 +21,7 @@
     <string name="high">High</string>
     <string name="low">Low</string>
     <string name="medium">Medium</string>
-
+    <string name="task_details">Task details</string>
 
 <!--    content description -->
     <string name="switch_sun_icon_content_description">Sun</string>
@@ -56,5 +56,8 @@
     <string name="cancel">Cancel</string>
     <string name="add">Add</string>
     <string name="skip_button">Skip</string>
+    <string name="add_task_title">Add new task</string>
+    <string name="move_to_done">Move to done</string>
+    <string name="move_to_in_progress">Move to in progress</string>
 
 </resources>

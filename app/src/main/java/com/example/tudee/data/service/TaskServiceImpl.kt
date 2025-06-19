@@ -8,6 +8,8 @@ import com.example.tudee.domain.TaskService
 import com.example.tudee.domain.entity.Task
 import com.example.tudee.domain.entity.TaskStatus
 import com.example.tudee.domain.request.TaskCreationRequest
+import com.example.tudee.ui.mapper.toDomain
+import com.example.tudee.ui.mapper.toEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.LocalDate
