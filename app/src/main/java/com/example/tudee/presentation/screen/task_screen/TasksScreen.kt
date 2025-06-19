@@ -101,7 +101,7 @@ fun TasksScreen(navController: NavController) {
         onTaskCardClicked = tasksScreenViewModel::onTaskCardClicked,
         onDayCardClicked = tasksScreenViewModel::onDayCardClicked,
         onDeleteIconClicked = tasksScreenViewModel::onDeleteIconClicked,
-        onDeleteButtonClicked = tasksScreenViewModel::onDeleteButtonClicked,
+        onDeleteButtonClicked = tasksScreenViewModel::onBottomSheetDeleteButtonClicked,
         onBottomSheetDismissed = tasksScreenViewModel::onBottomSheetDismissed,
         onCancelButtonClicked = tasksScreenViewModel::onCancelButtonClicked,
         onDateCardClicked = tasksScreenViewModel::onDateCardClicked,

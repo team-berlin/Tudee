@@ -4,7 +4,6 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.room.util.copy
 import com.example.tudee.R
 import com.example.tudee.domain.TaskCategoryService
 import com.example.tudee.domain.TaskService
@@ -122,7 +121,7 @@ class TasksScreenViewModel(
                 )
             )
             _taskScreenUiState.update { it.copy(isLoading = true) }
-            //getTasksByStatus(TaskStatus.TODO)
+            getTasksByStatus(TaskStatus.IN_PROGRESS)
             _taskScreenUiState.update { it.copy(isLoading = false) }
         }
     }
@@ -137,13 +136,13 @@ class TasksScreenViewModel(
 
     }
 
-    override fun onDeleteIconClicked(idOfTaskToBeDeleted: Long) {
+    override fun onDeleteIconClicked(idOfTaskToBeDeleted: Long) { // name can be enhanced
         _taskScreenUiState.update {
             it.copy(isBottomSheetVisible = true, idOfTaskToBeDeleted = idOfTaskToBeDeleted)
         }
     }
 
-    override fun onDeleteButtonClicked() {
+    override fun onBottomSheetDeleteButtonClicked() {
         _taskScreenUiState.update { state ->
             state.copy(
                 deleteBottomSheetUiState = state.deleteBottomSheetUiState.copy(
@@ -152,7 +151,7 @@ class TasksScreenViewModel(
             )
         }
         viewModelScope.launch {
-            taskService.deleteTask(_taskScreenUiState.value.idOfTaskToBeDeleted.toLong())
+            taskService.deleteTask(_taskScreenUiState.value.idOfTaskToBeDeleted)
             _taskScreenUiState.update { state ->
                 state.copy(
                     isBottomSheetVisible = false,
@@ -180,35 +179,40 @@ class TasksScreenViewModel(
         }
     }
 
+    private suspend fun getTasksByStatus(status: TaskStatus, tabIndex: Int = 0) {
+        taskService.getTasksByStatus(status).collect {
+            val result = it.map { task ->
+                val categoryIcon = getCategoryIconById(task.categoryId)
+                task.taskToTaskUiState(categoryIcon.toInt())
+            }
+            _taskScreenUiState.update { uiState ->
+                uiState.copy(
+                    selectedTabIndex = tabIndex,
+                    listOfTasksUiState = result,
+                    listOfTabBarItem = taskScreenUiState.value.listOfTabBarItem.mapIndexed { index, tabItem ->
+                        if (index == tabIndex) {
+                            tabItem.copy(
+                                isSelected = true,
+                                taskCount = uiState.listOfTasksUiState.size.toString()
+                            )
+                        } else {
+                            tabItem
+                        }
+                    }
+                )
+            }
+        }
+    }
+
+
     override fun onTabSelected(tabIndex: Int) {
         val statusUiState = TaskStatusUiState.entries[tabIndex]
         val status = statusUiState.toDomain()
 
         viewModelScope.launch {
-            taskService.getTasksByStatus(status).collect { tasks ->
-                val mappedTasks = tasks.map {
-                    val icon = getCategoryIconById(it.categoryId)
-                    it.taskToTaskUiState(icon.toInt())
-                }
-
-                _taskScreenUiState.update { taskScreenUiState ->
-                    taskScreenUiState.copy(
-                        selectedTabIndex = tabIndex,
-                        listOfTasksUiState = mappedTasks,
-                        listOfTabBarItem = taskScreenUiState.listOfTabBarItem.mapIndexed { index, tabItem ->
-                            tabItem.copy(
-                                isSelected = index == tabIndex,
-                                taskCount = mappedTasks.count {
-                                    it.status == statusUiState.status
-                                }.toString()
-                            )
-                        }
-                    )
-                }
-            }
+            getTasksByStatus(status = status, tabIndex = tabIndex)
         }
     }
-
 
 
     override fun onFloatingActionClicked() {
@@ -266,16 +270,6 @@ class TasksScreenViewModel(
         }
     }
 
-    private suspend fun getTasksByStatus(status: TaskStatus) {
-        taskService.getTasksByStatus(status).collect {
-            val result = it.map {
-                val categoryIcon = getCategoryIconById(it.categoryId)
-                it.taskToTaskUiState(categoryIcon.toInt())
-            }
-            _taskScreenUiState.update { it.copy(listOfTasksUiState = result) }
-        }
-    }
-
     private suspend fun getCategoryIconById(categoryId: Long): String {
         return categoryService.getCategoryIconById(categoryId)
     }
@@ -293,7 +287,7 @@ data class TasksScreenUiState(
     val isSnackBarVisible: Boolean = false,
     val datePickerUiState: DatePickerUiState = DatePickerUiState(),
     val deleteBottomSheetUiState: DeleteBottomSheetUiState = DeleteBottomSheetUiState(),
-    val idOfTaskToBeDeleted: Long=0,
+    val idOfTaskToBeDeleted: Long = 0,
     val noCurrentTasks: Boolean = listOfTasksUiState.isEmpty()
 )
 
@@ -372,8 +366,8 @@ data class DeleteBottomSheetUiState(
 )
 
 enum class TaskStatusUiState(@StringRes var status: Int) {
-    TODO(R.string.todo),
     IN_PROGRESS(R.string.in_progress),
+    TODO(R.string.todo),
     DONE(R.string.done)
 }
 
