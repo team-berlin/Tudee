@@ -55,6 +55,6 @@ fun Task.taskToTaskUiState(categoryIcon: Int): TaskUiState {
         priority = priority.toUiState().priority,
         status = status.toUiState().status,
         categoryTitle = "",
-        categoryIcon = categoryIcon
+        categoryIcon = categoryIcon.toString()
     )
 }

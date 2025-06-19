@@ -6,18 +6,24 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
 
@@ -27,8 +33,10 @@ fun NotTaskForTodayDialogue() {
     Box(
         Modifier
             .background(TudeeTheme.color.surface)
-            .padding(end = 25.dp)
-            .fillMaxWidth(),
+            .width(360.dp)
+            .height(153.dp)
+            .padding(end = 20.dp)
+        ,
     ) {
         Column(
             Modifier
@@ -41,11 +49,12 @@ fun NotTaskForTodayDialogue() {
                         bottomStart = 16.dp,
                     )
                 )
+                .offset(y = (-4).dp)
+                .zIndex(1f)
+                .width(203.dp)
                 .background(TudeeTheme.color.surfaceHigh)
-                .fillMaxWidth(.57f)
                 .padding(start = 12.dp, end = 10.dp)
-                .padding(vertical = 8.dp)
-            , verticalArrangement = Arrangement.spacedBy(4.dp)
+                .padding(vertical = 8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)
 
         ) {
             Text(
@@ -60,16 +69,18 @@ fun NotTaskForTodayDialogue() {
                 color = TudeeTheme.color.textColors.hint,
             )
         }
-        Box (
+        Box(
             Modifier.align(Alignment.BottomEnd)
-        ){
-            Image(
-                modifier = Modifier
-                    .size(144.dp)
-                    .align(Alignment.BottomEnd),
-                painter = painterResource(R.drawable.delete_bot_omage_container),
-                contentDescription = ""
-            )
+        ) {
+                Image(
+                    modifier = Modifier
+                        .padding(end = 5.dp)
+                        .size(144.dp)
+                        .align(Alignment.BottomEnd),
+                    painter = painterResource(R.drawable.delete_bot_omage_container),
+                    contentScale = ContentScale.Crop,
+                    contentDescription = ""
+                )
 
             Box(
                 Modifier.align(Alignment.BottomEnd)
@@ -79,25 +90,35 @@ fun NotTaskForTodayDialogue() {
                         .size(136.dp)
                         .align(Alignment.BottomEnd),
                     painter = painterResource(R.drawable.image_blue_overlay),
+                    contentScale = ContentScale.Crop,
                     contentDescription = ""
                 )
-                Image(
-                    modifier = Modifier
-                        .size(width = 23.dp, height = 34.dp)
-                        .align(Alignment.CenterStart),
-                    painter = painterResource(R.drawable.hint_indicator),
-                    contentDescription = ""
-                )
+
             }
             Image(
                 modifier = Modifier
                     .size(height = 100.dp, width = 107.dp)
                     .align(Alignment.BottomEnd),
                 painter = painterResource(R.drawable.delete_task_bot),
+                contentScale = ContentScale.Crop,
                 contentDescription = ""
             )
+            Box(
+                Modifier
+                    .size(136.dp)
+                    .align(Alignment.BottomEnd)
+            ) {
+                Image(
+                    modifier = Modifier
+                        .padding(start = 6.dp, top =4.dp )
+                        .size(width = 23.dp, height = 34.dp)
 
-
+                        .align(Alignment.CenterStart),
+                    painter = painterResource(R.drawable.hint_indicator),
+                    contentScale = ContentScale.Crop,
+                    contentDescription = ""
+                )
+            }
         }
     }
 }

@@ -1,6 +1,9 @@
 package com.example.tudee.presentation.components
 
-import androidx.compose.foundation.R
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -43,7 +46,7 @@ fun TabBarComponent(
     selectedTabIndex: Int,
     tabBarItems: List<TabBarItem>,
     onTabSelected: (Int) -> Unit,
-    tabContent: @Composable (tab: TabBarItem,isSelected:Boolean) -> Unit = {tab,isSelected->
+    tabContent: @Composable (tab: TabBarItem, isSelected: Boolean) -> Unit = { tab, isSelected ->
         DefaultTabContent(
             tabBarItem = tab,
             isSelected = isSelected,
@@ -59,18 +62,20 @@ fun TabBarComponent(
         modifier = modifier
             .fillMaxWidth()
             .background(TudeeTheme.color.surfaceHigh),
-        indicator = tabIndicator, divider = { TabBarHorizontalDivider() },
+        indicator = tabIndicator
+        , divider = { TabBarHorizontalDivider() },
         containerColor = backgroundColor,
         contentColor = contentColor
     ) {
         tabBarItems.forEachIndexed { index, tabItem ->
+
             Tab(
-                selected = index ==selectedTabIndex,
+                selected = index == selectedTabIndex,
                 onClick = {
                     onTabSelected(index)
                 },
                 text = {
-                    tabContent(tabItem, index ==selectedTabIndex)
+                    tabContent(tabItem, index == selectedTabIndex)
                 },
             )
         }
@@ -80,17 +85,23 @@ fun TabBarComponent(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TabIndicatorScope.DefaultTabIndicator(selectedTabIndex: Int, modifier: Modifier) =
-    TabRowDefaults.PrimaryIndicator(
-        modifier = modifier.tabIndicatorOffset(
-            selectedTabIndex,
-            matchContentSize = true
-        ),
-        height = 4.dp,
-        color = TudeeTheme.color.secondary,
-        shape = (RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)),
-        width = Dp.Unspecified
-    )
+    AnimatedVisibility(
+        visible = true,
+        enter = fadeIn(tween(1000)),
+        exit = fadeOut(tween(1000))
+    ) {
 
+        TabRowDefaults.PrimaryIndicator(
+            modifier = modifier.tabIndicatorOffset(
+                selectedTabIndex,
+                matchContentSize = true
+            ),
+            height = 4.dp,
+            color = TudeeTheme.color.secondary,
+            shape = (RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)),
+            width = Dp.Unspecified
+        )
+    }
 @Composable
 private fun DefaultTabContent(
     modifier: Modifier = Modifier,

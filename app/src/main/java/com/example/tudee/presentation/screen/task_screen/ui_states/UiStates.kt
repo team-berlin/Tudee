@@ -1,6 +1,5 @@
 package com.example.tudee.presentation.screen.task_screen.ui_states
 
-import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.example.tudee.presentation.components.TabBarItem
 import com.example.tudee.presentation.composables.buttons.ButtonState
@@ -39,8 +38,8 @@ data class TaskUiState(
     @StringRes
     val status: Int,
     val categoryTitle: String,
-    @DrawableRes
-    val categoryIcon: Int
+
+    val categoryIcon: String
 )
 
 data class DateCardUiState(
