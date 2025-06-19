@@ -43,5 +43,6 @@
     <string name="category">الفئة</string>
     <string name="cancel">إلغاء</string>
     <string name="add">إضافة</string>
+    <string name="addNewTask">إضافة مهمة جديدة</string>
 </resources>
 
