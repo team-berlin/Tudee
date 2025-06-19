@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.presentation.components.TudeeSlider
+import com.example.tudee.ui.home.viewmodel.SliderUiState
 
 @Composable
 fun HomeOverviewCard(
@@ -35,7 +36,8 @@ fun HomeOverviewCard(
     year: String,
     tasksDoneCount: String,
     tasksTodoCount: String,
-    tasksInProgressCount: String
+    tasksInProgressCount: String,
+    sliderUiState: SliderUiState
 ) {
     Column(
         modifier = modifier
@@ -63,10 +65,7 @@ fun HomeOverviewCard(
         }
         TudeeSlider(
             modifier = Modifier.padding(horizontal = 6.dp),
-            title = "Stay working!",
-            description = "You've completed 3 out of 10 tasks Keep going!",
-            emoji = painterResource(R.drawable.emoji_stay_working),
-            image = painterResource(R.drawable.tudee_stay_working_or_nothing),
+            sliderUiState = sliderUiState,
         )
         Text(
             modifier = Modifier.padding(vertical = 8.dp, horizontal = 12.dp),
@@ -175,7 +174,8 @@ private fun HomeOverviewCardPreview() {
             year = "2025",
             tasksDoneCount = "2",
             tasksTodoCount = "16",
-            tasksInProgressCount = "1"
+            tasksInProgressCount = "1",
+            sliderUiState = SliderUiState()
         )
     }
 }

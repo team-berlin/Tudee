@@ -1,17 +1,21 @@
 package com.example.tudee.ui.home.viewmodel
 
 
-interface HomeActions {
-      fun onInProgressArrowClicked()
-      fun onTodoArrowClicked()
-      fun onDoneArrowClicked()
-      fun onTaskCardClicked()
-      fun onFabClicked()
-      fun onBottomSheetDismissed()
-      fun editTask()
-      fun changeStatus()
-      fun onCreateTaskButtonClicked()
-      fun onEditTaskButtonClicked()
-      fun onCancelButtonClicked()
-      fun hideSnackBar()
+sealed interface HomeActions {
+    data class OnArrowClicked(val taskStatusUiState: TaskStatusUiState?) : HomeActions
+
+    data class OnTaskCardClicked(val taskUiState: TaskUiState) : HomeActions
+    data object OnFabClicked : HomeActions
+    data object OnBottomSheetDismissed : HomeActions
+    data object OnEditTaskButtonClicked : HomeActions
+    data object HideSnackBar : HomeActions
+    data object OnCancelButtonClicked : HomeActions
+
+    data class OnEditTaskTitleChanged(val title: String) : HomeActions
+    data class OnEditTaskCategoryChanged(val category: CategoryUiState) : HomeActions
+    data class OnEditTaskDescriptionChanged(val description: String) : HomeActions
+    data class OnEditTaskPriorityChanged(val priority: TaskPriorityUiState) : HomeActions
+
+    data class OnTaskStatusChanged(val status: TaskStatusUiState) : HomeActions
+    data class OnCreateTaskButtonClicked(val taskCreationRequest: TaskUiState) : HomeActions
 }
