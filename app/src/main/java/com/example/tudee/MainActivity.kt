@@ -17,7 +17,6 @@ import com.example.tudee.naviagtion.Destination
 import com.example.tudee.naviagtion.Destination.CategoriesScreen
 import com.example.tudee.naviagtion.Destination.TasksScreen
 import com.example.tudee.naviagtion.TudeeNavGraph
-import com.example.tudee.presentation.screen.categorytasks.CategoryTasksScreen
 
 class MainActivity : ComponentActivity() {
     private val bottomBarRoutes =
@@ -32,7 +31,15 @@ class MainActivity : ComponentActivity() {
             val currentRoute = navBackStackEntry?.destination?.route
 
             TudeeTheme {
-                CategoryTasksScreen()
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    bottomBar = {
+                        if (currentRoute in bottomBarRoutes) {
+                            // add the bottom bar Composable here
+                        }
+                    }) { innerPadding ->
+                    TudeeNavGraph(navController)
+                }
             }
         }
     }
