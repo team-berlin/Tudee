@@ -28,6 +28,65 @@ class CategoriesViewModel(
     private val _uiState = MutableStateFlow(CategoriesUiState())
     val uiState = _uiState.asStateFlow()
 
+//    private fun getCategories(): Flow<List<TaskCategory>> {
+//        return flow {
+//            emit(
+//                listOf(
+//                    TaskCategory(
+//                        id = 1234,
+//                        title = "Category 1",
+//                        image = "TODO()",
+//                        isPredefined = true
+//                    )
+//                )
+//            )
+//        }
+//    }
+
+//    private fun getTasksById(id: Long): Flow<List<Task>> {
+//        return flow {
+//            emit(
+//                listOf(
+//                    Task(
+//                        id = 112233,
+//                        title = "Task1",
+//                        description = "Task 1 Description",
+//                        priority = TaskPriority.HIGH,
+//                        categoryId = 1234,
+//                        status = TaskStatus.IN_PROGRESS,
+//                        assignedDate = LocalDate(2025, 1, 1)
+//                    )
+//                )
+//            )
+//        }
+//    }
+
+//    fun loadCategories() {
+//        viewModelScope.launch {
+//            try {
+//                val categories = getCategories().first()
+//
+//                val categoryTasksDeferred = categories.map { category ->
+//                    async {
+//                        val count = taskService.getTasksCountByCategoryId(category.id)
+//                        category to count
+//                    }
+//                }
+//
+//                val categoriesWithTasks =
+//                    categoryTasksDeferred.awaitAll().map { (category, categoryTasks) ->
+//                        category.toUiModel(categoryTasks.toInt())
+//                    }
+//
+//                _uiState.update { state ->
+//                    state.copy(categories = categoriesWithTasks)
+//                }
+//            } catch (e: Exception) {
+//                e.printStackTrace()
+//            }
+//        }
+//    }
+
     fun loadCategories() {
         viewModelScope.launch {
             try {
