@@ -9,7 +9,7 @@ data class OnBoardingPageUiModel(
 )
 
 enum class Pages(val page: Int) {
-    FistPage(0),
+    FirstPage(0),
     SecondPage(1),
     ThirdPage(2)
 }
