@@ -1,4 +1,4 @@
-package com.example.tudee.presentation.categories.model
+package com.example.tudee.presentation.screen.category.model
 
 import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Composable

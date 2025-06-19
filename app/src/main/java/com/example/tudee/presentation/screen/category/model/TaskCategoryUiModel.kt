@@ -1,4 +1,4 @@
-package com.example.tudee.presentation.categories.model
+package com.example.tudee.presentation.screen.category
 
 data class TaskCategoryUiModel(
     val id: Long,

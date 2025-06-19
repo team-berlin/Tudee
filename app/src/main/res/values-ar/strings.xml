@@ -35,5 +35,11 @@
         أم صغيرًا.</string>
 
     <string name="skip_button">تخطي</string>
+    <string name="high_priority">أولوية عالية</string>
+    <string name="medium_priority">أولوية متوسطة</string>
+    <string name="low_priority">أولوية ضقليلة</string>
+    <string name="in_progress">قيد التنفيذ</string>
+    <string name="to_do">معلقة</string>
+    <string name="done">مكتملة</string>
 </resources>
 

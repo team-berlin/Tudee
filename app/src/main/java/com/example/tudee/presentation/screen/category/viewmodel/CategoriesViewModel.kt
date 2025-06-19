@@ -1,25 +1,16 @@
-package com.example.tudee.presentation.categories.viewmodel
+package com.example.tudee.presentation.screen.category
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tudee.domain.TaskCategoryService
 import com.example.tudee.domain.TaskService
-import com.example.tudee.domain.entity.Task
-import com.example.tudee.domain.entity.TaskCategory
-import com.example.tudee.domain.entity.TaskPriority
-import com.example.tudee.domain.entity.TaskStatus
-import com.example.tudee.presentation.categories.mapper.toUiModel
-import com.example.tudee.presentation.categories.model.CategoriesUiState
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.LocalDate
 
 class CategoriesViewModel(
     private val taskCategoryService: TaskCategoryService,

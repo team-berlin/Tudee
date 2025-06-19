@@ -41,9 +41,7 @@ fun CategoryItemWithBadge(
     badgeCount: Int? = null
 ) {
     Column(
-        modifier = modifier
-            .width(104.dp)
-            .height(102.dp),
+        modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -58,49 +56,50 @@ fun CategoryItemWithBadge(
                 contentAlignment = Alignment.Center,
             ) {
                 Image(
-                    categoryPainter,
+                    modifier = Modifier.size(32.dp),
+                    painter = categoryPainter,
                     contentDescription = categoryImageContentDescription,
                 )
             }
 
-            when {
-                showCheckedIcon -> Box(
-                    Modifier
-                        .size(20.dp)
-                        .background(shape = CircleShape, color = badgeBackgroundColor)
-                        .align(Alignment.TopEnd)
-                ) {
-                    Icon(
-                        modifier = Modifier
-                            .size(12.dp)
-                            .align(Alignment.Center),
-                        tint = TudeeTheme.color.textColors.onPrimary,
-                        painter = painterResource(R.drawable.ic_double_check),
-                        contentDescription = null,
-                    )
-                }
+        when {
+            showCheckedIcon -> Box(
+                Modifier
+                    .size(20.dp)
+                    .background(shape = CircleShape, color = badgeBackgroundColor)
+                    .align(Alignment.TopEnd)
+            ) {
+                Icon(
+                    modifier = Modifier
+                        .size(12.dp)
+                        .align(Alignment.Center),
+                    tint = TudeeTheme.color.textColors.onPrimary,
+                    painter = painterResource(R.drawable.ic_double_check),
+                    contentDescription = null,
+                )
+            }
 
-                badgeCount != null -> {
-                    Box(
-                        modifier = Modifier
-                            .width(36.dp)
-                            .height(20.dp)
-                            .align(Alignment.TopEnd)
-                            .clip(RoundedCornerShape(50))
-                            .background(badgeBackgroundColor)
-                            .padding(horizontal = 2.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = badgeCount.toString(),
-                            style = categoryTextStyle,
-                            color = categoryTextColor,
-                            textAlign = TextAlign.Center,
-                        )
-                    }
+            badgeCount != null -> {
+                Box(
+                    modifier = Modifier
+                        .width(36.dp)
+                        .height(20.dp)
+                        .align(Alignment.TopEnd)
+                        .clip(RoundedCornerShape(50))
+                        .background(badgeBackgroundColor)
+                        .padding(horizontal = 2.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = badgeCount.toString(),
+                        style = categoryTextStyle,
+                        color = categoryTextColor,
+                        textAlign = TextAlign.Center,
+                    )
                 }
             }
         }
+    }
 
         Text(
             text = categoryName,

@@ -1,4 +1,4 @@
-package com.example.tudee.presentation.categories.screen
+package com.example.tudee.presentation.screen.category
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,7 +23,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.tudee.presentation.categories.viewmodel.CategoriesViewModel
 import com.example.tudee.presentation.components.CategoryItemWithBadge
 import org.koin.androidx.compose.koinViewModel
 import androidx.compose.foundation.lazy.grid.items
@@ -36,10 +35,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.naviagtion.Destination
-import com.example.tudee.presentation.categories.model.CategoriesUiState
-import com.example.tudee.presentation.categories.model.TaskCategoryUiModel
-import com.example.tudee.presentation.categories.model.UiImage
-import com.example.tudee.presentation.categories.model.asPainter
 import com.example.tudee.presentation.components.BottomNavItem
 import com.example.tudee.presentation.components.NavBar
 import com.example.tudee.presentation.components.TopAppBar

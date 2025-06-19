@@ -1,10 +1,9 @@
-package com.example.tudee.presentation.categories.mapper
+package com.example.tudee.presentation.screen.category.mapper
 
 import com.example.tudee.R
-import com.example.tudee.domain.entity.Task
 import com.example.tudee.domain.entity.TaskCategory
-import com.example.tudee.presentation.categories.model.TaskCategoryUiModel
-import com.example.tudee.presentation.categories.model.UiImage
+import com.example.tudee.presentation.screen.category.TaskCategoryUiModel
+import com.example.tudee.presentation.screen.category.UiImage
 
 fun TaskCategory.toUiModel(taskCount: Int): TaskCategoryUiModel {
     val uiImage: UiImage = if (isPredefined) {
