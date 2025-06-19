@@ -43,9 +43,10 @@ fun TabBarComponent(
     selectedTabIndex: Int,
     tabBarItems: List<TabBarItem>,
     onTabSelected: (Int) -> Unit,
-    tabContent: @Composable (tab: TabBarItem) -> Unit = {
+    tabContent: @Composable (tab: TabBarItem,isSelected:Boolean) -> Unit = {tab,isSelected->
         DefaultTabContent(
-            tabBarItem = it,
+            tabBarItem = tab,
+            isSelected = isSelected,
             modifier = Modifier
         )
     },
@@ -64,12 +65,12 @@ fun TabBarComponent(
     ) {
         tabBarItems.forEachIndexed { index, tabItem ->
             Tab(
-                selected = tabItem.isSelected,
+                selected = index ==selectedTabIndex,
                 onClick = {
                     onTabSelected(index)
                 },
                 text = {
-                    tabContent(tabItem)
+                    tabContent(tabItem, index ==selectedTabIndex)
                 },
             )
         }
@@ -93,6 +94,7 @@ private fun TabIndicatorScope.DefaultTabIndicator(selectedTabIndex: Int, modifie
 @Composable
 private fun DefaultTabContent(
     modifier: Modifier = Modifier,
+    isSelected: Boolean,
     tabBarItem: TabBarItem,
 
     ) {
@@ -106,7 +108,7 @@ private fun DefaultTabContent(
             style = if (tabBarItem.isSelected) TudeeTheme.textStyle.label.medium else TudeeTheme.textStyle.label.small,
             color = if (tabBarItem.isSelected) TudeeTheme.color.textColors.title else TudeeTheme.color.textColors.hint
         )
-        if (tabBarItem.isSelected) {
+        if (isSelected) {
             Box(
                 Modifier
                     .size(28.dp)
@@ -157,7 +159,7 @@ fun TabBarComponentPreview() {
             selectedTabIndex = 0,
             tabBarItems = defaultTabBarHeaders,
             onTabSelected = {},
-            tabContent = { DefaultTabContent(tabBarItem = it) }
+//            tabContent = { DefaultTabContent(tabBarItem = it) }
         )
     }
 }

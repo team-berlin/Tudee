@@ -1,4 +1,4 @@
-package com.example.tudee.presentation.screen.task_screen
+package com.example.tudee.presentation.screen.task_screen.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

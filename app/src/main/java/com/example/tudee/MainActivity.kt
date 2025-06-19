@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
 
             TudeeTheme {
 
-                    com.example.tudee.presentation.screen.task_screen.TasksScreen(navController)
+                com.example.tudee.presentation.screen.task_screen.ui.TasksScreen(navController)
 
             }
         }

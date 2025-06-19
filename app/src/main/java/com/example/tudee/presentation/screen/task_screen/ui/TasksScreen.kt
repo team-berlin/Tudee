@@ -1,4 +1,4 @@
-package com.example.tudee.presentation.screen.task_screen
+package com.example.tudee.presentation.screen.task_screen.ui
 
 
 import androidx.compose.animation.AnimatedContent
@@ -32,7 +32,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -84,6 +83,13 @@ import com.example.tudee.presentation.composables.buttons.FabButton
 import com.example.tudee.presentation.composables.buttons.NegativeButton
 import com.example.tudee.presentation.composables.buttons.SecondaryButton
 import com.example.tudee.presentation.composables.buttons.TextButton
+import com.example.tudee.presentation.screen.task_screen.mappers.TaskPriorityUiState
+import com.example.tudee.presentation.screen.task_screen.ui_states.DateCardUiState
+import com.example.tudee.presentation.screen.task_screen.ui_states.DatePickerUiState
+import com.example.tudee.presentation.screen.task_screen.ui_states.TaskUiState
+
+import com.example.tudee.presentation.screen.task_screen.ui_states.TasksScreenUiState
+import com.example.tudee.presentation.screen.task_screen.viewmodel.TasksScreenViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -101,7 +107,7 @@ fun TasksScreen(navController: NavController) {
         onTaskCardClicked = tasksScreenViewModel::onTaskCardClicked,
         onDayCardClicked = tasksScreenViewModel::onDayCardClicked,
         onDeleteIconClicked = tasksScreenViewModel::onDeleteIconClicked,
-        onDeleteButtonClicked = tasksScreenViewModel::onBottomSheetDeleteButtonClicked,
+        onDeleteButtonClicked = tasksScreenViewModel::onConfirmDelete,
         onBottomSheetDismissed = tasksScreenViewModel::onBottomSheetDismissed,
         onCancelButtonClicked = tasksScreenViewModel::onCancelButtonClicked,
         onDateCardClicked = tasksScreenViewModel::onDateCardClicked,
@@ -132,60 +138,14 @@ fun TasksScreenContent(
 
 
     ) {
-    val topAppBar = @Composable {
-        TopAppBar(
-            modifier = Modifier.background(TudeeTheme.color.surfaceHigh),
-            title = "Tasks", showBackButton = false
-        )
-    }
-
-    val bottomBar = @Composable {
-        NavBar(
-            navDestinations = listOf(
-                BottomNavItem(
-                    icon = painterResource(id = R.drawable.home),
-                    selectedIcon = painterResource(id = R.drawable.home_select),
-                    route = Destination.HomeScreen.route
-                ),
-                BottomNavItem(
-                    icon = painterResource(id = R.drawable.task),
-                    selectedIcon = painterResource(id = R.drawable.task_select),
-                    route = Destination.TasksScreen.route
-                ),
-                BottomNavItem(
-                    icon = painterResource(id = R.drawable.category),
-                    selectedIcon = painterResource(id = R.drawable.category_select),
-                    route = Destination.CategoriesScreen.route
-                )
-            ),
-            currentRoute = Destination.TasksScreen.route,
-            onNavDestinationClicked = {}
-        )
-    }
-
-    val fabButton = @Composable {
-        FabButton(
-            onClick = {
-                onFloatingActionClicked()
-            },
-            content = {
-                Icon(
-                    painter = painterResource(R.drawable.note_add),
-                    contentDescription = null
-                )
-            }
-        )
-    }
 
     TudeeScaffold(
         showTopAppBar = true,
-        topAppBar = {
-            topAppBar()
-        },
+        topAppBar = { TaskScreenTopAppBar() },
         showBottomBar = true,
-        bottomBarContent = bottomBar,
+        bottomBarContent = { TaskScreenBottomAppBar() },
         showFab = true,
-        floatingActionButton = fabButton
+        floatingActionButton = { TaskScreenFloatingActionButton { onFloatingActionClicked } }
     ) { paddingValues ->
 
         Box(
@@ -230,7 +190,7 @@ fun TasksScreenContent(
                     )
                 }
 
-                BottomSheet(
+                DeleteConfirmationBottomSheet(
                     isBottomSheetVisible = taskScreenUiState.isBottomSheetVisible,
                     title = taskScreenUiState.deleteBottomSheetUiState.title,
                     subtitle = taskScreenUiState.deleteBottomSheetUiState.subtitle,
@@ -386,7 +346,6 @@ fun TasksListContent(
         targetState = listOfTasks,
         transitionSpec = {
             fadeIn(tween(1000)) togetherWith fadeOut(tween(1000))
-            // Or add slideInHorizontally()/slideOutHorizontally() for swipe-like effect
         },
     )
     { listOfTasks ->
@@ -422,13 +381,12 @@ fun TasksListContent(
                     Modifier
                         .clip(RoundedCornerShape(16.dp))
                     CategoryTaskComponent(
-
                         title = task.title,
                         description = task.description,
                         priority = stringResource(task.priority),
                         priorityBackgroundColor = priorityBackgroundColor,
-                        taskIcon = { },
-                        onClick = { },
+                        taskIcon = { task.categoryIcon },
+                        onClick = { onTaskCardClicked(task.id) },
                         priorityIcon = priorityIcon,
                     )
                 }
@@ -566,7 +524,7 @@ fun HeadingDate(onDateCardClicked: () -> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BottomSheet(
+fun DeleteConfirmationBottomSheet(
     isBottomSheetVisible: Boolean,
     title: String,
     subtitle: String,
@@ -648,6 +606,56 @@ fun BottomSheet(
             }
         }
     }
+}
+
+@Composable
+private fun TaskScreenTopAppBar() {
+    TopAppBar(
+        modifier = Modifier.background(TudeeTheme.color.surfaceHigh),
+        title = "Tasks", showBackButton = false
+    )
+}
+
+@Composable
+
+private fun TaskScreenBottomAppBar() {
+    NavBar(
+        navDestinations = listOf(
+            BottomNavItem(
+                icon = painterResource(id = R.drawable.home),
+                selectedIcon = painterResource(id = R.drawable.home_select),
+                route = Destination.HomeScreen.route
+            ),
+            BottomNavItem(
+                icon = painterResource(id = R.drawable.task),
+                selectedIcon = painterResource(id = R.drawable.task_select),
+                route = Destination.TasksScreen.route
+            ),
+            BottomNavItem(
+                icon = painterResource(id = R.drawable.category),
+                selectedIcon = painterResource(id = R.drawable.category_select),
+                route = Destination.CategoriesScreen.route
+            )
+        ),
+        currentRoute = Destination.TasksScreen.route,
+        onNavDestinationClicked = {}
+    )
+}
+
+
+@Composable
+private fun TaskScreenFloatingActionButton(onFloatingActionClicked: () -> Unit) {
+    FabButton(
+        onClick = {
+            onFloatingActionClicked()
+        },
+        content = {
+            Icon(
+                painter = painterResource(R.drawable.note_add),
+                contentDescription = null
+            )
+        }
+    )
 }
 
 @Composable

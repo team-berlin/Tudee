@@ -1,5 +1,4 @@
-package com.example.tudee.presentation.screen.task_screen
-
+package com.example.tudee.presentation.screen.task_screen.interactors
 
 interface TaskScreenInteractor {
     fun onDayCardClicked(cardIndex: Int)
@@ -8,7 +7,7 @@ interface TaskScreenInteractor {
     fun onBottomSheetDismissed()
     fun onFloatingActionClicked()
     fun onTaskCardClicked(taskId:Long)
-    fun onBottomSheetDeleteButtonClicked()
+    fun onConfirmDelete()
     fun onCancelButtonClicked()
     fun onDateCardClicked()
     fun onDismissDatePicker()

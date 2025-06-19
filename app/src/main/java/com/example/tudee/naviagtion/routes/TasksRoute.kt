@@ -4,7 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.example.tudee.naviagtion.Destination
-import com.example.tudee.presentation.screen.task_screen.TasksScreen
+import com.example.tudee.presentation.screen.task_screen.ui.TasksScreen
 
 fun NavGraphBuilder.tasksRoute (
     navController: NavController
