@@ -13,7 +13,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.tudee.designsystem.theme.TudeeTheme
-import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -27,9 +26,9 @@ fun EditScreen(taskId: Long = 1L) {
         Button(
             onClick = {
                 Log.d("EditScreen", "Edit button clicked")
-                viewModel.showTaskData(taskId)
-                scope.launch {
-                    viewModel.showButtonSheet()
+                viewModel.run {
+                    showButtonSheet()
+                    getTaskInfoById(taskId)
                 }
             },
             modifier = Modifier.fillMaxWidth(),
@@ -43,13 +42,14 @@ fun EditScreen(taskId: Long = 1L) {
             onTaskTitleChanged = viewModel::onUpdateTaskTitle,
             onTaskDescriptionChanged = viewModel::onUpdateTaskDescription,
             onUpdateTaskDueDate = viewModel::onUpdateTaskDueDate,
-            onUpdateTaskPriority = viewModel::onUpdateTaskPriority,
+            onUpdateTaskPriority = viewModel::onSelectTaskPriority,
             onSelectTaskCategory = viewModel::onSelectTaskCategory,
             addButtonState = addButtonState,
             hideButtonSheet = viewModel::hideButtonSheet,
             isEditMode = true,
             onSaveClicked = viewModel::onSaveClicked,
-            onAddClicked = viewModel::onAddClicked,
+            onAddClicked = viewModel::onAddNewTaskClicked,
+            onCancelButtonClicked = viewModel::onCancelClicked,
         )
     }
 }

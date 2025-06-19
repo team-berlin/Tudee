@@ -36,4 +36,3 @@ fun TaskEntity.toDomain(): Task {
 fun Flow<List<TaskEntity>>.toDomain(): Flow<List<Task>> {
     return map { it.map(TaskEntity::toDomain) }
 }
-

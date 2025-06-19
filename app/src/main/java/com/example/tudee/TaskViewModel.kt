@@ -7,7 +7,6 @@ import com.example.tudee.domain.TaskCategoryService
 import com.example.tudee.domain.TaskService
 import com.example.tudee.domain.entity.Task
 import com.example.tudee.domain.entity.TaskPriority
-import com.example.tudee.domain.entity.TaskStatus
 import com.example.tudee.domain.request.TaskCreationRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -41,7 +40,7 @@ class TaskViewModel(
         )
 
     init {
-        observeCategories()
+//        observeCategories()
     }
 
     private fun observeCategories() {
@@ -66,7 +65,7 @@ class TaskViewModel(
         _uiState.update { it.copy(taskDueDate = newDueDate) }
     }
 
-    fun onUpdateTaskPriority(newPriority: TaskPriority) {
+    fun onSelectTaskPriority(newPriority: TaskPriority) {
         Log.d("TaskViewModel", "Updating task priority to: $newPriority")
         _uiState.update { it.copy(selectedTaskPriority = newPriority) }
     }
@@ -76,10 +75,10 @@ class TaskViewModel(
     }
 
     fun showButtonSheet() {
-        _uiState.update { it.copy(showBottomSheet = true) }
+        _uiState.update { it.copy(isButtonSheetVisibile = true) }
     }
 
-    fun showTaskData(taskId: Long) {
+    fun getTaskInfoById(taskId: Long) {
         viewModelScope.launch {
             with(taskService.getTaskById(taskId)) {
                 _uiState.update {
@@ -98,34 +97,37 @@ class TaskViewModel(
         }
     }
 
-    fun onAddClicked(taskCreationRequest: TaskCreationRequest) {
+    fun onAddNewTaskClicked(taskCreationRequest: TaskCreationRequest) {
         viewModelScope.launch {
             taskService.createTask(taskCreationRequest)
             Log.d("TaskViewModel", "Task created: $taskCreationRequest")
         }
 //        _uiState.update { it.copy(showBottomSheet = true, isEditMode = false) }
     }
-    fun onSaveClicked(editedTask: Task){
+
+    fun onSaveClicked(editedTask: Task) {
         viewModelScope.launch {
             taskService.editTask(editedTask)
             hideButtonSheet()
-            _uiState.update {
-                it.copy(
-                    showBottomSheet = false,
-                    isEditMode = false,
-                    taskTitle = "",
-                    taskDescription = "",
-                    selectedTaskPriority = null,
-                    selectedCategoryId = null,
-                    taskDueDate = null
-                )
-            }
             Log.d("TaskViewModel", "Task saved: $editedTask")
         }
-//        _uiState.update { it.copy(showBottomSheet = false, isEditMode = false) }
+    }
+
+    fun onCancelClicked() {
+        hideButtonSheet()
+        Log.d("TaskViewModel", "Edit cancelled")
     }
 
     fun hideButtonSheet() {
-        _uiState.update { it.copy(showBottomSheet = false) }
-    }
+        _uiState.update {
+            it.copy(
+                isButtonSheetVisibile = false,
+                isEditMode = false,
+                taskTitle = "",
+                taskDescription = "",
+                selectedTaskPriority = null,
+                selectedCategoryId = null,
+                taskDueDate = null
+            )
+        }    }
 }

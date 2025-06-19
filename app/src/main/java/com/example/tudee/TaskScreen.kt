@@ -76,6 +76,7 @@ fun TaskContent(
     isEditMode: Boolean,
     onSaveClicked: (Task) -> Unit,
     onAddClicked: (TaskCreationRequest) -> Unit,
+    onCancelButtonClicked: () -> Unit,
 ) {
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true,
@@ -83,13 +84,13 @@ fun TaskContent(
     val scope = rememberCoroutineScope()
 
 
-    LaunchedEffect(taskState.showBottomSheet) {
-        if (taskState.showBottomSheet)
+    LaunchedEffect(taskState.isButtonSheetVisibile) {
+        if (taskState.isButtonSheetVisibile)
             sheetState.show()
         else
             sheetState.hide()
     }
-    if (taskState.showBottomSheet || sheetState.currentValue != SheetValue.Hidden)
+    if (taskState.isButtonSheetVisibile || sheetState.currentValue != SheetValue.Hidden)
         ModalBottomSheet(
             onDismissRequest = hideButtonSheet,
             sheetState = sheetState,
@@ -116,6 +117,7 @@ fun TaskContent(
                             sheetState.hide()
                             hideButtonSheet()
                         }
+                        onCancelButtonClicked
                     },
                     onSaveClicked = onSaveClicked,
                     onAddClicked = onAddClicked,
@@ -216,12 +218,11 @@ fun BottomSheetContent(
                         },
                         labelColor = if (isSelected) TudeeTheme.color.textColors.onPrimary else TudeeTheme.color.textColors.hint,
                         backgroundColor = if (isSelected) {
-                            when(taskPriority){
+                            when (taskPriority) {
                                 TaskPriority.HIGH -> TudeeTheme.color.statusColors.pinkAccent
                                 TaskPriority.MEDIUM -> TudeeTheme.color.statusColors.yellowAccent
                                 TaskPriority.LOW -> TudeeTheme.color.statusColors.greenAccent
                             }
-                            TudeeTheme.color.statusColors.pinkAccent
                         } else TudeeTheme.color.surfaceLow,
                         icon = when (taskPriority) {
                             TaskPriority.HIGH -> painterResource(id = R.drawable.ic_priority_high)

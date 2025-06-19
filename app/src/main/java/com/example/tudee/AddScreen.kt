@@ -13,7 +13,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.tudee.designsystem.theme.TudeeTheme
-import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -40,13 +39,14 @@ fun AddScreen() {
             onTaskTitleChanged = viewModel::onUpdateTaskTitle,
             onTaskDescriptionChanged = viewModel::onUpdateTaskDescription,
             onUpdateTaskDueDate = viewModel::onUpdateTaskDueDate,
-            onUpdateTaskPriority = viewModel::onUpdateTaskPriority,
+            onUpdateTaskPriority = viewModel::onSelectTaskPriority,
             onSelectTaskCategory = viewModel::onSelectTaskCategory,
             addButtonState = addButtonState,
             hideButtonSheet = viewModel::hideButtonSheet,
             isEditMode = false,
             onSaveClicked = viewModel::onSaveClicked,
-            onAddClicked = viewModel::onAddClicked
+            onAddClicked = viewModel::onAddNewTaskClicked,
+            onCancelButtonClicked = viewModel::onCancelClicked,
         )
     }
 }
