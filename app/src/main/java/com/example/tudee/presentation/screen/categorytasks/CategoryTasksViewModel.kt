@@ -21,12 +21,6 @@ class CategoryTasksViewModel(
     private val _snackBarEvent = MutableSharedFlow<SnackBarEvent>()
     val snackBarEvent = _snackBarEvent.asSharedFlow()
 
-    fun showError() {
-        viewModelScope.launch {
-            _snackBarEvent.emit(SnackBarEvent.ShowError)
-        }
-    }
-
     fun getTasksByCategoryId(categoryId: Long) {
         _categoryTasksUiState.value = CategoryTasksUiState.Loading
 
