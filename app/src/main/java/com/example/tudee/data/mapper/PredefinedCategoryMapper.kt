@@ -31,7 +31,7 @@ val predefinedCategories=listOf(
         isPredefined =true ,
         image = "event"
     ), CategoryCreationRequest(
-        title = "Work",
+        title = "work",
         isPredefined =true ,
         image = "work"
     ), CategoryCreationRequest(
@@ -81,23 +81,23 @@ val predefinedCategories=listOf(
 
 fun getCategoryIcon(iconName:String):Int{
     when(iconName){
-        "Education"-> return R.drawable.education
-        "Shopping"-> return R.drawable.shopping
-        "Medical"-> return  R.drawable.medical
-        "Gym"-> return R.drawable.gym
-        "Entertainment"-> return R.drawable.entertainment
-        "Event"-> return R.drawable.event
-        "Work"-> return  R.drawable.work
-        "Budgeting"-> return  R.drawable.budgeting
-        "Self-care"-> return  R.drawable.self_care
-        "Adoration"-> return  R.drawable.adoration
-        "Fixing bugs"-> return  R.drawable.fixing_bugs
-        "Cleaning"-> return  R.drawable.cleaning
-        "Traveling"-> return  R.drawable.travelling
-        "Agriculture"-> return  R.drawable.agriculture
-        "Coding"-> return  R.drawable.coding
-        "Cooking"-> return  R.drawable.coocking
-        "Family & friend"-> return  R.drawable.family_friend
+        "education"-> return R.drawable.education
+        "shopping"-> return R.drawable.shopping
+        "medical"-> return  R.drawable.medical
+        "gym"-> return R.drawable.gym
+        "entertainment"-> return R.drawable.entertainment
+        "event"-> return R.drawable.event
+        "work"-> return  R.drawable.work
+        "budgeting"-> return  R.drawable.budgeting
+        "Self_care"-> return  R.drawable.self_care
+        "adoration"-> return  R.drawable.adoration
+        "fixing_bugs"-> return  R.drawable.fixing_bugs
+        "cleaning"-> return  R.drawable.cleaning
+        "traveling"-> return  R.drawable.travelling
+        "agriculture"-> return  R.drawable.agriculture
+        "coding"-> return  R.drawable.coding
+        "cooking"-> return  R.drawable.coocking
+        "family_friend"-> return  R.drawable.family_friend
         else -> return -1
     }
 }

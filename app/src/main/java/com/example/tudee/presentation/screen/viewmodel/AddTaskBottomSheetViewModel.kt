@@ -9,12 +9,12 @@ import com.example.tudee.domain.entity.Task
 import com.example.tudee.domain.entity.TaskPriority
 import com.example.tudee.domain.request.TaskCreationRequest
 import com.example.tudee.presentation.viewmodel.uistate.TaskBottomSheetState
-import com.example.tudee.utils.convertMillisToLocalDate
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -23,25 +23,35 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import java.time.YearMonth
 
 class AddTaskBottomSheetViewModel(
     private val taskService: TaskService,
     private val categoryService: TaskCategoryService
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<TaskBottomSheetState> =
+    private val _addTaskBottomSheetUiState: MutableStateFlow<TaskBottomSheetState> =
         MutableStateFlow(TaskBottomSheetState())
-    val uiState: StateFlow<TaskBottomSheetState> = _uiState.asStateFlow()
+    val uiState: StateFlow<TaskBottomSheetState> = _addTaskBottomSheetUiState.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            _addTaskBottomSheetUiState.update {
+                it.copy(
+                    categories = categoryService.getCategories().first()
+                )
+            }
+        }
+    }
+
 //    private val _isEditModeOn: MutableStateFlow<Boolean> = MutableStateFlow(false)
 //    val isEditModeOn = _isEditModeOn.asStateFlow()
 
     fun toggleEditMode(on: Boolean) {
-        _uiState.update { it.copy(isEditMode = on) }
+        _addTaskBottomSheetUiState.update { it.copy(isEditMode = on) }
     }
 
 
-    val isTaskValid: StateFlow<Boolean> = _uiState
+    val isTaskValid: StateFlow<Boolean> = _addTaskBottomSheetUiState
         .map { state ->
             state.taskTitle.isNotBlank() &&
                     state.taskDescription.isNotBlank() &&
@@ -54,31 +64,31 @@ class AddTaskBottomSheetViewModel(
         )
 
     fun onUpdateTaskTitle(newTitle: String) {
-        _uiState.update { it.copy(taskTitle = newTitle) }
+        _addTaskBottomSheetUiState.update { it.copy(taskTitle = newTitle) }
     }
 
     fun onUpdateTaskDescription(newDescription: String) {
-        _uiState.update { it.copy(taskDescription = newDescription) }
+        _addTaskBottomSheetUiState.update { it.copy(taskDescription = newDescription) }
     }
 
     fun onUpdateTaskDueDate(newDueDate: LocalDate) {
-        _uiState.update { it.copy(taskDueDate = newDueDate.toString()) }
+        _addTaskBottomSheetUiState.update { it.copy(taskDueDate = newDueDate.toString()) }
     }
 
     fun onSelectTaskPriority(newPriority: TaskPriority) {
-        _uiState.update { it.copy(selectedTaskPriority = newPriority) }
+        _addTaskBottomSheetUiState.update { it.copy(selectedTaskPriority = newPriority) }
     }
 
     fun onSelectTaskCategory(selectedCategoryId: Long) {
-        _uiState.update { it.copy(selectedCategoryId = selectedCategoryId) }
+        _addTaskBottomSheetUiState.update { it.copy(selectedCategoryId = selectedCategoryId) }
     }
 
     fun showButtonSheet() {
-        _uiState.update { it.copy(isButtonSheetVisible = true) }
+        _addTaskBottomSheetUiState.update { it.copy(isButtonSheetVisible = true) }
     }
 
     fun hideButtonSheet() {
-        _uiState.update {
+        _addTaskBottomSheetUiState.update {
             it.copy(
                 isButtonSheetVisible = false,
                 isEditMode = false,
@@ -96,7 +106,7 @@ class AddTaskBottomSheetViewModel(
         viewModelScope.launch {
             try {
                 with(taskService.getTaskById(taskId)) {
-                    _uiState.update {
+                    _addTaskBottomSheetUiState.update {
                         it.copy(
                             isEditMode = true,
                             taskId = taskId,
@@ -119,11 +129,11 @@ class AddTaskBottomSheetViewModel(
         viewModelScope.launch {
             try {
                 taskService.createTask(taskCreationRequest)
-                _uiState.update { it.copy(snackBarMessage = true) }
+                _addTaskBottomSheetUiState.update { it.copy(snackBarMessage = true) }
                 delay(2000)
                 hideButtonSheet()
             } catch (e: Exception) {
-                _uiState.update { it.copy(snackBarMessage = false) }
+                _addTaskBottomSheetUiState.update { it.copy(snackBarMessage = false) }
                 delay(2000)
                 hideButtonSheet()
             }
@@ -134,21 +144,21 @@ class AddTaskBottomSheetViewModel(
         viewModelScope.launch {
             try {
                 taskService.editTask(editedTask)
-                _uiState.update { it.copy(snackBarMessage = true) }
+                _addTaskBottomSheetUiState.update { it.copy(snackBarMessage = true) }
                 delay(2000)
                 hideButtonSheet()
             } catch (e: Exception) {
-                _uiState.update { it.copy(snackBarMessage = false) }
+                _addTaskBottomSheetUiState.update { it.copy(snackBarMessage = false) }
                 delay(2000)
                 hideButtonSheet()
             }
         }
     }
     fun onDateFieldClicked(){
-        _uiState.update { it.copy(isDatePickerVisible = true) }
+        _addTaskBottomSheetUiState.update { it.copy(isDatePickerVisible = true) }
     }
     fun onDismissDatePicker() {
-        _uiState.update { it.copy(isDatePickerVisible = false)
+        _addTaskBottomSheetUiState.update { it.copy(isDatePickerVisible = false)
 
         }
     }
@@ -164,7 +174,7 @@ class AddTaskBottomSheetViewModel(
                 monthNumber = localDateTime.date.monthNumber,
                 dayOfMonth = localDateTime.date.dayOfMonth
             )
-            _uiState.update {
+            _addTaskBottomSheetUiState.update {
                 it.copy(
                     taskDueDate = selectedDate.toString())
             }

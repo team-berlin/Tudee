@@ -126,7 +126,7 @@ class TasksScreenViewModel(
                     id = taskUiState.id,
                     title = taskUiState.title,
                     description = taskUiState.description,
-                    categoryIconRes = taskUiState.categoryIcon.toInt(),
+                    categoryIconRes = taskUiState.categoryIcon,
                     priority = TaskPriority.LOW,
                     status = TaskStatus.IN_PROGRESS
                 )
@@ -215,7 +215,7 @@ class TasksScreenViewModel(
             taskService.getTasksByStatus(status).collect {
                 val result = it.map { task ->
                     val categoryIcon = getCategoryIconById(task.categoryId)
-                    task.taskToTaskUiState(categoryIcon.toInt())
+                    task.taskToTaskUiState(categoryIcon)
                 }
                 _taskScreenUiState.update { uiState ->
                     uiState.copy(

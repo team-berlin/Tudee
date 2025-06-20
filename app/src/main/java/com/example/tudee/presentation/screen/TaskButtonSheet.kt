@@ -29,6 +29,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
+import com.example.tudee.data.mapper.getCategoryIcon
 import com.example.tudee.presentation.viewmodel.uistate.TaskBottomSheetState
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.domain.entity.Task
@@ -258,7 +259,7 @@ fun BottomSheetContent(
                 items(taskState.categories) { category ->
                     CategoryComponent(
                         modifier = Modifier.clickable { onSelectTaskCategory(category.id) },
-                        categoryPainter = painterResource(R.drawable.ic_education),
+                        categoryPainter = painterResource(getCategoryIcon(category.image)),
                         categoryImageContentDescription = category.title,
                         categoryName = category.title,
                         showCheckedIcon = category.id == taskState.selectedCategoryId

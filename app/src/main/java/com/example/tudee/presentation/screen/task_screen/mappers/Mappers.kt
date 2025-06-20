@@ -47,14 +47,14 @@ fun TaskPriority.toUiState(): TaskPriorityUiState = when (this) {
 
 
 
-fun Task.taskToTaskUiState(categoryIcon: Int): TaskUiState {
+fun Task.taskToTaskUiState(categoryIcon: String): TaskUiState {
     return TaskUiState(
         id = id,
         title = title,
         description = description,
         priority = priority.toUiState().priority,
         status = status.toUiState().status,
-        categoryTitle = "",
-        categoryIcon = categoryIcon.toString()
+        categoryTitle = "categorytitel",
+        categoryIcon = categoryIcon
     )
 }

@@ -4,6 +4,7 @@ import com.example.tudee.domain.entity.TaskCategory
 import com.example.tudee.domain.entity.TaskPriority
 import com.example.tudee.domain.entity.TaskStatus
 import kotlinx.datetime.LocalDate
+import org.koin.androidx.viewmodel.scope.emptyState
 
 data class TaskBottomSheetState(
     val isButtonSheetVisible: Boolean = false,
@@ -16,134 +17,7 @@ data class TaskBottomSheetState(
     val selectedCategoryId: Long? = null,
     val isEditMode: Boolean = false,
     val snackBarMessage: Boolean? = null,
-    val categories: List<TaskCategory> = listOf<TaskCategory>(
-        TaskCategory(
-            id = 0L,
-            title = "Work",
-            isPredefined = true,
-            image = "drawable/ic_work"
-        ),
-        TaskCategory(
-            id = 1L,
-            title = "Personal",
-            isPredefined = true,
-            image = "drawable/ic_personal"
-        ),
-        TaskCategory(
-            id = 2L,
-            title = "Shopping",
-            isPredefined = true,
-            image = "drawable/ic_shopping"
-        ),
-        TaskCategory(
-            id = 0L,
-            title = "Work",
-            isPredefined = true,
-            image = "drawable/ic_work"
-        ),
-        TaskCategory(
-            id = 1L,
-            title = "Personal",
-            isPredefined = true,
-            image = "drawable/ic_personal"
-        ),
-        TaskCategory(
-            id = 2L,
-            title = "Shopping",
-            isPredefined = true,
-            image = "drawable/ic_shopping"
-        ),
-        TaskCategory(
-            id = 0L,
-            title = "Work",
-            isPredefined = true,
-            image = "drawable/ic_work"
-        ),
-        TaskCategory(
-            id = 1L,
-            title = "Personal",
-            isPredefined = true,
-            image = "drawable/ic_personal"
-        ),
-        TaskCategory(
-            id = 2L,
-            title = "Shopping",
-            isPredefined = true,
-            image = "drawable/ic_shopping"
-        ),
-        TaskCategory(
-            id = 0L,
-            title = "Work",
-            isPredefined = true,
-            image = "drawable/ic_work"
-        ),
-        TaskCategory(
-            id = 1L,
-            title = "Personal",
-            isPredefined = true,
-            image = "drawable/ic_personal"
-        ),
-        TaskCategory(
-            id = 2L,
-            title = "Shopping",
-            isPredefined = true,
-            image = "drawable/ic_shopping"
-        ),
-        TaskCategory(
-            id = 0L,
-            title = "Work",
-            isPredefined = true,
-            image = "drawable/ic_work"
-        ),
-        TaskCategory(
-            id = 1L,
-            title = "Personal",
-            isPredefined = true,
-            image = "drawable/ic_personal"
-        ),
-        TaskCategory(
-            id = 2L,
-            title = "Shopping",
-            isPredefined = true,
-            image = "drawable/ic_shopping"
-        ),
-        TaskCategory(
-            id = 0L,
-            title = "Work",
-            isPredefined = true,
-            image = "drawable/ic_work"
-        ),
-        TaskCategory(
-            id = 1L,
-            title = "Personal",
-            isPredefined = true,
-            image = "drawable/ic_personal"
-        ),
-        TaskCategory(
-            id = 2L,
-            title = "Shopping",
-            isPredefined = true,
-            image = "drawable/ic_shopping"
-        ),
-        TaskCategory(
-            id = 0L,
-            title = "Work",
-            isPredefined = true,
-            image = "drawable/ic_work"
-        ),
-        TaskCategory(
-            id = 1L,
-            title = "Personal",
-            isPredefined = true,
-            image = "drawable/ic_personal"
-        ),
-        TaskCategory(
-            id = 2L,
-            title = "Shopping",
-            isPredefined = true,
-            image = "drawable/ic_shopping"
-        ),
-    ),
+    val categories: List<TaskCategory> = emptyList(),
     val taskPriorities: List<TaskPriority> = listOf(
         TaskPriority.HIGH,
         TaskPriority.MEDIUM,

@@ -27,6 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
+import com.example.tudee.data.mapper.getCategoryIcon
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.domain.entity.TaskPriority
 import com.example.tudee.domain.entity.TaskStatus
@@ -69,7 +70,7 @@ private fun TaskDetailsHeader() {
 }
 
 @Composable
-private fun TaskCategoryIcon(categoryIconRes: Int) {
+private fun TaskCategoryIcon(categoryIconRes: String) {
     Box(
         modifier = Modifier
             .size(56.dp)
@@ -78,8 +79,8 @@ private fun TaskCategoryIcon(categoryIconRes: Int) {
         contentAlignment = Alignment.Center
     ) {
         Icon(
-            painter = painterResource(R.drawable.tudee),
-            contentDescription = stringResource(R.string.category_icon),
+            painter = painterResource(getCategoryIcon(categoryIconRes)),
+            contentDescription = "category icon",
             modifier = Modifier.size(32.dp),
             tint = Color.Unspecified
         )
@@ -209,7 +210,7 @@ fun TaskDetailsScreenPreview() {
             id = 1L,
             title = "Study Jetpack Compose",
             description = "Finish the layout chapter and preview tips",
-            categoryIconRes = R.drawable.ic_category_book_open,
+            categoryIconRes = "education",
             priority = TaskPriority.HIGH,
             status = TaskStatus.IN_PROGRESS,
         )

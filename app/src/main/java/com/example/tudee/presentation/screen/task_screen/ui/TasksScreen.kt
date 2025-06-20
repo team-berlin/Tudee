@@ -88,6 +88,7 @@ import com.example.tudee.presentation.screen.task_screen.ui_states.DateUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.TaskUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.TasksScreenUiState
 import com.example.tudee.presentation.screen.task_screen.viewmodel.TasksScreenViewModel
+import com.example.tudee.presentation.screen.taskscreen.addTask.AddBottomSheet
 import com.example.tudee.presentation.screen.taskscreen.editTask.EditeBottomSheet
 import com.example.tudee.presentation.viewmodel.AddTaskBottomSheetViewModel
 import com.example.tudee.presentation.viewmodel.uistate.TaskBottomSheetState
@@ -185,7 +186,7 @@ fun TasksScreenContent(
 
             addTaskBottomSheetViewModel.toggleEditMode(true)
             if (true) {
-                EditeBottomSheet(581L)
+                AddBottomSheet()
 
             }
         }
@@ -258,13 +259,15 @@ fun TasksScreenContent(
                 deleteButtonUiState = taskScreenUiState.deleteBottomSheetUiState.deleteButtonState,
                 cancelButtonUiState = taskScreenUiState.deleteBottomSheetUiState.cancelButtonState
             )
+
+
         }
-
-        SnackBarSection(
-            isSnackBarVisible = taskScreenUiState.isSnackBarVisible, hideSnackBar = hideSnackBar
-        )
-
+        
     }
+    SnackBarSection(
+        isSnackBarVisible = taskScreenUiState.isSnackBarVisible,
+        hideSnackBar = hideSnackBar
+    )
 }
 
 

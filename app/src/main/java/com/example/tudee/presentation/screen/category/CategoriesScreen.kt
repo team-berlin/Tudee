@@ -32,6 +32,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.tudee.R
+import com.example.tudee.data.mapper.getCategoryIcon
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.naviagtion.Destination
 import com.example.tudee.presentation.components.BottomNavItem
@@ -135,7 +136,7 @@ fun CategoriesScreenContent(
                         items = state.categories
                     ) { category ->
                         CategoryItemWithBadge(
-                            categoryPainter = category.iconResId.asPainter(),
+                            categoryPainter = painterResource(getCategoryIcon(category.iconResId.toString())),
                             categoryName = category.name,
                             badgeCount = category.tasksCount,
                             categoryImageContentDescription = category.name,

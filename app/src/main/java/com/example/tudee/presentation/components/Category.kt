@@ -86,7 +86,6 @@ fun CategoryComponent(
 
                 ) {
                 Image(
-
                     categoryPainter,
                     contentDescription = categoryImageContentDescription,
                 )

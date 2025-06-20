@@ -7,7 +7,7 @@ data class TaskDetailsUiState(
     val id: Long,
     val title: String,
     val description: String,
-    val categoryIconRes: Int,
+    val categoryIconRes: String,
     val priority: TaskPriority,
     val status: TaskStatus,
 )
