@@ -36,14 +36,14 @@
         أم صغيرًا.</string>
 
     <string name="skip_button">تخطي</string>
-    <string name="Title_Error">Title Not Valid</string>
-    <string name="task_title">Task title</string>
-    <string name="description">Description</string>
-    <string name="set_due_date">set due date</string>
-    <string name="priority">Priority</string>
-    <string name="category">Category</string>
-    <string name="cancel">Cancel</string>
-    <string name="add">Add</string>
+    <string name="Title_Error">العنوان غير صالح</string>
+    <string name="task_title">عنوان المهمة</string>
+    <string name="description">الوصف</string>
+    <string name="set_due_date">تحديد تاريخ الاستحقاق</string>
+    <string name="priority">الأولوية</string>
+    <string name="category">الفئة</string>
+    <string name="cancel">إلغاء</string>
+    <string name="add">إضافة</string>
     <string name="task_details">تفاصيل المهمه</string>
     <string name="add_task_title">اضف مهمة جديدة</string>
     <string name="edit_task_title">تعديل المهمة</string>
