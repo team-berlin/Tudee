@@ -19,6 +19,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -56,10 +57,16 @@ fun CategoriesScreen(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route ?: ""
 
+    LaunchedEffect(Unit) {
+        viewModel.loadCategories()
+    }
+
     CategoriesScreenContent(
         state = state,
-        onCategoryClick = { viewModel.onCategoryClicked(it) },
-        onAddCategoryClick = { /* show bottom sheet */ },
+        onCategoryClick = { categoryId ->
+            navigateToCategoryDetails(navController, categoryId)
+        },
+        onAddCategoryClick = {showAddCategoryBottomSheet()},
         currentRoute = currentRoute,
         navController = navController
     )
@@ -165,8 +172,7 @@ fun CategoriesScreenContent(
                                 .fillMaxWidth()
                                 .wrapContentHeight()
                                 .clickable {
-                                    // Example: Navigate to details screen
-                                    // navController.navigate("${Destination.CategoryDetailsScreen.route}/${category.id}")
+                                    onCategoryClick(category.id)
                                 }
                         )
                     }
@@ -176,9 +182,8 @@ fun CategoriesScreenContent(
     }
 }
 
-
 @Composable
-fun CategoriesFab(
+private fun CategoriesFab(
     onClick: () -> Unit
 ) {
     FabButton(
@@ -200,6 +205,17 @@ fun CategoriesFab(
         )
     }
 }
+
+private fun navigateToCategoryDetails(navController: NavHostController, categoryId: Long) {
+    navController.navigate("${Destination.CategoryDetailsScreen.route}/$categoryId")
+}
+
+private fun showAddCategoryBottomSheet() {
+    // TODO: Replace with your actual bottom sheet handling logic
+}
+
+
+
 
 
 @Preview(showBackground = true)
@@ -257,4 +273,3 @@ fun CategoriesScreenPreview() {
         )
     }
 }
-
