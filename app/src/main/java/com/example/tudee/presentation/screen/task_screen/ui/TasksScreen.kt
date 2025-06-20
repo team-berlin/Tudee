@@ -465,7 +465,10 @@ fun DaysRow(
     val selectedIndex = listOfDateCardUiState.indexOfFirst { it.isSelected }.coerceAtLeast(0)
 
     LaunchedEffect(version) {
-        listState.scrollToItem(selectedIndex)
+        if (selectedIndex > 0)
+            listState.scrollToItem(selectedIndex-1)
+        else
+            listState.scrollToItem(selectedIndex)
     }
 
     LazyRow(
