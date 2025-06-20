@@ -205,6 +205,7 @@ fun TasksScreenContent(
                 onClear = {})
         }
         Column(
+            modifier = Modifier.padding(paddingValues),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             DateSection(
