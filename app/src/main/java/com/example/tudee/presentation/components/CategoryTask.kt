@@ -42,10 +42,10 @@ fun CategoryTaskComponent(
     Column(
         modifier = modifier
             .fillMaxWidth()
+            .clickable { onClick()}
             .border(1.dp, TudeeTheme.color.surfaceHigh, RoundedCornerShape(16.dp))
             .background( TudeeTheme.color.surfaceHigh,RoundedCornerShape(16.dp))
-            .padding(top = 4.dp, start = 4.dp, end = 12.dp, bottom = 12.dp)
-            .clickable { onClick()},
+            .padding(top = 4.dp, start = 4.dp, end = 12.dp, bottom = 12.dp),
         verticalArrangement = Arrangement.spacedBy(2.dp)
     ) {
         Row(
