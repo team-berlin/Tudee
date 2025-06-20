@@ -39,6 +39,8 @@ import com.example.tudee.presentation.components.TabBarComponent
 import com.example.tudee.presentation.components.TopAppBar
 import com.example.tudee.presentation.components.TudeeScaffold
 import com.example.tudee.presentation.screen.category.EditCategorySheet
+import com.example.tudee.presentation.screen.category.model.CategoryData
+import com.example.tudee.presentation.screen.category.model.toUiImage
 import kotlinx.coroutines.delay
 import org.koin.compose.getKoin
 
@@ -71,9 +73,10 @@ fun CategoryTasksScreen(
                 modifier = modifier,
                 categoryTaskUIState = uiState,
                 onBackClick = { navController.navigateUp() },
-                onEditCategoryImageClicked = { },
                 onDeleteCategory = viewModel::deleteCategory,
-                onSaveButtonClicked = {},
+                onSaveButtonClicked = { categoryData ->
+                    viewModel.editCategory(categoryData)
+                },
                 onTabSelected = { index ->
                     selectedTabIndex = index
                     viewModel.getTasksByStatus(uiState, index)
@@ -106,8 +109,7 @@ fun CategoryTasksContent(
     categoryTaskUIState: CategoryTasksUiState,
     onBackClick: () -> Unit,
     onDeleteCategory: () -> Unit,
-    onSaveButtonClicked: () -> Unit,
-    onEditCategoryImageClicked: () -> Unit,
+    onSaveButtonClicked: (CategoryData) -> Unit,
     onTabSelected: (Int) -> Unit
 ) {
 
@@ -117,10 +119,10 @@ fun CategoryTasksContent(
             categoryTaskUIState = categoryTaskUIState,
             categoryName = categoryTaskUIState.categoryTasksUiModel.title,
             categoryTasks = categoryTaskUIState.categoryTasksUiModel.tasks,
+            categoryImage = categoryTaskUIState.categoryTasksUiModel.image,
             onBackClick = { onBackClick() },
             onDeleteCategory = onDeleteCategory,
             onSaveButtonClicked = onSaveButtonClicked,
-            onEditCategoryImageClicked = onEditCategoryImageClicked,
             onTabSelected = { onTabSelected(it) }
         )
     }
@@ -139,11 +141,11 @@ private fun SuccessState(
     modifier: Modifier,
     categoryTaskUIState: CategoryTasksUiState,
     categoryName: String,
+    categoryImage: String,
     categoryTasks: List<TaskUIModel>,
     onBackClick: () -> Unit,
     onDeleteCategory: () -> Unit,
-    onSaveButtonClicked: () -> Unit,
-    onEditCategoryImageClicked: () -> Unit,
+    onSaveButtonClicked: (CategoryData) -> Unit,
     onTabSelected: (Int) -> Unit
 ) {
     var isEditCategorySheetVisible by remember { mutableStateOf(false) }
@@ -229,13 +231,13 @@ private fun SuccessState(
             }
 
             EditCategorySheet(
-                title = "Edit category",
                 isBottomSheetVisible = isEditCategorySheetVisible,
-                onBottomSheetDismissed = { isEditCategorySheetVisible = false },
                 onDeleteButtonClicked = onDeleteCategory,
+                onBottomSheetDismissed = { isEditCategorySheetVisible = false },
                 onCancelButtonClicked = { isEditCategorySheetVisible = false },
-                onSaveButtonClicked = onSaveButtonClicked,
-                onEditCategoryImageClicked = onEditCategoryImageClicked
+                onSaveButtonClicked = { onSaveButtonClicked(it) },
+                initialCategoryImage = categoryImage.toUiImage(),
+                initialCategoryName = categoryName
             )
         }
     }
