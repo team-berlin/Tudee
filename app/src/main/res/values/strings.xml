@@ -59,5 +59,8 @@
     <string name="add_task_title">Add new task</string>
     <string name="move_to_done">Move to done</string>
     <string name="move_to_in_progress">Move to in progress</string>
+    <string name="no_tasks_for_today">No tasks for today!</string>
+    <string name="tap_the_button_to_add_your">Tap the + button to add your \n</string>
+    <string name="first_one">first one.</string>
 
 </resources>

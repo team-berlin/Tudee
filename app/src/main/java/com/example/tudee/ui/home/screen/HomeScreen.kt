@@ -30,6 +30,7 @@ import com.example.tudee.presentation.components.AppBar
 import com.example.tudee.presentation.components.TudeeScaffold
 import com.example.tudee.presentation.composables.buttons.FabButton
 import com.example.tudee.presentation.home.components.TasksSection
+import com.example.tudee.presentation.screens.home.components.NoTask
 import com.example.tudee.ui.home.components.HomeOverviewCard
 import com.example.tudee.ui.home.viewmodel.HomeActions
 import com.example.tudee.ui.home.viewmodel.HomeUiState
@@ -138,26 +139,32 @@ fun HomeContent(
                     tasksInProgressCount = state.todayTasksInProgressCount,
                     sliderUiState = state.sliderUiState
                 )
-                Column(modifier = Modifier.padding(start = 16.dp)) {
-                    TasksSection(
-                        actions = actions,
-                        statusTitle = stringResource(R.string.todo),
-                        numberOfElement = state.todayTasksTodoCount,
-                        tasks = state.todayTasksTodo
-                    )
-                    TasksSection(
-                        actions = actions,
-                        statusTitle = stringResource(R.string.in_progress),
-                        numberOfElement = state.todayTasksInProgressCount,
-                        tasks = state.todayTasksInProgress
-                    )
-                    TasksSection(
-                        actions = actions,
-                        statusTitle = stringResource(R.string.done),
-                        numberOfElement = state.todayTasksDoneCount,
-                        tasks = state.todayTasksDone
-                    )
-                }
+                    Column(modifier = Modifier.padding(start = 16.dp)) {
+                        if (state.todayTasksTodoCount.isEmpty() &&
+                            state.todayTasksInProgressCount.isEmpty() &&
+                            state.todayTasksTodoCount.isEmpty()) {
+                            NoTask()
+                        } else {
+                            TasksSection(
+                                actions = actions,
+                                statusTitle = stringResource(R.string.todo),
+                                numberOfElement = state.todayTasksTodoCount,
+                                tasks = state.todayTasksTodo
+                            )
+                            TasksSection(
+                                actions = actions,
+                                statusTitle = stringResource(R.string.in_progress),
+                                numberOfElement = state.todayTasksInProgressCount,
+                                tasks = state.todayTasksInProgress
+                            )
+                            TasksSection(
+                                actions = actions,
+                                statusTitle = stringResource(R.string.done),
+                                numberOfElement = state.todayTasksDoneCount,
+                                tasks = state.todayTasksDone
+                            )
+                        }
+                    }
             }
         }
         AnimatedVisibility(state.isBottomSheetVisible) {
@@ -181,6 +188,7 @@ fun BackgroundBlueCard(modifier: Modifier = Modifier) {
 private fun HomeScreenPreview() {
     TudeeTheme {
         HomeContent(
+
             state = HomeUiState(),
             actions = {}
         )
