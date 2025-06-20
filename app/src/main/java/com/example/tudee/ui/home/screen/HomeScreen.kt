@@ -74,7 +74,7 @@ fun HomeScreen(
             viewModel.resetStatus()
         }
     }
-    TudeeTheme() {
+    TudeeTheme(isDarkTheme = state.isDarkMode) {
         HomeContent(
             navController = navController,
             modifier = modifier,
