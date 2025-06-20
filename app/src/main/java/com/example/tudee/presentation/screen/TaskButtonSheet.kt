@@ -38,6 +38,7 @@ import com.example.tudee.domain.request.TaskCreationRequest
 import com.example.tudee.presentation.components.CategoryComponent
 import com.example.tudee.presentation.components.DefaultLeadingContent
 import com.example.tudee.presentation.components.TudeeChip
+import com.example.tudee.presentation.components.TudeeDateDialog
 import com.example.tudee.presentation.components.TudeeTextField
 import com.example.tudee.presentation.composables.buttons.ButtonColors
 import com.example.tudee.presentation.composables.buttons.ButtonState
@@ -60,10 +61,23 @@ fun TaskContent(
     isEditMode: Boolean,
     onSaveClicked: (Task) -> Unit,
     onAddClicked: (TaskCreationRequest) -> Unit,
-    onCancelButtonClicked: () -> Unit
+    onCancelButtonClicked: () -> Unit,
+    onDateFieldClicked: () -> Unit,
+    onConfirmDatePicker: (Long?) -> Unit,
+    onEditClicked: (Long) -> Unit,
+    onDismissDatePicker: () -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
+
+
+    if (taskState.isDatePickerVisible){
+        TudeeDateDialog(
+            onConfirm = {onConfirmDatePicker(it)},
+            onDismiss = {onDismissDatePicker()},
+            onClear = {}
+        )
+    }
 
     if (taskState.isButtonSheetVisible) {
         ModalBottomSheet(
@@ -80,7 +94,8 @@ fun TaskContent(
                     onTaskDescriptionChanged = onTaskDescriptionChanged,
                     onUpdateTaskDueDate = onUpdateTaskDueDate,
                     onUpdateTaskPriority = onUpdateTaskPriority,
-                    onSelectTaskCategory = onSelectTaskCategory
+                    onSelectTaskCategory = onSelectTaskCategory,
+                    onDateFieldClicked = onDateFieldClicked
                 )
                 AddOrSaveButtons(
                     modifier = Modifier.align(Alignment.BottomCenter),
@@ -127,6 +142,7 @@ fun BottomSheetContent(
     onTaskDescriptionChanged: (String) -> Unit,
     onUpdateTaskDueDate: (LocalDate) -> Unit,
     onUpdateTaskPriority: (TaskPriority) -> Unit,
+    onDateFieldClicked: () -> Unit,
     onSelectTaskCategory: (Long) -> Unit
 ) {
     LazyColumn(
@@ -136,7 +152,7 @@ fun BottomSheetContent(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         item{
-            AddNewTaskText()
+            EditNewTaskText()
         }
         item {
             TudeeTextField(
@@ -178,6 +194,9 @@ fun BottomSheetContent(
                 },
                 leadingContent = { isFocused ->
                     DefaultLeadingContent(
+                        modifier = Modifier.clickable{
+                            onDateFieldClicked()
+                        },
                         painter = painterResource(R.drawable.ic_add_calendar),
                         isFocused = isFocused
                     )
@@ -251,9 +270,9 @@ fun BottomSheetContent(
 }
 
 @Composable
-private fun AddNewTaskText() {
+private fun EditNewTaskText() {
     Text(
-        text = stringResource(R.string.addNewTask),
+        text = stringResource(R.string.editNewTask),
         style = TudeeTheme.textStyle.title.large,
         color = TudeeTheme.color.textColors.title
     )
@@ -285,7 +304,7 @@ fun AddOrSaveButtons(
                         priority = taskState.selectedTaskPriority!!,
                         status = taskState.taskStatus!!,
                         categoryId = taskState.selectedCategoryId!!,
-                        assignedDate = taskState.taskDueDate!!
+                        assignedDate = LocalDate.parse(taskState.taskDueDate!!)
                     )
                     onSaveClicked(editedTask)
                 } else {
@@ -296,7 +315,7 @@ fun AddOrSaveButtons(
                             priority = taskState.selectedTaskPriority!!,
                             categoryId = taskState.selectedCategoryId!!,
                             status = TaskStatus.TODO,
-                            assignedDate = taskState.taskDueDate ?: LocalDate(2024, 1, 1)
+                            assignedDate = LocalDate.parse(taskState.taskDueDate!!)
                         )
                     )
                 }

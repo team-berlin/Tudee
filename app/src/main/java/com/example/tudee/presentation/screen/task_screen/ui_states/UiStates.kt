@@ -24,14 +24,7 @@ data class TasksScreenUiState(
     val deleteBottomSheetUiState: DeleteBottomSheetUiState = DeleteBottomSheetUiState(),
     val idOfTaskToBeDeleted: Long = 0,
     val noCurrentTasks: Boolean = listOfTasksUiState.isEmpty(),
-    val taskDetailsUiState: TaskDetailsUiState= TaskDetailsUiState(
-        id = -100,
-        title = "",
-        description = "",
-        categoryIconRes =0,
-        priority = TaskPriority.LOW,
-        status = TaskStatus.IN_PROGRESS
-    )
+    val taskDetailsUiState: TaskDetailsUiState?=null,
 )
 
 data class DateUiState(

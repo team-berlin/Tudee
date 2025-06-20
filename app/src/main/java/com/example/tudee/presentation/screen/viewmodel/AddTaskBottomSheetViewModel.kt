@@ -9,6 +9,7 @@ import com.example.tudee.domain.entity.Task
 import com.example.tudee.domain.entity.TaskPriority
 import com.example.tudee.domain.request.TaskCreationRequest
 import com.example.tudee.presentation.viewmodel.uistate.TaskBottomSheetState
+import com.example.tudee.utils.convertMillisToLocalDate
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -18,7 +19,11 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import java.time.YearMonth
 
 class AddTaskBottomSheetViewModel(
     private val taskService: TaskService,
@@ -32,7 +37,7 @@ class AddTaskBottomSheetViewModel(
 //    val isEditModeOn = _isEditModeOn.asStateFlow()
 
     fun toggleEditMode(on: Boolean) {
-
+        _uiState.update { it.copy(isEditMode = on) }
     }
 
 
@@ -57,7 +62,7 @@ class AddTaskBottomSheetViewModel(
     }
 
     fun onUpdateTaskDueDate(newDueDate: LocalDate) {
-        _uiState.update { it.copy(taskDueDate = newDueDate) }
+        _uiState.update { it.copy(taskDueDate = newDueDate.toString()) }
     }
 
     fun onSelectTaskPriority(newPriority: TaskPriority) {
@@ -100,7 +105,7 @@ class AddTaskBottomSheetViewModel(
                             taskDescription = description,
                             selectedTaskPriority = priority,
                             selectedCategoryId = categoryId,
-                            taskDueDate = assignedDate
+                            taskDueDate = assignedDate.toString()
                         )
                     }
                 }
@@ -137,6 +142,33 @@ class AddTaskBottomSheetViewModel(
                 delay(2000)
                 hideButtonSheet()
             }
+        }
+    }
+    fun onDateFieldClicked(){
+        _uiState.update { it.copy(isDatePickerVisible = true) }
+    }
+    fun onDismissDatePicker() {
+        _uiState.update { it.copy(isDatePickerVisible = false)
+
+        }
+    }
+
+    fun onConfirmDatePicker(millis: Long?) {
+        millis?.let {
+            val instant = Instant.fromEpochMilliseconds(millis)
+            val timeZone = TimeZone.currentSystemDefault() // or a fixed one
+            val localDateTime = instant.toLocalDateTime(timeZone)
+             // returns kotlinx.datetime.LocalDate
+            val selectedDate = LocalDate(
+                year = localDateTime.date.year,
+                monthNumber = localDateTime.date.monthNumber,
+                dayOfMonth = localDateTime.date.dayOfMonth
+            )
+            _uiState.update {
+                it.copy(
+                    taskDueDate = selectedDate.toString())
+            }
+
         }
     }
 

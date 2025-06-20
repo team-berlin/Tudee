@@ -112,6 +112,8 @@ fun TasksScreen(navController: NavController) {
     TasksScreenContent(
         addTaskBottomSheetUiState = addTaskBottomSheetUiState,
         showAddTaskBottomSheet = addTaskBottomSheetViewModel::showButtonSheet,
+        hideAddTaskBottomSheet = addTaskBottomSheetViewModel::hideButtonSheet,
+        addTaskBottomSheetViewModel=addTaskBottomSheetViewModel,
         taskScreenUiState = taskScreenUiState,
         onTabSelected = tasksScreenViewModel::onTabSelected,
         onTaskCardClicked = tasksScreenViewModel::onTaskCardClicked,
@@ -126,7 +128,8 @@ fun TasksScreen(navController: NavController) {
         onDismissDatePicker = tasksScreenViewModel::onDismissDatePicker,
         onConfirmDatePicker = tasksScreenViewModel::onConfirmDatePicker,
         hideSnackBar = tasksScreenViewModel::hideSnackBar,
-        version = tasksScreenViewModel.triggerEffectVersion.collectAsState().value
+        version = tasksScreenViewModel.triggerEffectVersion.collectAsState().value,
+        hideDetailsBottomSheet = tasksScreenViewModel::hideDetialsBottomSheet
     )
 }
 
@@ -150,6 +153,9 @@ fun TasksScreenContent(
     addTaskBottomSheetUiState: TaskBottomSheetState,
     showAddTaskBottomSheet: () -> Unit,
     version: Int,
+    hideAddTaskBottomSheet: () -> Unit,
+    hideDetailsBottomSheet: () -> Unit,
+    addTaskBottomSheetViewModel: AddTaskBottomSheetViewModel,
 
     ) {
 
@@ -172,20 +178,24 @@ fun TasksScreenContent(
                 .background(TudeeTheme.color.surfaceHigh)
                 .padding(paddingValues)
         ) {
-            if (addTaskBottomSheetUiState.isButtonSheetVisible) {
-                AddBottomSheet()
 
-            }
-            if (addTaskBottomSheetUiState.isButtonSheetVisible) {
-                EditeBottomSheet()
+//            addTaskBottomSheetViewModel.toggleEditMode(false)
+//            if (addTaskBottomSheetUiState.isButtonSheetVisible && !addTaskBottomSheetViewModel.uiState.value.isEditMode) {
+//                AddBottomSheet()
+//            }
+
+            addTaskBottomSheetViewModel.toggleEditMode(true)
+            if (true) {
+                EditeBottomSheet(581L)
+
             }
         }
-        val showBottomSheet = false
 
-        if (showBottomSheet) {
+
+        if (taskScreenUiState.taskDetailsUiState!=null) {
             ModalBottomSheet(
                 onDismissRequest = {
-
+                   hideDetailsBottomSheet()
                 },
                 sheetState = rememberModalBottomSheetState(),
                 containerColor = TudeeTheme.color.surface
@@ -193,7 +203,9 @@ fun TasksScreenContent(
                 TaskDetailsScreen(
                     taskDetailsState =
                         taskScreenUiState.taskDetailsUiState,
-                    onEditButtonClicked = {}
+                    onEditButtonClicked = {
+                        addTaskBottomSheetViewModel.showButtonSheet()
+                    }
                 )
             }
         }
@@ -205,6 +217,7 @@ fun TasksScreenContent(
                 onConfirm = onConfirmDatePicker,
                 onClear = {})
         }
+
         Column(
             modifier = Modifier.padding(paddingValues),
             verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -232,7 +245,7 @@ fun TasksScreenContent(
                     .weight(1f),
                 listOfTasks = taskScreenUiState.listOfTasksUiState,
                 onTaskCardClicked =
-                    { onTaskCardClicked },
+                    { onTaskCardClicked(it) },
                 onDeleteIconClick = onDeleteIconClicked,
             )
 
@@ -533,8 +546,9 @@ fun SwipeableCardWrapper(
         Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(12.dp))
+            // .clickable { onTaskCardClicked() }
             .background(TudeeTheme.color.statusColors.errorVariant)
-            .clickable { onTaskCardClicked() },
+          ,
         contentAlignment = Alignment.CenterEnd
     ) {
         IconButton(
@@ -544,7 +558,8 @@ fun SwipeableCardWrapper(
                 }
                 .padding(horizontal = 12.dp), onClick = {
                 onDeleteIconClick()
-            }) {
+            }
+        ) {
             Icon(
                 modifier = Modifier.size(32.dp),
                 painter = painterResource(R.drawable.delete_ic),
@@ -558,6 +573,7 @@ fun SwipeableCardWrapper(
                 .fillMaxWidth()
                 .offset { IntOffset(x = -neededOffset.value.roundToInt(), y = 0) }
                 .clip(RoundedCornerShape(12.dp))
+                // .clickable { onTaskCardClicked() }
                 .pointerInput(hiddenIconWidth) {
                     detectHorizontalDragGestures(onHorizontalDrag = { _, dragAmount ->
                         scope.launch {
@@ -768,33 +784,36 @@ private fun TaskScreenFloatingActionButton(onFloatingActionClicked: () -> Unit) 
     })
 }
 
-@Composable
-@Preview(
-    showBackground = true, showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES
-)
-fun TasksScreenContentPreview() {
-    TudeeTheme {
-        TasksScreenContent(
-            taskScreenUiState = TasksScreenUiState(),
-            onDayCardClicked = {},
-            onCalendarClicked = {},
-            onPreviousArrowClicked = {},
-            onNextArrowClicked = {},
-            onTabSelected = {},
-            onTaskCardClicked = {},
-            onDeleteIconClicked = { },
-            onDeleteButtonClicked = {},
-            onBottomSheetDismissed = {},
-            onCancelButtonClicked = {},
-            onConfirmDatePicker = {},
-            onDismissDatePicker = { },
-            hideSnackBar = {},
-            addTaskBottomSheetUiState = TaskBottomSheetState(),
-            showAddTaskBottomSheet = {},
-            version = 0
-        )
-
-    }
-}
+//@Composable
+//@Preview(
+//    showBackground = true, showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES
+//)
+//fun TasksScreenContentPreview() {
+//    TudeeTheme {
+//        TasksScreenContent(
+//            taskScreenUiState = TasksScreenUiState(),
+//            onDayCardClicked = {},
+//            onCalendarClicked = {},
+//            onPreviousArrowClicked = {},
+//            onNextArrowClicked = {},
+//            onTabSelected = {},
+//            onTaskCardClicked = {},
+//            onDeleteIconClicked = { },
+//            onDeleteButtonClicked = {},
+//            onBottomSheetDismissed = {},
+//            onCancelButtonClicked = {},
+//            onConfirmDatePicker = {},
+//            onDismissDatePicker = { },
+//            hideSnackBar = {},
+//            addTaskBottomSheetUiState = TaskBottomSheetState(isDatePickerVisible = true),
+//            showAddTaskBottomSheet = {},
+//            version = 0,
+//            hideAddTaskBottomSheet = {},
+//            hideDetailsBottomSheet = {  },
+//            addTaskBottomSheetViewModel =
+//        )
+//
+//    }
+//}
 
 

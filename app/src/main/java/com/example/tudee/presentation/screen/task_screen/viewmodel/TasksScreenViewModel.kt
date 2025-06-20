@@ -41,11 +41,11 @@ class TasksScreenViewModel(
 
     init {
         viewModelScope.launch {
-
             _taskScreenUiState.update { it.copy(isLoading = true) }
             getTasksByStatus(TaskStatus.IN_PROGRESS)
             _taskScreenUiState.update { it.copy(isLoading = false) }
         }
+
         updateDaysInMonth(
             month = YearMonth.now(),
             selectedDate = LocalDate.now()
@@ -134,6 +134,13 @@ class TasksScreenViewModel(
 
         }
     }
+    fun hideDetialsBottomSheet() {
+        _taskScreenUiState.update {
+            it.copy(
+                taskDetailsUiState = null
+            )
+        }
+    }
 
     override fun onCalendarClicked() {
         _taskScreenUiState
@@ -210,7 +217,6 @@ class TasksScreenViewModel(
                     val categoryIcon = getCategoryIconById(task.categoryId)
                     task.taskToTaskUiState(categoryIcon.toInt())
                 }
-
                 _taskScreenUiState.update { uiState ->
                     uiState.copy(
                         selectedTabIndex = tabIndex,

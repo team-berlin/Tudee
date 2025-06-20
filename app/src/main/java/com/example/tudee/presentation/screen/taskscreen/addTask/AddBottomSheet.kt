@@ -27,9 +27,12 @@ fun AddBottomSheet() {
         addButtonState = addButtonState,
         hideButtonSheet = viewModel::hideButtonSheet,
         isEditMode = false,
+        onDismissDatePicker = viewModel::onDismissDatePicker,
+        onDateFieldClicked = viewModel::onDateFieldClicked,
+        onEditClicked = viewModel::getTaskInfoById,
         onSaveClicked = viewModel::onSaveClicked,
         onAddClicked = viewModel::onAddNewTaskClicked,
         onCancelButtonClicked = viewModel::onCancelClicked,
+        onConfirmDatePicker = viewModel::onConfirmDatePicker,
     )
-
 }

@@ -10,7 +10,7 @@ data class TaskBottomSheetState(
     val taskId: Long? = null,
     val taskTitle: String = "",
     val taskDescription: String = "",
-    val taskDueDate: LocalDate? = null,
+    val taskDueDate: String? = null,
     val selectedTaskPriority: TaskPriority? = null,
     val taskStatus: TaskStatus? = null,
     val selectedCategoryId: Long? = null,
@@ -34,7 +34,8 @@ data class TaskBottomSheetState(
             title = "Shopping",
             isPredefined = true,
             image = "drawable/ic_shopping"
-        ),TaskCategory(
+        ),
+        TaskCategory(
             id = 0L,
             title = "Work",
             isPredefined = true,
@@ -51,7 +52,8 @@ data class TaskBottomSheetState(
             title = "Shopping",
             isPredefined = true,
             image = "drawable/ic_shopping"
-        ),TaskCategory(
+        ),
+        TaskCategory(
             id = 0L,
             title = "Work",
             isPredefined = true,
@@ -68,7 +70,8 @@ data class TaskBottomSheetState(
             title = "Shopping",
             isPredefined = true,
             image = "drawable/ic_shopping"
-        ),TaskCategory(
+        ),
+        TaskCategory(
             id = 0L,
             title = "Work",
             isPredefined = true,
@@ -85,7 +88,8 @@ data class TaskBottomSheetState(
             title = "Shopping",
             isPredefined = true,
             image = "drawable/ic_shopping"
-        ),TaskCategory(
+        ),
+        TaskCategory(
             id = 0L,
             title = "Work",
             isPredefined = true,
@@ -102,7 +106,8 @@ data class TaskBottomSheetState(
             title = "Shopping",
             isPredefined = true,
             image = "drawable/ic_shopping"
-        ),TaskCategory(
+        ),
+        TaskCategory(
             id = 0L,
             title = "Work",
             isPredefined = true,
@@ -119,7 +124,8 @@ data class TaskBottomSheetState(
             title = "Shopping",
             isPredefined = true,
             image = "drawable/ic_shopping"
-        ),TaskCategory(
+        ),
+        TaskCategory(
             id = 0L,
             title = "Work",
             isPredefined = true,
@@ -143,8 +149,9 @@ data class TaskBottomSheetState(
         TaskPriority.MEDIUM,
         TaskPriority.LOW
     ),
+    val isDatePickerVisible: Boolean=false,
 
-)
+    )
 
 
 
