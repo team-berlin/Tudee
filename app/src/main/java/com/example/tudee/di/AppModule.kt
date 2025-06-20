@@ -11,6 +11,7 @@ import com.example.tudee.domain.TaskService
 import com.example.tudee.presentation.viewmodel.TaskViewModel
 
 import org.koin.android.ext.koin.androidContext
+import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 
@@ -37,6 +38,6 @@ val appModule = module {
     single< TaskCategoryService> {
         TaskCategoryServiceImpl(get())
     }
-
+    viewModel { TaskViewModel(get(), get()) }
 
 }
