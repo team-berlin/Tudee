@@ -45,6 +45,7 @@ fun AddTaskContent(
     categories: List<CategoryUiState>,
     onAction: (HomeActions) -> Unit,
 ) {
+    val addButtonClick by remember { mutableStateOf(false) }
     val priorities = listOf(
         TaskPriorityUiState.HIGH to Triple(
             "High",
@@ -173,6 +174,8 @@ fun AddTaskContent(
                                 id = categories.image
                                     ?: R.drawable.category
                             ),
+                            showCheckedIcon = state.taskUiState.taskCategory?.id == categories.id,
+                            badgeBackgroundColor = TudeeTheme.color.statusColors.greenAccent,
                             categoryName = categories.title,
                             categoryImageContentDescription = "Category ${categories.title}",
                             modifier = Modifier
@@ -201,7 +204,7 @@ fun AddTaskContent(
         ) {
             PrimaryButton(
                 modifier = Modifier.fillMaxWidth(),
-//state = if (addButtonclick) ButtonState.IDLE else ButtonState.DISABLED,
+          state = if (addButtonClick) ButtonState.IDLE else ButtonState.DISABLED,
                 onClick = { onAction(HomeActions.OnCreateTaskButtonClicked(state.taskUiState)) },
             ) {
                 Text(text = stringResource(R.string.add))
