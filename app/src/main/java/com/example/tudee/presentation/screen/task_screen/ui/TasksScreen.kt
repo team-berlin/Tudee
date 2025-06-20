@@ -1,6 +1,7 @@
 package com.example.tudee.presentation.screen.task_screen.ui
 
 
+import android.content.res.Configuration
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
@@ -125,7 +126,7 @@ fun TasksScreen(navController: NavController) {
         onDismissDatePicker = tasksScreenViewModel::onDismissDatePicker,
         onConfirmDatePicker = tasksScreenViewModel::onConfirmDatePicker,
         hideSnackBar = tasksScreenViewModel::hideSnackBar,
-        version =  tasksScreenViewModel.triggerEffectVersion.collectAsState().value
+        version = tasksScreenViewModel.triggerEffectVersion.collectAsState().value
     )
 }
 
@@ -467,7 +468,7 @@ fun DaysRow(
 
     LaunchedEffect(version) {
         if (selectedIndex > 0)
-            listState.scrollToItem(selectedIndex-1)
+            listState.scrollToItem(selectedIndex - 1)
         else
             listState.scrollToItem(selectedIndex)
     }
@@ -768,28 +769,32 @@ private fun TaskScreenFloatingActionButton(onFloatingActionClicked: () -> Unit) 
 }
 
 @Composable
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(
+    showBackground = true, showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES
+)
 fun TasksScreenContentPreview() {
-    TudeeTheme
-    TasksScreenContent(
-        taskScreenUiState = TasksScreenUiState(),
-        onDayCardClicked = {},
-        onCalendarClicked = {},
-        onPreviousArrowClicked = {},
-        onNextArrowClicked = {},
-        onTabSelected = {},
-        onTaskCardClicked = {},
-        onDeleteIconClicked = { },
-        onDeleteButtonClicked = {},
-        onBottomSheetDismissed = {},
-        onCancelButtonClicked = {},
-        onConfirmDatePicker = {},
-        onDismissDatePicker = { },
-        hideSnackBar = {},
-        addTaskBottomSheetUiState = TaskBottomSheetState(),
-        showAddTaskBottomSheet = {},
-        version = 0
-    )
+    TudeeTheme {
+        TasksScreenContent(
+            taskScreenUiState = TasksScreenUiState(),
+            onDayCardClicked = {},
+            onCalendarClicked = {},
+            onPreviousArrowClicked = {},
+            onNextArrowClicked = {},
+            onTabSelected = {},
+            onTaskCardClicked = {},
+            onDeleteIconClicked = { },
+            onDeleteButtonClicked = {},
+            onBottomSheetDismissed = {},
+            onCancelButtonClicked = {},
+            onConfirmDatePicker = {},
+            onDismissDatePicker = { },
+            hideSnackBar = {},
+            addTaskBottomSheetUiState = TaskBottomSheetState(),
+            showAddTaskBottomSheet = {},
+            version = 0
+        )
+
+    }
 }
 
 
