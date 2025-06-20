@@ -28,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
+import com.example.tudee.naviagtion.Destination
 
 data class BottomNavItem(
     val icon: Painter,
@@ -110,17 +111,17 @@ private fun NavBarPreview() {
                 BottomNavItem(
                     icon = painterResource(id = R.drawable.home),
                     selectedIcon = painterResource(id = R.drawable.home_select),
-                    route = "home"
+                    route = Destination.HomeScreen.route
                 ),
                 BottomNavItem(
                     icon = painterResource(id = R.drawable.task),
                     selectedIcon = painterResource(id = R.drawable.task_select),
-                    route = "search"
+                    route = Destination.TasksScreen.route
                 ),
                 BottomNavItem(
                     icon = painterResource(id = R.drawable.category),
                     selectedIcon = painterResource(id = R.drawable.category_select),
-                    route = "profile"
+                    route = Destination.CategoriesScreen.route
                 )
             ),
             currentRoute = "home",

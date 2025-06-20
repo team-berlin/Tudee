@@ -1,7 +1,6 @@
 package com.example.tudee.presentation.screen.task_screen.ui
 
 
-import android.content.res.Configuration
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
@@ -63,7 +62,6 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -90,7 +88,6 @@ import com.example.tudee.presentation.screen.task_screen.ui_states.DateUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.TaskUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.TasksScreenUiState
 import com.example.tudee.presentation.screen.task_screen.viewmodel.TasksScreenViewModel
-import com.example.tudee.presentation.screen.taskscreen.addTask.AddBottomSheet
 import com.example.tudee.presentation.screen.taskscreen.editTask.EditeBottomSheet
 import com.example.tudee.presentation.viewmodel.AddTaskBottomSheetViewModel
 import com.example.tudee.presentation.viewmodel.uistate.TaskBottomSheetState
@@ -102,7 +99,7 @@ import java.util.Locale
 import kotlin.math.roundToInt
 
 @Composable
-fun TasksScreen(navController: NavController) {
+fun TasksScreen(navController: NavController, status: String) {
     val tasksScreenViewModel: TasksScreenViewModel = koinViewModel()
     val taskScreenUiState by tasksScreenViewModel.taskScreenUiState.collectAsState()
 
