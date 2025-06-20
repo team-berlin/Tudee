@@ -43,7 +43,7 @@ val appModule = module {
     }
 
     single<CategoryTasksViewModel> { CategoryTasksViewModel(get(), get()) }
-    single<OnBoardingViewModel> { OnBoardingViewModel(get()) }
+    single<OnBoardingViewModel> { OnBoardingViewModel(get(),get()) }
 
     single<AppEntryDao> { get<AppDatabase>().appEntryDao() }
     single<AppEntry> { AppEntryImpl(get()) }

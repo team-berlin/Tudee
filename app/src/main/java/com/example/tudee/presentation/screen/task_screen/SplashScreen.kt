@@ -19,8 +19,10 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
+import com.example.tudee.domain.AppEntry
 import com.example.tudee.naviagtion.Destination
 import kotlinx.coroutines.delay
+import org.koin.compose.getKoin
 
 @Composable
 fun SplashScreen(
@@ -29,12 +31,20 @@ fun SplashScreen(
     backgroundColor: Color = TudeeTheme.color.surface,
     overlayColor: Color = TudeeTheme.color.statusColors.overlay,
     backgroundPainter: Painter = painterResource(R.drawable.background_ellipse),
-    iconPainter: Painter = painterResource(R.drawable.tudee_logo)
+    iconPainter: Painter = painterResource(R.drawable.tudee_logo),
+    appEntry: AppEntry = getKoin().get()
 ) {
     LaunchedEffect(Unit) {
         delay(3000)
-        navController.navigate(Destination.OnBoardingScreen.route) {
-            popUpTo(Destination.SplashScreen.route) { inclusive = true }
+        if (appEntry.isFirstEntry()) {
+            navController.navigate(Destination.OnBoardingScreen.route) {
+                popUpTo(Destination.SplashScreen.route) { inclusive = true }
+            }
+
+        } else {
+            navController.navigate(Destination.HomeScreen.route) {
+                popUpTo(Destination.SplashScreen.route) { inclusive = true }
+            }
         }
     }
     Box(

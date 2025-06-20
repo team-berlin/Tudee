@@ -134,6 +134,7 @@ private fun OnBoardingContent(
                             pageState.animateScrollToPage(pageState.currentPage + Pages.SecondPage.page)
                         } else {
                             navController.navigate(Destination.HomeScreen.route)
+                            viewModel.loadInitialData()
                             viewModel.saveFirstEntry()
                         }
                     }

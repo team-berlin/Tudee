@@ -129,7 +129,7 @@ private fun NavBarPreview() {
                     route = Destination.CategoriesScreen.route
                 )
             ),
-            currentRoute = "home",
+            currentRoute = "Task",
             onNavDestinationClicked = {}
         )
     }
