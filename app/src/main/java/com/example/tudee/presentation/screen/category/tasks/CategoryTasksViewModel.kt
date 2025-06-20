@@ -6,6 +6,7 @@ import com.example.tudee.domain.TaskCategoryService
 import com.example.tudee.domain.TaskService
 import com.example.tudee.domain.entity.Task
 import com.example.tudee.domain.entity.TaskCategory
+import com.example.tudee.presentation.screen.category.model.CategoryData
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -52,10 +53,17 @@ class CategoryTasksViewModel(
         }
     }
 
-    fun editCategory(category: TaskCategory) {
+    fun editCategory(category: CategoryData) {
         _categoryTasksUiState.value.categoryTasksUiModel?.let {
             viewModelScope.launch {
-                taskCategoryService.editCategory(category)
+                taskCategoryService.editCategory(
+                    TaskCategory(
+                        id = it.id,
+                        title = category.name,
+                        image = category.url,
+                        isPredefined = it.isPredefined
+                    )
+                )
             }
         }
     }
