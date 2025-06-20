@@ -38,6 +38,7 @@ import com.example.tudee.presentation.components.BottomNavItem
 import com.example.tudee.presentation.components.CategoryItemWithBadge
 import com.example.tudee.presentation.components.NavBar
 import com.example.tudee.presentation.components.TopAppBar
+import com.example.tudee.presentation.components.TudeeScaffold
 import com.example.tudee.presentation.composables.buttons.ButtonDefaults
 import com.example.tudee.presentation.composables.buttons.ButtonState
 import com.example.tudee.presentation.composables.buttons.FabButton
@@ -45,6 +46,7 @@ import com.example.tudee.presentation.screen.category.model.CategoriesUiState
 import com.example.tudee.presentation.screen.category.model.TaskCategoryUiModel
 import com.example.tudee.presentation.screen.category.model.UiImage
 import com.example.tudee.presentation.screen.category.viewmodel.CategoriesViewModel
+import com.example.tudee.presentation.screen.task_screen.ui.TaskScreenBottomAppBar
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -80,11 +82,12 @@ fun CategoriesScreenContent(
     currentRoute: String,
     navController: NavHostController
 ) {
-    Scaffold(
+    TudeeScaffold(
         floatingActionButton = {
             CategoriesFab(onAddCategoryClick)
         },
-        topBar = {
+        showTopAppBar = true,
+        topAppBar = {
             TopAppBar(
                 title = "Categories",
                 showBackButton = false,
@@ -92,41 +95,10 @@ fun CategoriesScreenContent(
                 titleStyle = TudeeTheme.textStyle.title.large
             )
         },
-        bottomBar = {
-            NavBar(
-                navDestinations = listOf(
-                    BottomNavItem(
-                        icon = painterResource(R.drawable.home),
-                        selectedIcon = painterResource(R.drawable.home_select),
-                        route = Destination.HomeScreen.route
-                    ),
-                    BottomNavItem(
-                        icon = painterResource(R.drawable.task),
-                        selectedIcon = painterResource(R.drawable.task_select),
-                        route = Destination.TasksScreen.route
-                    ),
-                    BottomNavItem(
-                        icon = painterResource(R.drawable.category),
-                        selectedIcon = painterResource(R.drawable.category_select),
-                        route = Destination.CategoriesScreen.route
-                    ),
-                ),
-                currentRoute = currentRoute,
-                onNavDestinationClicked = { route ->
-                    if (route != currentRoute) {
-                        navController.navigate(route) {
-                            popUpTo(Destination.HomeScreen.route) {
-                                inclusive = false
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    }
-                }
-            )
-        },
-        containerColor = TudeeTheme.color.surface
+        showFab = true,
+        showBottomBar = true,
+        bottomBarContent = { TaskScreenBottomAppBar(navController = navController) },
+//        containerColor = TudeeTheme.color.surface
     ) { padding ->
         when {
             state.isLoading -> {

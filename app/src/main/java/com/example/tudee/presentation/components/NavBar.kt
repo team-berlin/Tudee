@@ -17,6 +17,7 @@ import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,6 +50,7 @@ fun NavBar(
     shadowColor: Color = Color(0x14000000),
     rippleColor: Color = TudeeTheme.color.surfaceHigh,
 ) {
+    val currentSelectedRoute = remember { mutableStateOf(currentRoute) }
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -64,7 +66,7 @@ fun NavBar(
         verticalAlignment = Alignment.CenterVertically
     ) {
         navDestinations.forEach { item ->
-            val isSelected = currentRoute == item.route
+            val isSelected = currentSelectedRoute.value == item.route
             val backgroundColorAnimated by animateColorAsState(
                 targetValue = if (isSelected) selectedItemBackgroundColor else backgroundColor,
                 animationSpec = spring(
@@ -88,7 +90,10 @@ fun NavBar(
                             radius = (42 / 2).dp,
                             color = rippleColor
                         )
-                    ) { onNavDestinationClicked(item.route) },
+                    ) {
+                        currentSelectedRoute.value = item.route
+                        onNavDestinationClicked(item.route)
+                      },
                 contentAlignment = Alignment.Center
             ) {
                 Icon(

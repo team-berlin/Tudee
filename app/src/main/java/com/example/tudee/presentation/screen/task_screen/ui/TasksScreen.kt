@@ -107,6 +107,7 @@ fun TasksScreen(navController: NavController, status: String) {
     val addTaskBottomSheetUiState by addTaskBottomSheetViewModel.uiState.collectAsState()
 
     TasksScreenContent(
+        navController = navController,
         addTaskBottomSheetUiState = addTaskBottomSheetUiState,
         showAddTaskBottomSheet = addTaskBottomSheetViewModel::showButtonSheet,
         hideAddTaskBottomSheet = addTaskBottomSheetViewModel::hideButtonSheet,
@@ -133,6 +134,7 @@ fun TasksScreen(navController: NavController, status: String) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TasksScreenContent(
+    navController: NavController,
     taskScreenUiState: TasksScreenUiState,
     onDayCardClicked: (Int) -> Unit,
     onCalendarClicked: () -> Unit,
@@ -160,7 +162,7 @@ fun TasksScreenContent(
         showTopAppBar = true,
         topAppBar = { TaskScreenTopAppBar() },
         showBottomBar = true,
-        bottomBarContent = { TaskScreenBottomAppBar() },
+        bottomBarContent = { TaskScreenBottomAppBar(navController) },
         showFab = true,
         floatingActionButton = {
             TaskScreenFloatingActionButton {
@@ -749,8 +751,7 @@ private fun TaskScreenTopAppBar() {
 }
 
 @Composable
-
-private fun TaskScreenBottomAppBar() {
+fun TaskScreenBottomAppBar(navController: NavController) {
     NavBar(
         navDestinations = listOf(
             BottomNavItem(
@@ -766,7 +767,21 @@ private fun TaskScreenBottomAppBar() {
                 selectedIcon = painterResource(id = R.drawable.category_select),
                 route = Destination.CategoriesScreen.route
             )
-        ), currentRoute = Destination.TasksScreen.route, onNavDestinationClicked = {})
+        ), currentRoute = navController.currentDestination?.route ?: Destination.HomeScreen.route, onNavDestinationClicked = { route ->
+            when(route) {
+                Destination.HomeScreen.route -> {
+                    navController.navigate(Destination.HomeScreen.route)
+                }
+
+                Destination.TasksScreen.route -> {
+                    navController.navigate(Destination.TasksScreen.route)
+                }
+
+                Destination.CategoriesScreen.route -> {
+                    navController.navigate(Destination.CategoriesScreen.route)
+                }
+            }
+        })
 }
 
 

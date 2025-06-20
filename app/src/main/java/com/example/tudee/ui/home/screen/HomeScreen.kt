@@ -25,6 +25,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.presentation.components.AppBar
@@ -35,6 +37,7 @@ import com.example.tudee.presentation.components.TudeeTaskDetailsBottomSheet
 import com.example.tudee.presentation.composables.buttons.ButtonState
 import com.example.tudee.presentation.composables.buttons.FabButton
 import com.example.tudee.presentation.home.components.TasksSection
+import com.example.tudee.presentation.screen.task_screen.ui.TaskScreenBottomAppBar
 import com.example.tudee.presentation.screens.home.components.NoTask
 import com.example.tudee.ui.home.components.HomeOverviewCard
 import com.example.tudee.ui.home.viewmodel.HomeActions
@@ -45,6 +48,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HomeScreen(
+    navController: NavController,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = koinViewModel(),
     navigateDoneTasks: () -> Unit = {},
@@ -70,8 +74,9 @@ fun HomeScreen(
             viewModel.resetStatus()
         }
     }
-    TudeeTheme(isDarkTheme = state.isDarkMode) {
+    TudeeTheme() {
         HomeContent(
+            navController = navController,
             modifier = modifier,
             state = state,
             actions = viewModel::handleActions,
@@ -82,9 +87,10 @@ fun HomeScreen(
 @SuppressLint("SuspiciousIndentation")
 @Composable
 fun HomeContent(
+    navController: NavController,
     modifier: Modifier = Modifier,
     state: HomeUiState,
-    actions: (HomeActions) -> Unit = {}
+    actions: (HomeActions) -> Unit = {},
 ) {
     TudeeScaffold(
         showTopAppBar = true,
@@ -99,6 +105,8 @@ fun HomeContent(
             )
         },
         showFab = true,
+        bottomBarContent = { TaskScreenBottomAppBar(navController = navController) },
+        showBottomBar = true,
         floatingActionButton = {
             FabButton(
                 onClick = {
@@ -237,6 +245,7 @@ fun BottomSheetContent(
 private fun HomeScreenPreview() {
     TudeeTheme {
         HomeContent(
+            navController = rememberNavController(),
             state = HomeUiState(),
             actions = {}
         )

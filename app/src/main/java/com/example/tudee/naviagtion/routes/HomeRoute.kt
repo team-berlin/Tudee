@@ -11,6 +11,7 @@ fun NavGraphBuilder.homeRoute (
 ) {
     composable(route = Destination.HomeScreen.route) {
         HomeScreen(
+            navController = navController,
             navigateDoneTasks = {
                 navController.navigate(Destination.TasksScreen.route + "/done")
             },

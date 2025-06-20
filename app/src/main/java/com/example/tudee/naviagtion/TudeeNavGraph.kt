@@ -25,7 +25,7 @@ import com.example.tudee.naviagtion.routes.tasksRoute
 @Composable
 fun TudeeNavGraph(navController: NavHostController) {
     NavHost(navController = navController,
-        startDestination = Destination.OnBoardingScreen.route) {
+        startDestination = Destination.HomeScreen.route) {
         splashRoute(navController)
         //onBoardingRoute(navController)
         homeRoute(navController)

@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
             val currentRoute = navBackStackEntry?.destination?.route
 
             TudeeTheme {
-                HomeScreen()
+                TudeeNavGraph(navController)
             }
         }
     }
