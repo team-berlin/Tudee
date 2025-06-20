@@ -24,4 +24,7 @@ interface TaskCategoryDao {
 
     @Query("SELECT * FROM task_category_table WHERE id = :categoryId")
     fun getCategoryById(categoryId: Long): Flow<TaskCategoryEntity>
+
+    @Query("SELECT image FROM task_category_table WHERE id = :categoryIconId")
+    suspend fun getCategoryIconById(categoryIconId: Long): String
 }

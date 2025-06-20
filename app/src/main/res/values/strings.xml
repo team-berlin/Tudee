@@ -5,7 +5,6 @@
     <string name="snack_bar_error_message">Some error occurred</string>
     <string name="snack_bar_success_message">Successfully.</string>
 
-
     <string name="tudee_description">Your cute Helper for Every Task</string>
 
     <string name="default_task_title">Organize Study Desk</string>
@@ -22,7 +21,29 @@
     <string name="medium">Medium</string>
     <string name="task_details">Task details</string>
 
-<!--    content description -->
+
+    <!-- Task Status -->
+    <string name="todo">To Do</string>
+    <string name="in_progress">In Progress</string>
+    <string name="done">Done</string>
+
+    <!-- Task Priority -->
+    <string name="low">Low</string>
+    <string name="medium">Medium</string>
+    <string name="high">High</string>
+
+    <string name="task_deleted_success">Deleted task successfully.</string>
+
+    <string name="no_tasks">No tasks here!</string>
+    <string name="add_first_task_hint">Tap the + button to add your first one.</string>
+
+    <string name="select_date">Select date</string>
+    <string name="date_picker_clear_button_text">Clear</string>
+    <string name="date_picker_cancel_button_text">Cancel</string>
+    <string name="date_picker_ok_button_text">OK</string>
+
+
+    <!--    content description -->
     <string name="switch_sun_icon_content_description">Sun</string>
     <string name="switch_moon_icon_content_description">Moon</string>
     <string name="switch_stars_icon_content_description">stars</string>
@@ -55,6 +76,12 @@
     <string name="cancel">Cancel</string>
     <string name="add">Add</string>
     <string name="skip_button">Skip</string>
+    <string name="addNewTask">Add new task</string>
+    <string name="editNewTask">Edit  task</string>
+
+    <string name="task_details">Task details</string>
+    <string name="category_icon">Category_Icon</string>
+    <string name="edit_icon">Edit icon</string>
     <string name="add_task_title">Add new task</string>
     <string name="edit_task_title">Edit task</string>
     <string name="move_to_done">Move to done</string>
@@ -74,4 +101,8 @@ Tudee is proud of you</string>
     <string name="stay_working_desc">You\'ve completed %1$s out of %2$s tasks Keep going!</string>
     <string name="today">today, %1$s %2$s %3$s</string>
     <string name="overview">Overview</string>
+
+    <string name="previous_week_arrow_content_description">Previous week</string>
+    <string name="next_week_arrow_content_description">Next week</string>
+    <string name="open_calendar_content_description">Open calendar</string>
 </resources>

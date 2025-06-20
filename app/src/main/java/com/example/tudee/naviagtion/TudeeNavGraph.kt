@@ -6,7 +6,7 @@ import androidx.navigation.compose.NavHost
 import com.example.tudee.naviagtion.routes.categoriesRoute
 import com.example.tudee.naviagtion.routes.categoryDetailsRoute
 import com.example.tudee.naviagtion.routes.homeRoute
-import com.example.tudee.naviagtion.routes.onBoardingRoute
+//import com.example.tudee.naviagtion.routes.onBoardingRoute
 import com.example.tudee.naviagtion.routes.splashRoute
 import com.example.tudee.naviagtion.routes.tasksRoute
 
@@ -24,9 +24,10 @@ import com.example.tudee.naviagtion.routes.tasksRoute
 
 @Composable
 fun TudeeNavGraph(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = Destination.OnBoardingScreen.route) {
+    NavHost(navController = navController,
+        startDestination = Destination.OnBoardingScreen.route) {
         splashRoute(navController)
-        onBoardingRoute(navController)
+        //onBoardingRoute(navController)
         homeRoute(navController)
         tasksRoute(navController)
         categoriesRoute(navController)

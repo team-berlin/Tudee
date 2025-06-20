@@ -1,5 +1,9 @@
 package com.example.tudee.presentation.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -20,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -27,7 +32,7 @@ import com.example.tudee.designsystem.theme.TudeeTheme
 
 
 data class TabBarItem(
-    val title: String,
+    val title: Int,
     val taskCount: String,
     val isSelected: Boolean,
 )
@@ -40,10 +45,11 @@ fun TabBarComponent(
     contentColor: Color = Color.Unspecified,
     selectedTabIndex: Int,
     tabBarItems: List<TabBarItem>,
-    onTabSelected: () -> Unit,
-    tabContent: @Composable (tab: TabBarItem) -> Unit = {
+    onTabSelected: (Int) -> Unit,
+    tabContent: @Composable (tab: TabBarItem, isSelected: Boolean) -> Unit = { tab, isSelected ->
         DefaultTabContent(
-            tabBarItem = it,
+            tabBarItem = tab,
+            isSelected = isSelected,
             modifier = Modifier
         )
     },
@@ -56,18 +62,20 @@ fun TabBarComponent(
         modifier = modifier
             .fillMaxWidth()
             .background(TudeeTheme.color.surfaceHigh),
-        indicator = tabIndicator, divider = { TabBarHorizontalDivider() },
+        indicator = tabIndicator
+        , divider = { TabBarHorizontalDivider() },
         containerColor = backgroundColor,
         contentColor = contentColor
     ) {
         tabBarItems.forEachIndexed { index, tabItem ->
+
             Tab(
-                selected = tabItem.isSelected,
+                selected = index == selectedTabIndex,
                 onClick = {
-                    onTabSelected()
+                    onTabSelected(index)
                 },
                 text = {
-                    tabContent(tabItem)
+                    tabContent(tabItem, index == selectedTabIndex)
                 },
             )
         }
@@ -77,20 +85,27 @@ fun TabBarComponent(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TabIndicatorScope.DefaultTabIndicator(selectedTabIndex: Int, modifier: Modifier) =
-    TabRowDefaults.PrimaryIndicator(
-        modifier = modifier.tabIndicatorOffset(
-            selectedTabIndex,
-            matchContentSize = true
-        ),
-        height = 4.dp,
-        color = TudeeTheme.color.secondary,
-        shape = (RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)),
-        width = Dp.Unspecified
-    )
+    AnimatedVisibility(
+        visible = true,
+        enter = fadeIn(tween(1000)),
+        exit = fadeOut(tween(1000))
+    ) {
 
+        TabRowDefaults.PrimaryIndicator(
+            modifier = modifier.tabIndicatorOffset(
+                selectedTabIndex,
+                matchContentSize = true
+            ),
+            height = 4.dp,
+            color = TudeeTheme.color.secondary,
+            shape = (RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)),
+            width = Dp.Unspecified
+        )
+    }
 @Composable
 private fun DefaultTabContent(
     modifier: Modifier = Modifier,
+    isSelected: Boolean,
     tabBarItem: TabBarItem,
 
     ) {
@@ -99,12 +114,12 @@ private fun DefaultTabContent(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = tabBarItem.title,
+            text = stringResource(tabBarItem.title.toInt()),
             modifier = Modifier.padding(end = 4.dp),
             style = if (tabBarItem.isSelected) TudeeTheme.textStyle.label.medium else TudeeTheme.textStyle.label.small,
             color = if (tabBarItem.isSelected) TudeeTheme.color.textColors.title else TudeeTheme.color.textColors.hint
         )
-        if (tabBarItem.isSelected) {
+        if (isSelected) {
             Box(
                 Modifier
                     .size(28.dp)
@@ -134,17 +149,17 @@ private fun TabBarHorizontalDivider() {
 fun TabBarComponentPreview() {
     val defaultTabBarHeaders = listOf<TabBarItem>(
         TabBarItem(
-            title = "In Progress",
+            title = 0,
             taskCount = "0",
             isSelected = true
         ),
         TabBarItem(
-            title = "To DO",
+            title = 0,
             taskCount = "0",
             isSelected = false
         ),
         TabBarItem(
-            title = "Done",
+            title = 0,
             taskCount = "0",
             isSelected = false
         ),
@@ -155,7 +170,7 @@ fun TabBarComponentPreview() {
             selectedTabIndex = 0,
             tabBarItems = defaultTabBarHeaders,
             onTabSelected = {},
-            tabContent = { DefaultTabContent(tabBarItem = it) }
+//            tabContent = { DefaultTabContent(tabBarItem = it) }
         )
     }
 }
@@ -163,14 +178,14 @@ fun TabBarComponentPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun DefaultTabContentPreview(
-    tabBarItem: TabBarItem = TabBarItem("tesPreview", "2", true)
+    tabBarItem: TabBarItem = TabBarItem(0, "2", true)
 ) {
     TudeeTheme {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = tabBarItem.title,
+                text = stringResource(tabBarItem.title),
                 modifier = Modifier.padding(end = 4.dp),
                 style = if (tabBarItem.isSelected) TudeeTheme.textStyle.label.medium else TudeeTheme.textStyle.label.small,
                 color = if (tabBarItem.isSelected) TudeeTheme.color.textColors.title else TudeeTheme.color.textColors.hint

@@ -8,5 +8,5 @@ interface TaskCategoryService {
     suspend fun editCategory(category: TaskCategory)
     suspend fun deleteCategory(categoryId: Long)
     fun getCategories(): Flow<List<TaskCategory>>
-    fun getCategoryById(categoryId: Long): Flow<TaskCategory>
+    suspend fun getCategoryById(categoryId: Long): Flow<TaskCategory>
 }

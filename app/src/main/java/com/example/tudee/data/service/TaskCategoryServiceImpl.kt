@@ -29,7 +29,7 @@ class TaskCategoryServiceImpl(
        }
     }
 
-    override fun getCategoryById(categoryId: Long): Flow<TaskCategory> {
+    override suspend fun getCategoryById(categoryId: Long): Flow<TaskCategory> {
         return taskCategoryDao.getCategoryById(categoryId).map {
             it.toDomain()
         }
