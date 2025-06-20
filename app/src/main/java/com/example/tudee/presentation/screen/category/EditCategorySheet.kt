@@ -135,7 +135,6 @@ private fun SheetContent(
     onCancelButtonClicked: () -> Unit
 ) {
     Column {
-        // Main content
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -159,7 +158,6 @@ private fun SheetContent(
             )
         }
 
-        // Action buttons
         ActionButtons(
             onSaveButtonClicked = onSaveButtonClicked,
             onCancelButtonClicked = onCancelButtonClicked
