@@ -59,7 +59,7 @@ fun HomeOverviewCard(
             )
             Text(
                 modifier = Modifier.padding(start = 8.dp),
-                text = "today, $todayDate $month $year",
+                text = stringResource(R.string.today, todayDate, month, year),
                 style = TudeeTheme.textStyle.label.medium,
                 color = TudeeTheme.color.textColors.body
             )
@@ -70,7 +70,7 @@ fun HomeOverviewCard(
         )
         Text(
             modifier = Modifier.padding(vertical = 8.dp, horizontal = 12.dp),
-            text = "Overview",
+            text = stringResource(R.string.overview),
             style = TudeeTheme.textStyle.title.large,
             color = TudeeTheme.color.textColors.title
         )

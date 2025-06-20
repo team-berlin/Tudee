@@ -7,7 +7,6 @@
     <string name="default_task_title">تنظيم مكتب الدراسة</string>
     <string name="default_task_description">راجع بنية الخلية ووظائفها للغد...</string>
     <string name="default_priority">متوسطة</string>
-    <string name="stay_working">واصل العمل!</string>
     <string name="you_ve_completed_3_out_of_10_tasks_keep_going">لقد أنجزت 3 من أصل 10 مهام، واصل التقدم!</string>
     <string name="back_button">زر العودة</string>
     <string name="done">منتهي</string>
@@ -54,4 +53,15 @@
     <string name="tap_the_button_to_add_your">اضغط على الزر + لاضافة</string>
     <string name="first_one">الاولى</string>
     <string name="edit">تعديل</string>
+    <string name="stay_working">استمر في العمل!</string>
+    <string name="Tadaa">تادا!</string>
+    <string name="zero_progress">مافيش تقدم؟!</string>
+    <string name="nothing_in_your_list">مافيش حاجة في قائمتك…</string>
+    <string name="Tadaa_desc">أنت رائع!!!
+تودي فخور بيك</string>
+    <string name="zero_progress_desc">انت بس بتتصفح، مش شغال. تودي شايفك. ارجع للشغل!!!</string>
+    <string name="nothing_in_your_list_desc">املأ يومك بحاجات ممتعة.</string>
+    <string name="stay_working_desc">أنجزت %1$s من أصل %2$s مهام. كمل!</string>
+    <string name="today">اليوم، %1$s %2$s %3$s</string>
+    <string name="overview">نظرة عامة</string>
 </resources>

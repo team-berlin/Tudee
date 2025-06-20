@@ -3,6 +3,7 @@ package com.example.tudee.ui.home.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.tudee.R
 import com.example.tudee.domain.TaskService
 import com.example.tudee.domain.entity.Task
 import com.example.tudee.domain.entity.TaskStatus
@@ -113,6 +114,53 @@ class HomeViewModel(val taskService: TaskService) : ViewModel() {
                 }
                 updateTodayCounters(tasks)
                 Log.d("HomeViewModel", "Updated tasks: ${_homeUiState.value.todayTasksTodo}")
+                updateSliderState(tasks)
+            }
+        }
+    }
+
+    private fun updateSliderState(tasks: List<Task>) {
+        val todayTasks = homeUiState.value.allTasks.filter {
+            it.taskAssignedDate == Clock.System.now()
+                .toLocalDateTime(TimeZone.currentSystemDefault()).date
+        }
+        if (tasks.isEmpty()) {
+            _homeUiState.update { oldValue ->
+                oldValue.copy(
+                    sliderUiState = SliderUiState(
+                        sliderUiEnum = SliderEnum.NOTHING_IN_YOUR_LIST,
+                        description = R.string.nothing_in_your_list
+                    )
+                )
+            }
+        } else if (homeUiState.value.todayTasksDone.size == todayTasks.size) {
+            _homeUiState.update { oldValue ->
+                oldValue.copy(
+                    sliderUiState = SliderUiState(
+                        sliderUiEnum = SliderEnum.TADAA,
+                        description = R.string.Tadaa_desc
+                    )
+                )
+            }
+        } else if (homeUiState.value.todayTasksInProgress.isEmpty() && todayTasks.isNotEmpty()) {
+            _homeUiState.update { oldValue ->
+                oldValue.copy(
+                    sliderUiState = SliderUiState(
+                        sliderUiEnum = SliderEnum.ZERO_PROGRESS,
+                        description = R.string.zero_progress_desc
+                    )
+                )
+            }
+        } else {
+            _homeUiState.update { oldValue ->
+                oldValue.copy(
+                    sliderUiState = SliderUiState(
+                        sliderUiEnum = SliderEnum.STAY_WORKING,
+                        description = R.string.stay_working_desc,
+                        totalTasks = todayTasks.size,
+                        doneTasks = homeUiState.value.todayTasksDone.size
+                    )
+                )
             }
         }
     }

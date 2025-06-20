@@ -47,7 +47,7 @@ import kotlinx.datetime.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun TudeeBottomSheet(
+fun TudeeBottomSheet(
     isVisible: Boolean,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
@@ -75,7 +75,29 @@ private fun TudeeBottomSheet(
         content()
     }
 }
-
+//region TaskDetailsBottomSheet
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TudeeTaskDetailsBottomSheet(
+    task: TaskUiState,
+    onEditButtonClicked: () -> Unit,
+    changeStatusButtonState: ButtonState,
+    isChangeStatusButtonEnable: Boolean,
+    onMoveActionClicked: () -> Unit,
+    onDismissRequest: () -> Unit,
+    modifier: Modifier = Modifier,
+    isVisible: Boolean=false
+) {
+    TudeeBottomSheet(isVisible = isVisible, onDismissRequest = {onDismissRequest()}) {
+        TudeeTaskDetailsBottomSheetContent(
+            task = task,
+            onEditButtonClicked = {onEditButtonClicked()},
+            changeStatusButtonState = changeStatusButtonState,
+            isChangeStatusButtonEnable = isChangeStatusButtonEnable,
+            onMoveActionClicked = {onMoveActionClicked()}
+        )
+    }
+}
 @Composable
 private fun TudeeTaskDetailsBottomSheetContent(
     task: TaskUiState,
@@ -254,7 +276,7 @@ private fun TudeeTaskDetailsButtonsRow(
         }
     }
 }
-
+//endregion
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
@@ -274,14 +296,14 @@ private fun BottomSheetPreview() {
             taskStatusUiState = TaskStatusUiState.DONE,
             taskAssignedDate = LocalDate(2025, 6, 19)
         )
-        TudeeBottomSheet(isVisible = true, onDismissRequest = {}) {
-            TudeeTaskDetailsBottomSheetContent(
-                task = previewTaskUiState,
-                onEditButtonClicked = {},
-                changeStatusButtonState = ButtonState.IDLE,
-                isChangeStatusButtonEnable = true,
-                onMoveActionClicked = {}
-            )
-        }
+        TudeeTaskDetailsBottomSheet(
+            task = previewTaskUiState,
+            onEditButtonClicked = {},
+            changeStatusButtonState = ButtonState.IDLE,
+            isChangeStatusButtonEnable = true,
+            onMoveActionClicked = {},
+            onDismissRequest = {},
+            isVisible = true
+        )
     }
 }

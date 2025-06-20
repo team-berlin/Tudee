@@ -21,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
+import com.example.tudee.ui.home.viewmodel.SliderEnum
 import com.example.tudee.ui.home.viewmodel.SliderUiState
 
 @Composable
@@ -40,39 +41,47 @@ fun TudeeSlider(
                 .padding(end = 8.dp),
         ) {
             Row(modifier = Modifier.padding(bottom = 8.dp)) {
-                sliderUiState.cardTitle?.let {
-                    Text(
-                        text = stringResource(it),
-                        color = titleColor,
-                        style = titleStyle,
-                        modifier = Modifier.padding(end = 8.dp)
-                    )
-                }
-                sliderUiState.cardEmoji?.let {
-                    Image(
-                        painter = painterResource(it),
-                        contentDescription = null,
-                        modifier = Modifier.size(20.dp)
-                    )
-                }
-            }
-            sliderUiState.cardDescription?.let {
                 Text(
-                    text = stringResource(it),
+                    text = stringResource(sliderUiState.sliderUiEnum.title),
+                    color = titleColor,
+                    style = titleStyle,
+                    modifier = Modifier.padding(end = 8.dp)
+                )
+                Image(
+                    painter = painterResource(sliderUiState.sliderUiEnum.emoji),
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp)
+                )
+            }
+            if (sliderUiState.sliderUiEnum == SliderEnum.STAY_WORKING) {
+                Text(
+                    text = stringResource(
+                        sliderUiState.description,
+                        sliderUiState.doneTasks,
+                        sliderUiState.totalTasks
+                    ),
+                    color = descriptionTextColor,
+                    style = descriptionTextStyle,
+                )
+            } else {
+                Text(
+                    text = stringResource(
+                        sliderUiState.description,
+                    ),
                     color = descriptionTextColor,
                     style = descriptionTextStyle,
                 )
             }
         }
-        sliderUiState.cardImage?.let {
-            Image(
-                painter =painterResource(it),
-                contentDescription = null,
-                modifier = Modifier
-                    .width(76.dp)
-                    .height(92.dp)
-            )
-        }
+
+        Image(
+            painter = painterResource(sliderUiState.sliderUiEnum.image),
+            contentDescription = null,
+            modifier = Modifier
+                .width(76.dp)
+                .height(92.dp)
+        )
+
     }
 }
 
