@@ -62,17 +62,17 @@ fun TaskContent(
 ) {
     val priorities = listOf(
         TaskPriorityUiState.HIGH to Triple(
-            "High",
+            stringResource(R.string.high),
             R.drawable.ic_priority_high,
             TudeeTheme.color.statusColors.pinkAccent
         ),
         TaskPriorityUiState.MEDIUM to Triple(
-            "Medium",
+            stringResource(R.string.medium),
             R.drawable.ic_priority_medium,
             TudeeTheme.color.statusColors.yellowAccent
         ),
         TaskPriorityUiState.LOW to Triple(
-            "Low",
+            stringResource(R.string.low),
             R.drawable.ic_priority_low,
             TudeeTheme.color.statusColors.greenAccent
         )
@@ -97,7 +97,7 @@ fun TaskContent(
             item {
                 TudeeTextField(
                     modifier = Modifier.padding(top = 12.dp),
-                    value = state.selectedTask?.taskTitle ?: "",
+                    value = state.selectedTask.taskTitle,
                     onValueChange = { onAction(HomeActions.OnEditTaskTitleChanged(it)) },
                     placeholder = stringResource(R.string.task_title),
                     leadingContent = { isFocused ->
@@ -112,7 +112,7 @@ fun TaskContent(
             item {
                 TudeeTextField(
                     textStyle = TudeeTheme.textStyle.body.medium,
-                    value = state.selectedTask?.taskDescription?:"",
+                    value = state.selectedTask.taskDescription,
                     onValueChange = { onAction(HomeActions.OnEditTaskDescriptionChanged(it)) },
                     placeholder = stringResource(R.string.description),
                     singleLine = false,
@@ -126,8 +126,9 @@ fun TaskContent(
                 var showDatePicker by remember { mutableStateOf(false) }
 
                     TudeeTextField(
+                        enabled = false,
                         modifier = Modifier.padding(top = 16.dp),
-                        value = state.selectedTask?.taskAssignedDate.toString(),
+                        value = state.selectedTask.taskAssignedDate.toString(),
                         onValueChange = { },
                         placeholder = stringResource(R.string.set_due_date),
                         leadingContent = { isFocused ->
