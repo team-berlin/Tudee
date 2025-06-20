@@ -30,12 +30,15 @@ import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.domain.entity.TaskPriority
 import com.example.tudee.domain.entity.TaskStatus
-import com.example.tudee.presentation.composables.buttons.SecondaryButton
 import com.example.tudee.presentation.components.TudeeChip
+import com.example.tudee.presentation.composables.buttons.SecondaryButton
 import com.example.tudee.presentation.viewmodel.taskuistate.TaskDetailsUiState
 
 @Composable
-fun TaskDetailsScreen(taskDetailsState: TaskDetailsUiState) {
+fun TaskDetailsScreen(
+    taskDetailsState: TaskDetailsUiState,
+    onEditButtonClicked: () -> Unit,
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -52,7 +55,7 @@ fun TaskDetailsScreen(taskDetailsState: TaskDetailsUiState) {
             priority = taskDetailsState.priority
         )
         if (taskDetailsState.status != TaskStatus.DONE) {
-            TaskActionButtons()
+            TaskActionButtons( onEditButtonClick = onEditButtonClicked)
         }
     }
 }
@@ -75,7 +78,7 @@ private fun TaskCategoryIcon(categoryIconRes: Int) {
         contentAlignment = Alignment.Center
     ) {
         Icon(
-            painter = painterResource(id = categoryIconRes),
+            painter = painterResource(R.drawable.tudee),
             contentDescription = stringResource(R.string.category_icon),
             modifier = Modifier.size(32.dp),
             tint = Color.Unspecified
@@ -109,13 +112,15 @@ private fun TaskStatusAndPriorityChips(status: TaskStatus, priority: TaskPriorit
 }
 
 @Composable
-private fun TaskActionButtons() {
+private fun TaskActionButtons(onEditButtonClick: () -> Unit = {}) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         IconFab(
-            onClick = {},
+            onClick = {
+                onEditButtonClick()
+            },
             icon = painterResource(R.drawable.pencil_edit),
             contentDescription = stringResource(R.string.edit_icon)
         )
@@ -208,6 +213,6 @@ fun TaskDetailsScreenPreview() {
             priority = TaskPriority.HIGH,
             status = TaskStatus.IN_PROGRESS,
         )
-        TaskDetailsScreen(sampleTask)
+        TaskDetailsScreen(sampleTask, {})
     }
 }

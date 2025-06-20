@@ -55,14 +55,5 @@ fun FakeHomeScreen() {
         }
     )
 
-    if (showBottomSheet && selectedTask != null) {
-        val bottomSheetState = rememberModalBottomSheetState()
-        ModalBottomSheet(
-            onDismissRequest = { showBottomSheet = false },
-            sheetState = bottomSheetState,
-            containerColor = TudeeTheme.color.surface,
-        ) {
-            TaskDetailsScreen(taskDetailsState = selectedTask!!)
-        }
-    }
+
 }

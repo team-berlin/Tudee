@@ -16,7 +16,6 @@ data class TaskBottomSheetState(
     val selectedCategoryId: Long? = null,
     val isEditMode: Boolean = false,
     val snackBarMessage: Boolean? = null,
-
     val categories: List<TaskCategory> = listOf<TaskCategory>(
         TaskCategory(
             id = 0L,

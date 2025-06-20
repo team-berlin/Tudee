@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tudee.domain.TaskCategoryService
 import com.example.tudee.domain.TaskService
+import com.example.tudee.domain.entity.TaskPriority
 import com.example.tudee.domain.entity.TaskStatus
 import com.example.tudee.presentation.components.TabBarItem
 import com.example.tudee.presentation.composables.buttons.ButtonState
@@ -12,7 +13,9 @@ import com.example.tudee.presentation.screen.task_screen.mappers.TaskStatusUiSta
 import com.example.tudee.presentation.screen.task_screen.mappers.taskToTaskUiState
 import com.example.tudee.presentation.screen.task_screen.mappers.toDomain
 import com.example.tudee.presentation.screen.task_screen.ui_states.DateCardUiState
+import com.example.tudee.presentation.screen.task_screen.ui_states.TaskUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.TasksScreenUiState
+import com.example.tudee.presentation.viewmodel.taskuistate.TaskDetailsUiState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -94,6 +97,7 @@ class TasksScreenViewModel(
             it.copy(isBottomSheetVisible = false)
         }
     }
+
     var job: Job? = null
     override fun onTabSelected(tabIndex: Int) {
         val statusUiState = TaskStatusUiState.entries[tabIndex]
@@ -106,8 +110,20 @@ class TasksScreenViewModel(
         _taskScreenUiState.update { it.copy(isAddBottomSheetVisible = true) }
     }
 
-    override fun onTaskCardClicked(taskId: Long) {
+    override fun onTaskCardClicked(taskUiState: TaskUiState) {
+        _taskScreenUiState.update {
+            it.copy(
+                taskDetailsUiState = TaskDetailsUiState(
+                    id = taskUiState.id,
+                    title = taskUiState.title,
+                    description = taskUiState.description,
+                    categoryIconRes = taskUiState.categoryIcon.toInt(),
+                    priority = TaskPriority.LOW,
+                    status = TaskStatus.IN_PROGRESS
+                )
+            )
 
+        }
     }
 
     override fun onDateCardClicked() {

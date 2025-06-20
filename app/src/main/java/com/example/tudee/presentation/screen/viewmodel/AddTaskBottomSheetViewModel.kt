@@ -25,8 +25,16 @@ class AddTaskBottomSheetViewModel(
     private val categoryService: TaskCategoryService
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<TaskBottomSheetState> = MutableStateFlow(TaskBottomSheetState())
+    private val _uiState: MutableStateFlow<TaskBottomSheetState> =
+        MutableStateFlow(TaskBottomSheetState())
     val uiState: StateFlow<TaskBottomSheetState> = _uiState.asStateFlow()
+//    private val _isEditModeOn: MutableStateFlow<Boolean> = MutableStateFlow(false)
+//    val isEditModeOn = _isEditModeOn.asStateFlow()
+
+    fun toggleEditMode(on: Boolean) {
+
+    }
+
 
     val isTaskValid: StateFlow<Boolean> = _uiState
         .map { state ->

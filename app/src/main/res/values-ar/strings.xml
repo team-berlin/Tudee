@@ -69,7 +69,7 @@
     <string name="cancel">إلغاء</string>
     <string name="add">إضافة</string>
     <string name="addNewTask">إضافة مهمة جديدة</string>
-
+    <string name="save">حفظ</string>
     <string name="task_details">تفاصيل المهمة</string>
     <string name="category_icon">أيقونة الفئة</string>
     <string name="edit_icon">أيقونة التعديل</string>

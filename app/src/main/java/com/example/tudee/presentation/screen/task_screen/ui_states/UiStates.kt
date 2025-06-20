@@ -1,10 +1,13 @@
 package com.example.tudee.presentation.screen.task_screen.ui_states
 
 import androidx.annotation.StringRes
+import com.example.tudee.domain.entity.TaskPriority
+import com.example.tudee.domain.entity.TaskStatus
 import com.example.tudee.presentation.components.TabBarItem
 import com.example.tudee.presentation.composables.buttons.ButtonState
 import com.example.tudee.presentation.screen.task_screen.viewmodel.defaultTabBarItem
 import com.example.tudee.presentation.screen.task_screen.viewmodel.getNextSevenDays
+import com.example.tudee.presentation.viewmodel.taskuistate.TaskDetailsUiState
 import kotlinx.datetime.LocalDate
 
 data class TasksScreenUiState(
@@ -21,7 +24,15 @@ data class TasksScreenUiState(
     val datePickerUiState: DatePickerUiState = DatePickerUiState(),
     val deleteBottomSheetUiState: DeleteBottomSheetUiState = DeleteBottomSheetUiState(),
     val idOfTaskToBeDeleted: Long = 0,
-    val noCurrentTasks: Boolean = listOfTasksUiState.isEmpty()
+    val noCurrentTasks: Boolean = listOfTasksUiState.isEmpty(),
+    val taskDetailsUiState: TaskDetailsUiState= TaskDetailsUiState(
+        id = -100,
+        title = "",
+        description = "",
+        categoryIconRes =0,
+        priority = TaskPriority.LOW,
+        status = TaskStatus.IN_PROGRESS
+    )
 )
 
 data class DatePickerUiState(

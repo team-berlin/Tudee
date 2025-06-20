@@ -20,24 +20,11 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun EditeBottomSheet(taskId: Long = 1L) {
     val viewModel: AddTaskBottomSheetViewModel = koinViewModel()
+
     val taskScreenUiState by viewModel.uiState.collectAsState()
     val addButtonState by viewModel.isTaskValid.collectAsState()
 
-    Box(modifier = Modifier.padding(10.dp).size(width = 200.dp, height = 200.dp)) {
-        Button(
-            onClick = {
-                Log.d("EditScreen", "Edit button clicked")
-                viewModel.run {
-                    showButtonSheet()
-                    getTaskInfoById(taskId)
-                }
-            },
-            modifier = Modifier.fillMaxWidth(),
-            enabled = true
-        ) {
-            Text("Edit Task", color = TudeeTheme.color.textColors.onPrimary)
-        }
-
+    viewModel.toggleEditMode(true)
 
         TaskContent(
             taskState = taskScreenUiState,
@@ -54,4 +41,3 @@ fun EditeBottomSheet(taskId: Long = 1L) {
             onCancelButtonClicked = viewModel::onCancelClicked,
         )
     }
-}

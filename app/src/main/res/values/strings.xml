@@ -5,7 +5,6 @@
     <string name="snack_bar_error_message">Some error occurred</string>
     <string name="snack_bar_success_message">Successfully.</string>
 
-
     <string name="tudee_description">Your cute Helper for Every Task</string>
 
     <string name="default_task_title">Organize Study Desk</string>
@@ -36,8 +35,6 @@
     <string name="date_picker_clear_button_text">Clear</string>
     <string name="date_picker_cancel_button_text">Cancel</string>
     <string name="date_picker_ok_button_text">OK</string>
-
-
 
 
     <!--    content description -->
@@ -80,6 +77,6 @@
     <string name="category_icon">Category_Icon</string>
     <string name="edit_icon">Edit icon</string>
     <string name="move_to_done">Move to done</string>
-
+    <string name="save">SAVE</string>
 
 </resources>
