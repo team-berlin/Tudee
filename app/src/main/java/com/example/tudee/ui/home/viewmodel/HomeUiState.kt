@@ -18,7 +18,7 @@ data class HomeUiState(
     val todayTasksTodo: List<TaskUiState> = emptyList(),
 
     val isBottomSheetVisible: Boolean = false,
-    val isEditTaskBottomSheetContentVisible: Boolean = false,
+    val isPreviewSheetVisible: Boolean = false,
     val selectedTask: TaskUiState = TaskUiState(),
     val showSnackBar: Boolean = false,
 

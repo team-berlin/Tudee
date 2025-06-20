@@ -53,6 +53,7 @@ class HomeViewModel(val taskService: TaskService) : ViewModel() {
             is HomeActions.OnTaskCardClicked -> onTaskCardClicked(actions.taskUiState)
             is HomeActions.OnTaskStatusChanged -> onTaskStatusChanged(actions.status)
             is HomeActions.OnThemeChanged -> onThemeChanged(actions.isDarkMode)
+            HomeActions.OnOpenBottomSheet -> onOpenBottomSheet()
         }
     }
 
@@ -277,7 +278,7 @@ class HomeViewModel(val taskService: TaskService) : ViewModel() {
         _homeUiState.update { oldValue ->
             oldValue.copy(
                 isBottomSheetVisible = false,
-                isEditTaskBottomSheetContentVisible = false
+                isPreviewSheetVisible = false
             )
         }
     }
@@ -286,7 +287,6 @@ class HomeViewModel(val taskService: TaskService) : ViewModel() {
         _homeUiState.update { oldValue ->
             oldValue.copy(
                 isBottomSheetVisible = false,
-                isEditTaskBottomSheetContentVisible = false
             )
         }
     }
@@ -322,16 +322,26 @@ class HomeViewModel(val taskService: TaskService) : ViewModel() {
         _homeUiState.update { oldValue ->
             oldValue.copy(
                 isBottomSheetVisible = true,
-                isEditTaskBottomSheetContentVisible = false
+                selectedTask = TaskUiState(),
+                isPreviewSheetVisible = false,
             )
         }
+    }
+    private fun onOpenBottomSheet() {
+        _homeUiState.update { oldValue ->
+            oldValue.copy(
+                isPreviewSheetVisible = false,
+                isBottomSheetVisible = true,
+            )
+        }
+
     }
 
     private fun onTaskCardClicked(taskUiState: TaskUiState) {
         _homeUiState.update { oldValue ->
             oldValue.copy(
-                isBottomSheetVisible = true,
-                isEditTaskBottomSheetContentVisible = true,
+                isBottomSheetVisible = false,
+                isPreviewSheetVisible = true,
                 selectedTask = taskUiState
             )
         }
@@ -351,7 +361,6 @@ class HomeViewModel(val taskService: TaskService) : ViewModel() {
                         oldValue.copy(
                             showSnackBar = true,
                             isBottomSheetVisible = false,
-                            isEditTaskBottomSheetContentVisible = false
                         )
                     }
                 }
@@ -402,12 +411,17 @@ class HomeViewModel(val taskService: TaskService) : ViewModel() {
     }
 
     private fun onTaskStatusChanged(status: TaskStatusUiState) {
-        _homeUiState.update { oldValue ->
-            oldValue.copy(
-                selectedTask = oldValue.selectedTask.copy(
-                    taskStatusUiState = status
-                )
+        viewModelScope.launch (Dispatchers.IO) {
+            taskService.editTaskStatus(
+                taskId = _homeUiState.value.selectedTask.taskId.toLong(),
+                status = status.toTaskStatus()
             )
+            _homeUiState.update { oldValue ->
+                oldValue.copy(
+                    isPreviewSheetVisible = false,
+                    isBottomSheetVisible = false,
+                )
+            }
         }
     }
 

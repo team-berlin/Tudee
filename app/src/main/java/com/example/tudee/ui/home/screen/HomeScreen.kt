@@ -31,6 +31,8 @@ import com.example.tudee.presentation.components.AppBar
 import com.example.tudee.presentation.components.TaskContent
 import com.example.tudee.presentation.components.TaskContentMode
 import com.example.tudee.presentation.components.TudeeScaffold
+import com.example.tudee.presentation.components.TudeeTaskDetailsBottomSheet
+import com.example.tudee.presentation.composables.buttons.ButtonState
 import com.example.tudee.presentation.composables.buttons.FabButton
 import com.example.tudee.presentation.home.components.TasksSection
 import com.example.tudee.presentation.screens.home.components.NoTask
@@ -38,6 +40,7 @@ import com.example.tudee.ui.home.components.HomeOverviewCard
 import com.example.tudee.ui.home.viewmodel.HomeActions
 import com.example.tudee.ui.home.viewmodel.HomeUiState
 import com.example.tudee.ui.home.viewmodel.HomeViewModel
+import com.example.tudee.ui.home.viewmodel.TaskStatusUiState
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -171,6 +174,21 @@ fun HomeContent(
                     }
             }
         }
+        if(state.isPreviewSheetVisible){
+            TudeeTaskDetailsBottomSheet(
+                isVisible = true,
+                task = state.selectedTask,
+                onDismissRequest = { actions(HomeActions.OnBottomSheetDismissed) },
+                onEditButtonClicked = {actions(HomeActions.OnOpenBottomSheet)},
+                isChangeStatusButtonEnable = state.selectedTask.taskStatusUiState != TaskStatusUiState.DONE,
+                onMoveActionClicked = {
+                    actions(HomeActions.OnTaskStatusChanged(
+                        if(state.selectedTask.taskStatusUiState == TaskStatusUiState.TODO) TaskStatusUiState.IN_PROGRESS else TaskStatusUiState.DONE
+                    ))
+                },
+                changeStatusButtonState = ButtonState.IDLE
+            )
+        }
         if (state.isBottomSheetVisible) {
             BottomSheetContent(
                 state = state,
@@ -209,7 +227,7 @@ fun BottomSheetContent(
             state = state,
             categories = state.allTasks.mapNotNull { it.taskCategory }.distinctBy { it.id },
             onAction = actions,
-            mode = if (state.isEditTaskBottomSheetContentVisible) TaskContentMode.EDIT else TaskContentMode.ADD
+            mode = if (state.selectedTask.taskId.isNotEmpty()) TaskContentMode.EDIT else TaskContentMode.ADD
         )
     }
 }

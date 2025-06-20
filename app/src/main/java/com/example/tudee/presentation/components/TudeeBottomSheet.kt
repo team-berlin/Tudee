@@ -152,13 +152,13 @@ private fun TudeeTaskDetails(task: TaskUiState, modifier: Modifier = Modifier) {
     }
     Text(
         modifier = Modifier.padding(top = 8.dp),
-        text = stringResource(task.taskTitle.toInt()),
+        text = task.taskTitle,
         color = TudeeTheme.color.textColors.title,
         style = TudeeTheme.textStyle.title.large
     )
     Text(
         modifier = Modifier.padding(top = 8.dp),
-        text = stringResource(task.taskDescription.toInt()),
+        text = task.taskDescription,
         color = TudeeTheme.color.textColors.body,
         style = TudeeTheme.textStyle.title.small
     )

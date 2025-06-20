@@ -20,4 +20,5 @@ sealed interface HomeActions {
     data class OnTaskStatusChanged(val status: TaskStatusUiState) : HomeActions
     data class OnCreateTaskButtonClicked(val taskCreationRequest: TaskUiState) : HomeActions
     data class OnThemeChanged(val isDarkMode: Boolean) : HomeActions
+    data object OnOpenBottomSheet : HomeActions
 }
