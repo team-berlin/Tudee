@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -16,10 +15,12 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -33,10 +34,8 @@ import androidx.navigation.compose.rememberNavController
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.presentation.components.CategoryTaskComponent
-import com.example.tudee.presentation.components.DefaultTabContent
 import com.example.tudee.presentation.components.SnackBarComponent
 import com.example.tudee.presentation.components.TabBarComponent
-import com.example.tudee.presentation.components.TabBarItem
 import com.example.tudee.presentation.components.TopAppBar
 import com.example.tudee.presentation.components.TudeeScaffold
 import com.example.tudee.presentation.screen.category.EditCategorySheet
@@ -52,6 +51,8 @@ fun CategoryTasksScreen(
     val uiState by viewModel.categoryTasksUiState.collectAsState()
     val showSnackBar = remember { mutableStateOf(false) }
 
+    var selectedTabIndex by remember { mutableIntStateOf(0) }
+
     LaunchedEffect(Unit) {
         viewModel.snackBarEvent.collect { event ->
             when (event) {
@@ -65,19 +66,29 @@ fun CategoryTasksScreen(
     }
 
     Box(modifier = modifier.fillMaxSize()) {
-        CategoryTasksContent(
-            modifier = modifier,
-            categoryTaskUIState = uiState,
-            onBackClick = { navController.navigateUp() },
-            onEditIconClick = { },
-            onEditCategoryImageClicked = TODO(),
-            onDeleteCategory = viewModel::deleteCategory,
-            onSaveButtonClicked = TODO(),
-        )
+        if (uiState.categoryTasksUiModel != null) {
+            CategoryTasksContent(
+                modifier = modifier,
+                categoryTaskUIState = uiState,
+                onBackClick = { navController.navigateUp() },
+                onEditCategoryImageClicked = { },
+                onDeleteCategory = viewModel::deleteCategory,
+                onSaveButtonClicked = {},
+                onTabSelected = { index ->
+                    selectedTabIndex = index
+                    viewModel.getTasksByStatus(uiState, index)
+                },
+            )
+        } else if (uiState.loading) {
+            LoadingState(modifier = modifier)
+        } else {
+            Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text("No tasks available")
+            }
+        }
 
         if (showSnackBar.value) {
             SnackBarComponent(
-                modifier = Modifier.statusBarsPadding(),
                 message = stringResource(R.string.snack_bar_error_message),
                 iconPainter = painterResource(id = R.drawable.ic_error),
                 iconDescription = stringResource(R.string.snack_bar_error_message),
@@ -88,29 +99,29 @@ fun CategoryTasksScreen(
     }
 }
 
+
 @Composable
 fun CategoryTasksContent(
     modifier: Modifier = Modifier,
     categoryTaskUIState: CategoryTasksUiState,
     onBackClick: () -> Unit,
-    onEditIconClick: () -> Unit,
     onDeleteCategory: () -> Unit,
     onSaveButtonClicked: () -> Unit,
     onEditCategoryImageClicked: () -> Unit,
+    onTabSelected: (Int) -> Unit
 ) {
 
-    if (categoryTaskUIState.loading) {
-        LoadingState(Modifier)
-    } else if (categoryTaskUIState.categoryTasksUiModel != null) {
+    if (categoryTaskUIState.categoryTasksUiModel != null) {
         SuccessState(
             modifier = modifier,
+            categoryTaskUIState = categoryTaskUIState,
             categoryName = categoryTaskUIState.categoryTasksUiModel.title,
             categoryTasks = categoryTaskUIState.categoryTasksUiModel.tasks,
-            onEditIconClick = { onEditIconClick() },
             onBackClick = { onBackClick() },
             onDeleteCategory = onDeleteCategory,
             onSaveButtonClicked = onSaveButtonClicked,
             onEditCategoryImageClicked = onEditCategoryImageClicked,
+            onTabSelected = { onTabSelected(it) }
         )
     }
 }
@@ -126,33 +137,16 @@ private fun LoadingState(modifier: Modifier) {
 @Composable
 private fun SuccessState(
     modifier: Modifier,
+    categoryTaskUIState: CategoryTasksUiState,
     categoryName: String,
     categoryTasks: List<TaskUIModel>,
-    onEditIconClick: () -> Unit,
     onBackClick: () -> Unit,
     onDeleteCategory: () -> Unit,
     onSaveButtonClicked: () -> Unit,
     onEditCategoryImageClicked: () -> Unit,
+    onTabSelected: (Int) -> Unit
 ) {
     var isEditCategorySheetVisible by remember { mutableStateOf(false) }
-
-    val defaultTabBarHeaders = listOf(
-        TabBarItem(
-            title = stringResource(R.string.in_progress),
-            taskCount = "0",
-            isSelected = true
-        ),
-        TabBarItem(
-            title = stringResource(R.string.to_do),
-            taskCount = "0",
-            isSelected = false
-        ),
-        TabBarItem(
-            title = stringResource(R.string.done),
-            taskCount = "0",
-            isSelected = false
-        ),
-    )
     TudeeScaffold(
         modifier = modifier.fillMaxSize(),
         showTopAppBar = true,
@@ -163,7 +157,9 @@ private fun SuccessState(
                     showBackButton = true,
                     title = categoryName,
                     trailingComposable = {
-                        IconButton(onClick = onEditIconClick) {
+                        IconButton(onClick = {
+                            isEditCategorySheetVisible = true
+                        }) {
                             Icon(
                                 modifier = Modifier
                                     .border(
@@ -178,13 +174,6 @@ private fun SuccessState(
                         }
                     }
                 )
-                TabBarComponent(
-                    modifier = Modifier,
-                    selectedTabIndex = 0,
-                    tabBarItems = defaultTabBarHeaders,
-                    onTabSelected = {},
-                    tabContent = { DefaultTabContent(tabBarItem = it) }
-                )
             }
 
         }
@@ -194,6 +183,15 @@ private fun SuccessState(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
+            categoryTaskUIState.categoryTasksUiModel?.let {
+                TabBarComponent(
+                    selectedTabIndex = it.selectedTabIndex,
+                    tabBarItems = it.listOfTabBarItem,
+                    onTabSelected = { index ->
+                        onTabSelected(index)
+                    }
+                )
+            }
             LazyColumn(
                 modifier = modifier
                     .fillMaxSize()
@@ -201,6 +199,7 @@ private fun SuccessState(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 contentPadding = PaddingValues(bottom = 12.dp)
             ) {
+
                 items(categoryTasks) { categoryTask ->
                     val taskPriorityBackgroundColor = when (categoryTask.priority.tasPriorityType) {
                         TaskPriorityType.HIGH -> TudeeTheme.color.statusColors.pinkAccent
@@ -223,7 +222,7 @@ private fun SuccessState(
                         },
                         priorityIcon = painterResource(id = R.drawable.ic_priority_medium),
                         onClick = {
-                            isEditCategorySheetVisible = true
+
                         }
                     )
                 }
