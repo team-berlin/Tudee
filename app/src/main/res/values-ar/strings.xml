@@ -41,6 +41,7 @@
     <string name="in_progress">قيد التنفيذ</string>
     <string name="to_do">معلقة</string>
     <string name="done">مكتملة</string>
+    <string name="category_image_desc">صورة الصنف</string>
     <string name="upload_image">رفع صورة</string>
     <string name="edit_uploaded_image">تعديل الصورة</string>
 </resources>

@@ -20,14 +20,14 @@ class CategoryTasksViewModel(
 ) : ViewModel() {
 
     private val _categoryTasksUiState =
-        MutableStateFlow<CategoryTasksUiState>(CategoryTasksUiState.Loading)
+        MutableStateFlow(CategoryTasksUiState(loading = false))
     val categoryTasksUiState: StateFlow<CategoryTasksUiState> get() = _categoryTasksUiState
 
     private val _snackBarEvent = MutableSharedFlow<SnackBarEvent>()
     val snackBarEvent = _snackBarEvent.asSharedFlow()
 
     fun getTasksByCategoryId(categoryId: Long) {
-        _categoryTasksUiState.value = CategoryTasksUiState.Loading
+        _categoryTasksUiState.value = _categoryTasksUiState.value.copy(loading = true)
 
         viewModelScope.launch {
             taskService.getTasksByCategoryId(categoryId)
@@ -36,8 +36,27 @@ class CategoryTasksViewModel(
                 }
                 .collect { categoryTasks ->
                     _categoryTasksUiState.value =
-                        CategoryTasksUiState.Success(categoryTasks.first())
+                        _categoryTasksUiState.value.copy(
+                            loading = false,
+                            categoryTasksUiModel = categoryTasks.first()
+                        )
                 }
+        }
+    }
+
+    fun deleteCategory() {
+        _categoryTasksUiState.value.categoryTasksUiModel?.let {
+            viewModelScope.launch {
+                taskCategoryService.deleteCategory(it.id)
+            }
+        }
+    }
+
+    fun editCategory(category: TaskCategory) {
+        _categoryTasksUiState.value.categoryTasksUiModel?.let {
+            viewModelScope.launch {
+                taskCategoryService.editCategory(category)
+            }
         }
     }
 

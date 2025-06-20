@@ -22,6 +22,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -38,6 +39,7 @@ import com.example.tudee.presentation.components.TabBarComponent
 import com.example.tudee.presentation.components.TabBarItem
 import com.example.tudee.presentation.components.TopAppBar
 import com.example.tudee.presentation.components.TudeeScaffold
+import com.example.tudee.presentation.screen.category.EditCategorySheet
 import kotlinx.coroutines.delay
 import org.koin.compose.getKoin
 
@@ -67,7 +69,10 @@ fun CategoryTasksScreen(
             modifier = modifier,
             categoryTaskUIState = uiState,
             onBackClick = { navController.navigateUp() },
-            onEditIconClick = { }
+            onEditIconClick = { },
+            onEditCategoryImageClicked = TODO(),
+            onDeleteCategory = viewModel::deleteCategory,
+            onSaveButtonClicked = TODO(),
         )
 
         if (showSnackBar.value) {
@@ -88,20 +93,24 @@ fun CategoryTasksContent(
     modifier: Modifier = Modifier,
     categoryTaskUIState: CategoryTasksUiState,
     onBackClick: () -> Unit,
-    onEditIconClick: () -> Unit
+    onEditIconClick: () -> Unit,
+    onDeleteCategory: () -> Unit,
+    onSaveButtonClicked: () -> Unit,
+    onEditCategoryImageClicked: () -> Unit,
 ) {
 
-    when (categoryTaskUIState) {
-        is CategoryTasksUiState.Loading -> {
-            LoadingState(Modifier)
-        }
-
-        is CategoryTasksUiState.Success -> SuccessState(
+    if (categoryTaskUIState.loading) {
+        LoadingState(Modifier)
+    } else if (categoryTaskUIState.categoryTasksUiModel != null) {
+        SuccessState(
             modifier = modifier,
             categoryName = categoryTaskUIState.categoryTasksUiModel.title,
             categoryTasks = categoryTaskUIState.categoryTasksUiModel.tasks,
             onEditIconClick = { onEditIconClick() },
-            onBackClick = { onBackClick() }
+            onBackClick = { onBackClick() },
+            onDeleteCategory = onDeleteCategory,
+            onSaveButtonClicked = onSaveButtonClicked,
+            onEditCategoryImageClicked = onEditCategoryImageClicked,
         )
     }
 }
@@ -120,8 +129,13 @@ private fun SuccessState(
     categoryName: String,
     categoryTasks: List<TaskUIModel>,
     onEditIconClick: () -> Unit,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onDeleteCategory: () -> Unit,
+    onSaveButtonClicked: () -> Unit,
+    onEditCategoryImageClicked: () -> Unit,
 ) {
+    var isEditCategorySheetVisible by remember { mutableStateOf(false) }
+
     val defaultTabBarHeaders = listOf(
         TabBarItem(
             title = stringResource(R.string.in_progress),
@@ -209,11 +223,21 @@ private fun SuccessState(
                         },
                         priorityIcon = painterResource(id = R.drawable.ic_priority_medium),
                         onClick = {
-                            // navigate to task details screen
+                            isEditCategorySheetVisible = true
                         }
                     )
                 }
             }
+
+            EditCategorySheet(
+                title = "Edit category",
+                isBottomSheetVisible = isEditCategorySheetVisible,
+                onBottomSheetDismissed = { isEditCategorySheetVisible = false },
+                onDeleteButtonClicked = onDeleteCategory,
+                onCancelButtonClicked = { isEditCategorySheetVisible = false },
+                onSaveButtonClicked = onSaveButtonClicked,
+                onEditCategoryImageClicked = onEditCategoryImageClicked
+            )
         }
     }
 }

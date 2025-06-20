@@ -4,10 +4,10 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.example.tudee.domain.entity.TaskStatus
 
-sealed class CategoryTasksUiState {
-    data object Loading : CategoryTasksUiState()
-    data class Success(val categoryTasksUiModel: CategoryTasksUiModel) : CategoryTasksUiState()
-}
+data class CategoryTasksUiState (
+    val loading: Boolean,
+    val categoryTasksUiModel: CategoryTasksUiModel? = null
+)
 
 data class CategoryTasksUiModel(
     val id: Long,

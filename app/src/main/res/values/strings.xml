@@ -49,5 +49,6 @@
     <string name="done">Done</string>
     <string name="upload_image">Upload</string>
     <string name="edit_uploaded_image">Edit uploaded image</string>
+    <string name="category_image_desc">Category Image</string>
 
 </resources>
