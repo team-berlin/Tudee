@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
@@ -44,10 +45,10 @@ fun CategoryTaskComponent(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
+            .clickable { onClick()}
             .border(1.dp, TudeeTheme.color.surfaceHigh, RoundedCornerShape(16.dp))
             .background( TudeeTheme.color.surfaceHigh,RoundedCornerShape(16.dp))
-            .padding(top = 4.dp, start = 4.dp, end = 12.dp, bottom = 12.dp)
-            .clickable { onClick()},
+            .padding(top = 4.dp, start = 4.dp, end = 12.dp),
         verticalArrangement = Arrangement.spacedBy(2.dp)
     ) {
         Row(
@@ -114,9 +115,12 @@ private fun CategoryTaskComponentInformation(
         )
         description?.let {
             Text(
+                modifier = Modifier.padding(end=12.dp, bottom = 12.dp),
                 text = it,
                 style = TudeeTheme.textStyle.label.small,
                 color = TudeeTheme.color.textColors.hint
+                , maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
     }
