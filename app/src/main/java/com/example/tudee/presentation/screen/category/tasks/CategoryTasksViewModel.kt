@@ -60,7 +60,7 @@ class CategoryTasksViewModel(
                     TaskCategory(
                         id = it.id,
                         title = category.name,
-                        image = category.url,
+                        image = category.uiImage.asString(),
                         isPredefined = it.isPredefined
                     )
                 )

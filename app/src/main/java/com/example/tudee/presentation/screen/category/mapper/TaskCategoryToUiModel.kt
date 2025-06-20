@@ -11,7 +11,7 @@ fun TaskCategory.toUiModel(taskCount: Int): TaskCategoryUiModel {
         val resId = R.drawable.tudee //handle predefined categories
         UiImage.Drawable(resId)
     } else {
-        UiImage.Url(image)
+        UiImage.External(image)
     }
 
     return TaskCategoryUiModel(

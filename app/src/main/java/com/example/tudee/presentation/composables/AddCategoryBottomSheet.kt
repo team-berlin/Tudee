@@ -134,8 +134,7 @@ fun AddCategorySheet(
             ) {
                 PrimaryButton(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
+                        .fillMaxWidth(),
                     onClick = onAddClick,
                     enabled = categoryName.isNotBlank()
                 ) {
@@ -144,8 +143,7 @@ fun AddCategorySheet(
 
                 SecondaryButton(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
+                        .fillMaxWidth(),
                     onClick = onCancelClick
                 ) {
                     Text(text = "Cancel", style = TudeeTheme.textStyle.label.large)

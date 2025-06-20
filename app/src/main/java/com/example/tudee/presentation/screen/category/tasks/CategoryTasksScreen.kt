@@ -41,6 +41,7 @@ import com.example.tudee.presentation.components.TopAppBar
 import com.example.tudee.presentation.components.TudeeScaffold
 import com.example.tudee.presentation.screen.category.EditCategorySheet
 import com.example.tudee.presentation.screen.category.model.CategoryData
+import com.example.tudee.presentation.screen.category.model.toUiImage
 import kotlinx.coroutines.delay
 import org.koin.compose.getKoin
 
@@ -238,7 +239,7 @@ private fun SuccessState(
                 onBottomSheetDismissed = { isEditCategorySheetVisible = false },
                 onCancelButtonClicked = { isEditCategorySheetVisible = false },
                 onSaveButtonClicked = { onSaveButtonClicked(it) },
-                initialCategoryImage = categoryImage,
+                initialCategoryImage = categoryImage.toUiImage(),
                 initialCategoryName = categoryName
             )
         }

@@ -3,6 +3,7 @@ package com.example.tudee.presentation.screen.category
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,13 +35,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.presentation.components.DefaultLeadingContent
@@ -57,7 +56,7 @@ fun EditCategorySheet(
     modifier: Modifier = Modifier,
     title: String = "Edit category",
     initialCategoryName: String,
-    initialCategoryImage: String,
+    initialCategoryImage: UiImage,
     isBottomSheetVisible: Boolean,
     onBottomSheetDismissed: () -> Unit,
     onDeleteButtonClicked: () -> Unit,
@@ -69,13 +68,13 @@ fun EditCategorySheet(
     }
 
     var selectedUiImage by remember(initialCategoryImage) {
-        mutableStateOf(UiImage.Url(initialCategoryImage))
+        mutableStateOf(initialCategoryImage)
     }
 
     val photoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia()
     ) { uri ->
-        uri?.let { selectedUiImage = UiImage.Url(it.path.toString()) }
+        uri?.let { selectedUiImage = UiImage.External(it.path.toString()) }
     }
 
     val sheetState = rememberModalBottomSheetState()
@@ -114,7 +113,7 @@ fun EditCategorySheet(
                     onSaveButtonClicked(
                         CategoryData(
                             name = categoryName.trim(),
-                            url = selectedUiImage.url
+                            uiImage = selectedUiImage
                         )
                     )
                 },
@@ -235,6 +234,7 @@ private fun EditCategoryImage(
         modifier = Modifier
             .clip(RoundedCornerShape(16.dp))
             .background(Color(0x1A000000))
+            .height(113.dp)
             .dashedBorder(
                 color = TudeeTheme.color.stroke,
                 shape = RoundedCornerShape(16.dp),
@@ -245,11 +245,9 @@ private fun EditCategoryImage(
             ),
         contentAlignment = Alignment.Center
     ) {
-        AsyncImage(
-            model = imageUri,
-            contentDescription = stringResource(R.string.category_image_desc),
-            modifier = Modifier.height(113.dp),
-            contentScale = ContentScale.Crop
+        Image(
+            painter = imageUri.asPainter(),
+            contentDescription = stringResource(R.string.category_image_desc)
         )
 
         EditImageOverlay(onEditImageClicked = onEditImageClicked)
@@ -344,6 +342,6 @@ private fun EditCategorySheetPreview() {
         onCancelButtonClicked = {},
         onSaveButtonClicked = {},
         initialCategoryName = "Reading novels",
-        initialCategoryImage = "null"
+        initialCategoryImage = UiImage.Drawable(R.drawable.books)
     )
 }
