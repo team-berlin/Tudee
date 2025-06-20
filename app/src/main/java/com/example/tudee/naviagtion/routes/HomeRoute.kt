@@ -4,12 +4,22 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.example.tudee.naviagtion.Destination
+import com.example.tudee.ui.home.screen.HomeScreen
 
 fun NavGraphBuilder.homeRoute (
     navController: NavController
 ) {
     composable(route = Destination.HomeScreen.route) {
-        // add your screen Composable here
-        // ex: HomeScreen(navController)
+        HomeScreen(
+            navigateDoneTasks = {
+                navController.navigate(Destination.TasksScreen.route + "/done")
+            },
+            navigateInProgressTasks = {
+                navController.navigate(Destination.TasksScreen.route + "/in_progress")
+            },
+            navigateTodoTasks = {
+                navController.navigate(Destination.TasksScreen.route + "/todo")
+            }
+        )
     }
 }

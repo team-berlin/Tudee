@@ -28,4 +28,10 @@ class TaskCategoryServiceImpl(
            it.map { it.toDomain() }
        }
     }
+
+    override fun getCategoryById(categoryId: Long): Flow<TaskCategory> {
+        return taskCategoryDao.getCategoryById(categoryId).map {
+            it.toDomain()
+        }
+    }
 }

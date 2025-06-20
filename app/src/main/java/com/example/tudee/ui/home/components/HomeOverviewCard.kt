@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
@@ -26,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.presentation.components.TudeeSlider
+import com.example.tudee.ui.home.viewmodel.SliderUiState
 
 @Composable
 fun HomeOverviewCard(
@@ -35,7 +37,8 @@ fun HomeOverviewCard(
     year: String,
     tasksDoneCount: String,
     tasksTodoCount: String,
-    tasksInProgressCount: String
+    tasksInProgressCount: String,
+    sliderUiState: SliderUiState
 ) {
     Column(
         modifier = modifier
@@ -56,21 +59,18 @@ fun HomeOverviewCard(
             )
             Text(
                 modifier = Modifier.padding(start = 8.dp),
-                text = "today, $todayDate $month $year",
+                text = stringResource(R.string.today, todayDate, month, year),
                 style = TudeeTheme.textStyle.label.medium,
                 color = TudeeTheme.color.textColors.body
             )
         }
         TudeeSlider(
             modifier = Modifier.padding(horizontal = 6.dp),
-            title = "Stay working!",
-            description = "You've completed 3 out of 10 tasks Keep going!",
-            emoji = painterResource(R.drawable.emoji_stay_working),
-            image = painterResource(R.drawable.tudee_stay_working_or_nothing),
+            sliderUiState = sliderUiState,
         )
         Text(
             modifier = Modifier.padding(vertical = 8.dp, horizontal = 12.dp),
-            text = "Overview",
+            text = stringResource(R.string.overview),
             style = TudeeTheme.textStyle.title.large,
             color = TudeeTheme.color.textColors.title
         )
@@ -117,6 +117,7 @@ private fun OverviewCard(
     Box(
         modifier = modifier
             .fillMaxWidth()
+            .clip(RoundedCornerShape(20.dp))
             .background(
                 color = cardColor, shape = RoundedCornerShape(20.dp)
             )
@@ -175,7 +176,8 @@ private fun HomeOverviewCardPreview() {
             year = "2025",
             tasksDoneCount = "2",
             tasksTodoCount = "16",
-            tasksInProgressCount = "1"
+            tasksInProgressCount = "1",
+            sliderUiState = SliderUiState()
         )
     }
 }

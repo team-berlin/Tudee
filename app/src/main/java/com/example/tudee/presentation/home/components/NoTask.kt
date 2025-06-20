@@ -17,14 +17,23 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
 
 @Composable
-fun NoTask(modifier: Modifier = Modifier) {
+fun NoTask(
+    backgroundColor:Color = TudeeTheme.color.surfaceHigh,
+    textStyle: TextStyle = TudeeTheme.textStyle.title.small,
+    textColor: Color = TudeeTheme.color.textColors.body,
+    hintColor: Color = TudeeTheme.color.textColors.hint,
+    modifier: Modifier = Modifier
+) {
 
     Row(modifier = modifier
         .fillMaxWidth()
@@ -33,23 +42,23 @@ fun NoTask(modifier: Modifier = Modifier) {
             Column(
                 modifier = Modifier
                     .background(
-                        color = TudeeTheme.color.surfaceHigh,
+                        color = backgroundColor,
                         shape = RoundedCornerShape(12.dp)
                     ),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Text(
                     modifier = Modifier.padding(start = 12.dp, top = 8.dp),
-                    text = "No tasks for today!",
-                    style = TudeeTheme.textStyle.title.small,
-                    color = TudeeTheme.color.textColors.body
+                    text = stringResource(R.string.no_tasks_for_today),
+                    style = textStyle,
+                    color = textColor
                 )
                 Text(
                     modifier = Modifier.padding(start = 12.dp, end = 12.dp, bottom = 8.dp),
-                    text = "Tap the + button to add your \n" +
-                            "first one.",
-                    style = TudeeTheme.textStyle.body.small,
-                    color = TudeeTheme.color.textColors.hint
+                    text = stringResource(R.string.tap_the_button_to_add_your) +
+                            stringResource(R.string.first_one),
+                    style = textStyle,
+                    color = hintColor
                 )
             }
 

@@ -21,13 +21,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
+import com.example.tudee.ui.home.viewmodel.SliderEnum
+import com.example.tudee.ui.home.viewmodel.SliderUiState
 
 @Composable
 fun TudeeSlider(
-    title: String,
-    description: String,
-    emoji: Painter,
-    image: Painter,
+    sliderUiState: SliderUiState,
     modifier: Modifier = Modifier,
     titleColor: Color = TudeeTheme.color.textColors.title,
     descriptionTextColor: Color = TudeeTheme.color.textColors.body,
@@ -43,30 +42,46 @@ fun TudeeSlider(
         ) {
             Row(modifier = Modifier.padding(bottom = 8.dp)) {
                 Text(
-                    text = title,
+                    text = stringResource(sliderUiState.sliderUiEnum.title),
                     color = titleColor,
                     style = titleStyle,
                     modifier = Modifier.padding(end = 8.dp)
                 )
                 Image(
-                    painter = emoji,
+                    painter = painterResource(sliderUiState.sliderUiEnum.emoji),
                     contentDescription = null,
                     modifier = Modifier.size(20.dp)
                 )
             }
-            Text(
-                text = description,
-                color = descriptionTextColor,
-                style = descriptionTextStyle,
-            )
+            if (sliderUiState.sliderUiEnum == SliderEnum.STAY_WORKING) {
+                Text(
+                    text = stringResource(
+                        sliderUiState.description,
+                        sliderUiState.doneTasks,
+                        sliderUiState.totalTasks
+                    ),
+                    color = descriptionTextColor,
+                    style = descriptionTextStyle,
+                )
+            } else {
+                Text(
+                    text = stringResource(
+                        sliderUiState.description,
+                    ),
+                    color = descriptionTextColor,
+                    style = descriptionTextStyle,
+                )
+            }
         }
+
         Image(
-            painter = image,
+            painter = painterResource(sliderUiState.sliderUiEnum.image),
             contentDescription = null,
             modifier = Modifier
                 .width(76.dp)
                 .height(92.dp)
         )
+
     }
 }
 
@@ -81,10 +96,7 @@ fun TudeeSlider(
 private fun TudeeSliderPreview() {
     TudeeTheme {
         TudeeSlider(
-            title = stringResource(R.string.stay_working),
-            description = stringResource(R.string.you_ve_completed_3_out_of_10_tasks_keep_going),
-            emoji = painterResource(R.drawable.emoji_stay_working),
-            image = painterResource(R.drawable.tudee_stay_working_or_nothing),
+            sliderUiState = SliderUiState(),
         )
     }
 }

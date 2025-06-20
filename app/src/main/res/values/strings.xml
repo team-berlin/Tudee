@@ -21,6 +21,7 @@
     <string name="high">High</string>
     <string name="low">Low</string>
     <string name="medium">Medium</string>
+    <string name="task_details">Task details</string>
 
 <!--    content description -->
     <string name="switch_sun_icon_content_description">Sun</string>
@@ -46,6 +47,32 @@
         celebrate you on for every win, big or
         small.</string>
 
+    <string name="Title_Error">Title Not Valid</string>
+    <string name="task_title">Task title</string>
+    <string name="description">Description</string>
+    <string name="set_due_date">set due date</string>
+    <string name="priority">Priority</string>
+    <string name="category">Category</string>
+    <string name="cancel">Cancel</string>
+    <string name="add">Add</string>
     <string name="skip_button">Skip</string>
-
+    <string name="add_task_title">Add new task</string>
+    <string name="edit_task_title">Edit task</string>
+    <string name="move_to_done">Move to done</string>
+    <string name="move_to_in_progress">Move to in progress</string>
+    <string name="no_tasks_for_today">No tasks for today!</string>
+    <string name="tap_the_button_to_add_your">Tap the + button to add your \n</string>
+    <string name="first_one">first one.</string>
+    <string name="edit">Edit</string>
+    <string name="stay_working">Stay working!</string>
+    <string name="Tadaa">Tadaa!</string>
+    <string name="zero_progress">Zero progress?!</string>
+    <string name="nothing_in_your_list">Nothing on your list…</string>
+    <string name="Tadaa_desc">You’re doing amazing!!!
+Tudee is proud of you</string>
+    <string name="zero_progress_desc">You just scrolling, not working. Tudee is watching. back to work!!!</string>
+    <string name="nothing_in_your_list_desc">Fill your day with something awesome.</string>
+    <string name="stay_working_desc">You\'ve completed %1$s out of %2$s tasks Keep going!</string>
+    <string name="today">today, %1$s %2$s %3$s</string>
+    <string name="overview">Overview</string>
 </resources>
