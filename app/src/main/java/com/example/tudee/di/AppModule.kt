@@ -8,8 +8,10 @@ import com.example.tudee.data.service.TaskCategoryServiceImpl
 import com.example.tudee.data.service.TaskServiceImpl
 import com.example.tudee.domain.TaskCategoryService
 import com.example.tudee.domain.TaskService
+import com.example.tudee.ui.home.viewmodel.HomeViewModel
 
 import org.koin.android.ext.koin.androidContext
+import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
@@ -29,7 +31,9 @@ val appModule = module {
     single<TaskCategoryDao> {
         get<AppDatabase>().taskCategoryDao()
     }
-    viewModelOf(::HomeViewModel)
+    viewModel<HomeViewModel>{
+        HomeViewModel(get())
+    }
     single<TaskService> { TaskServiceImpl(get()) }  // replace with your real implementation
     single<TaskCategoryService> { TaskCategoryServiceImpl(get()) }
 

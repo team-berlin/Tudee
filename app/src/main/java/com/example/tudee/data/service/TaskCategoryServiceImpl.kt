@@ -34,4 +34,8 @@ class TaskCategoryServiceImpl(
             it.toDomain()
         }
     }
+
+    override suspend fun getCategoryIconById(categoryIconId: Long): String {
+        return taskCategoryDao.getCategoryIconById(categoryIconId)
+    }
 }
