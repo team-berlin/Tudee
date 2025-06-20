@@ -16,8 +16,6 @@
 
     <!-- Task Status -->
     <string name="todo">To Do</string>
-    <string name="in_progress">In Progress</string>
-    <string name="done">Done</string>
 
     <!-- Task Priority -->
     <string name="low">Low</string>

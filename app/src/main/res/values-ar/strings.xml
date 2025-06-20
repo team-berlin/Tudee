@@ -4,8 +4,6 @@
 
     <!-- Task Status -->
     <string name="todo">قيد التنفيذ</string>
-    <string name="in_progress">جارٍ العمل</string>
-    <string name="done">منجز</string>
 
     <!-- Task Priority -->
     <string name="low">منخفض</string>
