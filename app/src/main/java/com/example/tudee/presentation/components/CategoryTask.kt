@@ -44,7 +44,7 @@ fun CategoryTaskComponent(
         modifier = modifier
             .fillMaxWidth()
             .border(1.dp, TudeeTheme.color.surfaceHigh, RoundedCornerShape(16.dp))
-            .background( TudeeTheme.color.surfaceHigh)
+            .background( TudeeTheme.color.surfaceHigh,RoundedCornerShape(16.dp))
             .padding(top = 4.dp, start = 4.dp, end = 12.dp, bottom = 12.dp)
             .clickable { onClick()},
         verticalArrangement = Arrangement.spacedBy(2.dp)
@@ -108,16 +108,14 @@ private fun CategoryTaskComponentInformation(
     ) {
         Text(
             text = title,
-            style = TudeeTheme.textStyle.label.large.copy(
-                color = TudeeTheme.color.textColors.body
-            )
+            style = TudeeTheme.textStyle.label.large,
+            color = TudeeTheme.color.textColors.body
         )
         description?.let {
             Text(
                 text = it,
-                style = TudeeTheme.textStyle.label.small.copy(
-                    color = TudeeTheme.color.textColors.hint
-                )
+                style = TudeeTheme.textStyle.label.small,
+                color = TudeeTheme.color.textColors.hint
             )
         }
     }
