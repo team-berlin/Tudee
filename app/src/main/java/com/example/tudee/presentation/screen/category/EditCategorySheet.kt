@@ -1,5 +1,8 @@
 package com.example.tudee.presentation.screen.category
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -32,7 +35,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -45,19 +47,36 @@ import com.example.tudee.presentation.components.TudeeTextField
 import com.example.tudee.presentation.composables.buttons.PrimaryButton
 import com.example.tudee.presentation.composables.buttons.SecondaryButton
 import com.example.tudee.presentation.composables.buttons.TextButton
+import com.example.tudee.presentation.screen.category.model.CategoryData
+import com.example.tudee.presentation.screen.category.model.UiImage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditCategorySheet(
     modifier: Modifier = Modifier,
     title: String = "Edit category",
+    initialCategoryName: String,
+    initialCategoryImage: UiImage,
     isBottomSheetVisible: Boolean,
     onBottomSheetDismissed: () -> Unit,
     onDeleteButtonClicked: () -> Unit,
     onCancelButtonClicked: () -> Unit,
-    onSaveButtonClicked: () -> Unit,
-    onEditCategoryImageClicked: () -> Unit,
+    onSaveButtonClicked: (CategoryData) -> Unit,
 ) {
+    var categoryName by remember(initialCategoryName) {
+        mutableStateOf(initialCategoryName)
+    }
+
+    var selectedUiImage by remember(initialCategoryImage) {
+        mutableStateOf(initialCategoryImage)
+    }
+
+    val photoPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia()
+    ) { uri ->
+        uri?.let { selectedUiImage = UiImage.External(it.path.toString()) }
+    }
+
     val sheetState = rememberModalBottomSheetState()
 
     LaunchedEffect(isBottomSheetVisible) {
@@ -67,9 +86,6 @@ fun EditCategorySheet(
             sheetState.hide()
         }
     }
-
-    var categoryName by remember { mutableStateOf("Reading novels") }
-    val categoryImage = painterResource(R.drawable.books)
 
     if (isBottomSheetVisible) {
         ModalBottomSheet(
@@ -82,98 +98,143 @@ fun EditCategorySheet(
                 initialValue = SheetValue.Expanded
             )
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .padding(bottom = 24.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                SheetHeader(
-                    sheetTitle = title,
-                    onDeleteButtonClicked = onDeleteButtonClicked
-                )
-
-                TudeeTextField(
-                    value = categoryName,
-                    onValueChange = { categoryName = it },
-                    leadingContent = { isFocused ->
-                        DefaultLeadingContent(
-                            painter = painterResource(R.drawable.menu_circle),
-                            isFocused = isFocused
+            SheetContent(
+                title = title,
+                categoryName = categoryName,
+                onCategoryNameChange = { categoryName = it },
+                selectedImageUri = selectedUiImage,
+                onEditImageClicked = {
+                    photoPickerLauncher.launch(
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                    )
+                },
+                onDeleteButtonClicked = onDeleteButtonClicked,
+                onSaveButtonClicked = {
+                    onSaveButtonClicked(
+                        CategoryData(
+                            name = categoryName.trim(),
+                            uiImage = selectedUiImage
                         )
-                    }
-                )
-
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalAlignment = Alignment.Start,
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Text(
-                        text = "Category image",
-                        style = TudeeTheme.textStyle.title.medium,
-                        color = TudeeTheme.color.textColors.title,
                     )
-
-                    EditCategoryImage(
-                        categoryImage = categoryImage,
-                        onEditImageClicked = onEditCategoryImageClicked
-                    )
-                }
-            }
-
-            Column(
-                Modifier
-                    .fillMaxWidth()
-                    .background(TudeeTheme.color.surfaceHigh)
-                    .padding(horizontal = 16.dp)
-                    .padding(vertical = 12.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                SaveButton(onSaveButtonClicked)
-                CancelButton(onCancelButtonClicked)
-            }
+                },
+                onCancelButtonClicked = onCancelButtonClicked
+            )
         }
     }
 }
 
 @Composable
-private fun CancelButton(onCancelButtonClicked: () -> Unit) {
-    SecondaryButton(
-        modifier = Modifier.fillMaxWidth(),
-        onClick = onCancelButtonClicked
-    ) {
-        Text(
-            text = "Cancel",
-            style = TudeeTheme.textStyle.label.large
+private fun SheetContent(
+    title: String,
+    categoryName: String,
+    onCategoryNameChange: (String) -> Unit,
+    selectedImageUri: UiImage,
+    onEditImageClicked: () -> Unit,
+    onDeleteButtonClicked: () -> Unit,
+    onSaveButtonClicked: () -> Unit,
+    onCancelButtonClicked: () -> Unit
+) {
+    Column {
+        // Main content
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .padding(bottom = 24.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            SheetHeader(
+                sheetTitle = title,
+                onDeleteButtonClicked = onDeleteButtonClicked
+            )
+
+            CategoryNameField(
+                value = categoryName,
+                onValueChange = onCategoryNameChange
+            )
+
+            CategoryImageSection(
+                selectedImageUri = selectedImageUri,
+                onEditImageClicked = onEditImageClicked
+            )
+        }
+
+        // Action buttons
+        ActionButtons(
+            onSaveButtonClicked = onSaveButtonClicked,
+            onCancelButtonClicked = onCancelButtonClicked
         )
     }
 }
 
 @Composable
-private fun SaveButton(onSaveButtonClicked: () -> Unit) {
-    PrimaryButton(
+private fun CategoryNameField(
+    value: String,
+    onValueChange: (String) -> Unit
+) {
+    TudeeTextField(
+        value = value,
+        onValueChange = onValueChange,
+        leadingContent = { isFocused ->
+            DefaultLeadingContent(
+                painter = painterResource(R.drawable.menu_circle),
+                isFocused = isFocused
+            )
+        }
+    )
+}
+
+@Composable
+private fun CategoryImageSection(
+    selectedImageUri: UiImage,
+    onEditImageClicked: () -> Unit
+) {
+    Column(
         modifier = Modifier.fillMaxWidth(),
-        onClick = onSaveButtonClicked
+        horizontalAlignment = Alignment.Start,
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Text(
-            text = "Save",
-            style = TudeeTheme.textStyle.label.large
+            text = "Category image",
+            style = TudeeTheme.textStyle.title.medium,
+            color = TudeeTheme.color.textColors.title,
         )
+
+        EditCategoryImage(
+            imageUri = selectedImageUri,
+            onEditImageClicked = onEditImageClicked
+        )
+    }
+}
+
+@Composable
+private fun ActionButtons(
+    onSaveButtonClicked: () -> Unit,
+    onCancelButtonClicked: () -> Unit
+) {
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .background(TudeeTheme.color.surfaceHigh)
+            .padding(horizontal = 16.dp)
+            .padding(vertical = 12.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        SaveButton(onSaveButtonClicked)
+        CancelButton(onCancelButtonClicked)
     }
 }
 
 @Composable
 private fun EditCategoryImage(
-    categoryImage: Painter,
+    imageUri: UiImage,
     onEditImageClicked: () -> Unit
 ) {
     Box(
         modifier = Modifier
             .clip(RoundedCornerShape(16.dp))
             .background(Color(0x1A000000))
+            .height(113.dp)
             .dashedBorder(
                 color = TudeeTheme.color.stroke,
                 shape = RoundedCornerShape(16.dp),
@@ -185,38 +246,49 @@ private fun EditCategoryImage(
         contentAlignment = Alignment.Center
     ) {
         Image(
-            modifier = Modifier
-                .height(113.dp),
-            painter = categoryImage,
+            painter = imageUri.asPainter(),
             contentDescription = stringResource(R.string.category_image_desc)
         )
 
-        IconButton(onClick = onEditImageClicked) {
-            Icon(
-                painter = painterResource(R.drawable.pencil_edit),
-                modifier = Modifier
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(TudeeTheme.color.surfaceHigh)
-                    .padding(6.dp)
-                    .size(20.dp),
-                contentDescription = stringResource(R.string.back_button),
-                tint = TudeeTheme.color.secondary
-            )
-        }
+        EditImageOverlay(onEditImageClicked = onEditImageClicked)
+    }
+}
+
+@Composable
+private fun EditImageOverlay(onEditImageClicked: () -> Unit) {
+    IconButton(onClick = onEditImageClicked) {
+        Icon(
+            painter = painterResource(R.drawable.pencil_edit),
+            modifier = Modifier
+                .clip(RoundedCornerShape(12.dp))
+                .background(TudeeTheme.color.surfaceHigh)
+                .padding(6.dp)
+                .size(20.dp),
+            contentDescription = "Edit image",
+            tint = TudeeTheme.color.secondary
+        )
     }
 }
 
 @Composable
 private fun SheetHeader(sheetTitle: String, onDeleteButtonClicked: () -> Unit) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         SheetTitle(sheetTitle)
         DeleteButton(onDeleteButtonClicked)
     }
+}
+
+@Composable
+private fun SheetTitle(title: String) {
+    Text(
+        text = title,
+        style = TudeeTheme.textStyle.title.large,
+        color = TudeeTheme.color.textColors.title,
+    )
 }
 
 @Composable
@@ -235,12 +307,29 @@ private fun DeleteButton(onDeleteButtonClicked: () -> Unit) {
 }
 
 @Composable
-private fun SheetTitle(title: String) {
-    Text(
-        text = title,
-        style = TudeeTheme.textStyle.title.large,
-        color = TudeeTheme.color.textColors.title,
-    )
+private fun SaveButton(onSaveButtonClicked: () -> Unit) {
+    PrimaryButton(
+        modifier = Modifier.fillMaxWidth(),
+        onClick = onSaveButtonClicked
+    ) {
+        Text(
+            text = "Save",
+            style = TudeeTheme.textStyle.label.large
+        )
+    }
+}
+
+@Composable
+private fun CancelButton(onCancelButtonClicked: () -> Unit) {
+    SecondaryButton(
+        modifier = Modifier.fillMaxWidth(),
+        onClick = onCancelButtonClicked
+    ) {
+        Text(
+            text = "Cancel",
+            style = TudeeTheme.textStyle.label.large
+        )
+    }
 }
 
 @Preview(widthDp = 360, heightDp = 800)
@@ -252,6 +341,7 @@ private fun EditCategorySheetPreview() {
         onDeleteButtonClicked = {},
         onCancelButtonClicked = {},
         onSaveButtonClicked = {},
-        onEditCategoryImageClicked = {}
+        initialCategoryName = "Reading novels",
+        initialCategoryImage = UiImage.Drawable(R.drawable.books)
     )
 }
