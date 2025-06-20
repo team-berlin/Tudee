@@ -177,23 +177,23 @@ fun TasksScreenContent(
                 EditeBottomSheet()
             }
         }
-            val showBottomSheet = false
+        val showBottomSheet = false
 
-            if (showBottomSheet) {
-                ModalBottomSheet(
-                    onDismissRequest = {
+        if (showBottomSheet) {
+            ModalBottomSheet(
+                onDismissRequest = {
 
-                    },
-                    sheetState = rememberModalBottomSheetState(),
-                    containerColor = TudeeTheme.color.surface
-                ) {
-                    TaskDetailsScreen(
-                        taskDetailsState =
-                            taskScreenUiState.taskDetailsUiState,
-                        onEditButtonClicked = {}
-                    )
-                }
+                },
+                sheetState = rememberModalBottomSheetState(),
+                containerColor = TudeeTheme.color.surface
+            ) {
+                TaskDetailsScreen(
+                    taskDetailsState =
+                        taskScreenUiState.taskDetailsUiState,
+                    onEditButtonClicked = {}
+                )
             }
+        }
 
 
         if (taskScreenUiState.dateUiState.isDatePickerVisible) {
@@ -202,53 +202,53 @@ fun TasksScreenContent(
                 onConfirm = onConfirmDatePicker,
                 onClear = {})
         }
-            Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                DateSection(
-                    datePickerUiState = taskScreenUiState.dateUiState,
-                    listOfDateCardUiState = taskScreenUiState.dateUiState.daysCardsData,
-                    onCalendarClicked = onCalendarClicked,
-                    onPreviousArrowClicked = onPreviousArrowClicked,
-                    onNextArrowClicked = onNextArrowClicked,
-                    onDayCardClicked = onDayCardClicked
-                )
-
-                TabBarComponent(
-                    selectedTabIndex = taskScreenUiState.selectedTabIndex,
-                    tabBarItems = taskScreenUiState.listOfTabBarItem,
-                    onTabSelected = onTabSelected
-                )
-
-                TasksListContent(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(TudeeTheme.color.surface)
-                        .weight(1f),
-                    listOfTasks = taskScreenUiState.listOfTasksUiState,
-                    onTaskCardClicked =
-                        { onTaskCardClicked },
-                    onDeleteIconClick = onDeleteIconClicked,
-                )
-
-                DeleteConfirmationBottomSheet(
-                    isBottomSheetVisible = taskScreenUiState.isBottomSheetVisible,
-                    title = taskScreenUiState.deleteBottomSheetUiState.title,
-                    subtitle = taskScreenUiState.deleteBottomSheetUiState.subtitle,
-                    onBottomSheetDismissed = onBottomSheetDismissed,
-                    onDeleteButtonClicked = onDeleteButtonClicked,
-                    onCancelButtonClicked = onCancelButtonClicked,
-                    deleteButtonUiState = taskScreenUiState.deleteBottomSheetUiState.deleteButtonState,
-                    cancelButtonUiState = taskScreenUiState.deleteBottomSheetUiState.cancelButtonState
-                )
-            }
-
-            SnackBarSection(
-                isSnackBarVisible = taskScreenUiState.isSnackBarVisible, hideSnackBar = hideSnackBar
+        Column(
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            DateSection(
+                datePickerUiState = taskScreenUiState.dateUiState,
+                listOfDateCardUiState = taskScreenUiState.dateUiState.daysCardsData,
+                onCalendarClicked = onCalendarClicked,
+                onPreviousArrowClicked = onPreviousArrowClicked,
+                onNextArrowClicked = onNextArrowClicked,
+                onDayCardClicked = onDayCardClicked
             )
 
+            TabBarComponent(
+                selectedTabIndex = taskScreenUiState.selectedTabIndex,
+                tabBarItems = taskScreenUiState.listOfTabBarItem,
+                onTabSelected = onTabSelected
+            )
+
+            TasksListContent(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(TudeeTheme.color.surface)
+                    .weight(1f),
+                listOfTasks = taskScreenUiState.listOfTasksUiState,
+                onTaskCardClicked =
+                    { onTaskCardClicked },
+                onDeleteIconClick = onDeleteIconClicked,
+            )
+
+            DeleteConfirmationBottomSheet(
+                isBottomSheetVisible = taskScreenUiState.isBottomSheetVisible,
+                title = taskScreenUiState.deleteBottomSheetUiState.title,
+                subtitle = taskScreenUiState.deleteBottomSheetUiState.subtitle,
+                onBottomSheetDismissed = onBottomSheetDismissed,
+                onDeleteButtonClicked = onDeleteButtonClicked,
+                onCancelButtonClicked = onCancelButtonClicked,
+                deleteButtonUiState = taskScreenUiState.deleteBottomSheetUiState.deleteButtonState,
+                cancelButtonUiState = taskScreenUiState.deleteBottomSheetUiState.cancelButtonState
+            )
         }
+
+        SnackBarSection(
+            isSnackBarVisible = taskScreenUiState.isSnackBarVisible, hideSnackBar = hideSnackBar
+        )
+
     }
+}
 
 
 @Composable
