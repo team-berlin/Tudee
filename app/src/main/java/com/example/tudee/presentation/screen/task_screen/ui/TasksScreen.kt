@@ -176,7 +176,7 @@ fun TasksScreenContent(
                 EditeBottomSheet()
             }
         }
-            val showBottomSheet = true
+            val showBottomSheet = false
 
             if (showBottomSheet) {
                 ModalBottomSheet(
@@ -189,7 +189,7 @@ fun TasksScreenContent(
                     TaskDetailsScreen(
                         taskDetailsState =
                             taskScreenUiState.taskDetailsUiState,
-                        onEditButtonClicked = TODO()
+                        onEditButtonClicked = {}
                     )
                 }
             }
