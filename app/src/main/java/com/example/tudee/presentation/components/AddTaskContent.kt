@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -16,6 +17,10 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -28,16 +33,17 @@ import com.example.tudee.presentation.composables.buttons.ButtonState
 import com.example.tudee.presentation.composables.buttons.PrimaryButton
 import com.example.tudee.presentation.composables.buttons.SecondaryButton
 import com.example.tudee.ui.home.viewmodel.CategoryUiState
+import com.example.tudee.ui.home.viewmodel.HomeActions
 import com.example.tudee.ui.home.viewmodel.HomeUiState
 import com.example.tudee.ui.home.viewmodel.TaskPriorityUiState
 import com.example.tudee.ui.home.viewmodel.TaskUiState
-import kotlinx.datetime.LocalDate
 
 @Composable
 fun AddTaskContent(
     modifier: Modifier = Modifier,
     state: HomeUiState,
     categories: List<CategoryUiState>,
+    onAction: (HomeActions) -> Unit,
 ) {
     val priorities = listOf(
         TaskPriorityUiState.HIGH to Triple(
@@ -58,107 +64,130 @@ fun AddTaskContent(
     )
 
     Box {
-        Column(
+        LazyColumn(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            item {
+                Text(
+                    text = stringResource(R.string.add_task_title),
+                    style = TudeeTheme.textStyle.title.large,
+                    color = TudeeTheme.color.textColors.title
+                )
+            }
+            item {
+                TudeeTextField(
+                    modifier = Modifier.padding(top = 12.dp),
+                    value = state.taskUiState.taskTitle,
+                    onValueChange = { onAction(HomeActions.OnEditTaskTitleChanged(it)) },
+                    placeholder = stringResource(R.string.task_title),
+                    leadingContent = { isFocused ->
+                        DefaultLeadingContent(
+                            painter = painterResource(R.drawable.ic_notebook),
+                            isFocused = isFocused
+                        )
+                    },
+                    textStyle = TudeeTheme.textStyle.label.medium
+                )
+            }
+            item {
+                TudeeTextField(
+                    textStyle = TudeeTheme.textStyle.body.medium,
+                    value = state.taskUiState.taskDescription,
+                    onValueChange = { onAction(HomeActions.OnEditTaskDescriptionChanged(it)) },
+                    placeholder = stringResource(R.string.description),
+                    singleLine = false,
+                    modifier = Modifier
+                        .height(168.dp)
+                        .padding(top = 16.dp)
+                )
 
-            Text(
-                text = stringResource(R.string.add_task_title),
-                style = TudeeTheme.textStyle.title.large,
-                color = TudeeTheme.color.textColors.title
-            )
+            }
+            item {
+                TudeeTextField(
+                    modifier = Modifier.padding(top = 16.dp),
+                    value = state.taskUiState.taskAssignedDate.toString(),
+                    onValueChange = { },
+                    placeholder = stringResource(R.string.set_due_date),
+                    leadingContent = { isFocused ->
+                        DefaultLeadingContent(
+                            painter = painterResource(R.drawable.ic_calendar),
+                            isFocused = isFocused
+                        )
+                    }
+                )
+            }
+            item {
+                Text(
+                    modifier = Modifier.padding(top = 16.dp),
+                    text = stringResource(R.string.priority),
+                    style = TudeeTheme.textStyle.title.medium,
+                    color = TudeeTheme.color.textColors.title
+                )
+            }
+            item {
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(horizontal = 4.dp)
+                ) {
+                    items(priorities) { (priority, data) ->
+                        val isSelected: Boolean = state.taskUiState.taskPriority == priority
 
-            TudeeTextField(
-                modifier = Modifier.padding(top = 12.dp),
-                value = state.taskUiState.taskTitle,
-                onValueChange = { },
-                placeholder = stringResource(R.string.task_title),
-                leadingContent = { isFocused ->
-                    DefaultLeadingContent(
-                        painter = painterResource(R.drawable.ic_notebook),
-                        isFocused = isFocused
-                    )
-                }
-            )
-
-
-            TudeeTextField(
-
-                value = state.taskUiState.taskDescription,
-                onValueChange = { },
-                placeholder = stringResource(R.string.description),
-                singleLine = false,
-                modifier = Modifier
-                    .height(168.dp)
-                    .padding(top = 16.dp)
-            )
-
-            TudeeTextField(
-                modifier = Modifier.padding(top = 16.dp),
-                value = state.taskUiState.taskAssignedDate.toString(),
-                onValueChange = { },
-                placeholder = stringResource(R.string.set_due_date),
-                leadingContent = { isFocused ->
-                    DefaultLeadingContent(
-                        painter = painterResource(R.drawable.ic_calendar),
-                        isFocused = isFocused
-                    )
-                }
-            )
-
-            Text(
-                modifier = Modifier.padding(top = 16.dp),
-                text = stringResource(R.string.priority),
-                style = TudeeTheme.textStyle.title.medium,
-                color = TudeeTheme.color.textColors.title
-            )
-            LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = PaddingValues(horizontal = 4.dp)
-            ) {
-                items(priorities) { (priority, data) ->
-                    val (label, iconRes, backgroundColor) = data
-                    TudeeChip(
-                        label = label,
-                        icon = painterResource(iconRes),
-                        backgroundColor = if (state.taskUiState.taskPriority == priority) backgroundColor else TudeeTheme.color.surfaceLow,
-                        labelColor = if (state.taskUiState.taskPriority == priority) TudeeTheme.color.textColors.onPrimary else TudeeTheme.color.textColors.body,
-                        modifier = Modifier
-                            .padding(top = 8.dp)
-                            .clickable { }
-                    )
+                        val (label, iconRes, backgroundColor) = data
+                        TudeeChip(
+                            label = label,
+                            icon = painterResource(iconRes),
+                            backgroundColor = if (isSelected) backgroundColor else TudeeTheme.color.surfaceLow,
+                            labelColor = if (isSelected) TudeeTheme.color.textColors.onPrimary else TudeeTheme.color.textColors.body,
+                            modifier = Modifier
+                                .padding(top = 8.dp)
+                                .clickable { onAction(HomeActions.OnEditTaskPriorityChanged(priority)) }
+                        )
+                    }
                 }
             }
+            item {
+                Text(
+                    modifier = Modifier.padding(top = 16.dp),
+                    text = stringResource(R.string.category),
+                    style = TudeeTheme.textStyle.title.medium,
+                    color = TudeeTheme.color.textColors.title
+                )
+            }
+            item {
+                LazyVerticalGrid(
+                    columns = GridCells.Adaptive(minSize = 104.dp),
 
-            Text(
-                modifier = Modifier.padding(top = 16.dp),
-                text = stringResource(R.string.category),
-                style = TudeeTheme.textStyle.title.medium,
-                color = TudeeTheme.color.textColors.title
-            )
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(3),
-                verticalArrangement = Arrangement.spacedBy(24.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.padding(top = 8.dp)
-            ) {
-                items(categories) { categories ->
-                    CategoryItemWithBadge(
-                        categoryPainter = painterResource(
-                            id = categories.image
-                                ?: R.drawable.category
-                        ),
-                        categoryName = categories.title,
-                        categoryImageContentDescription = "Education Category",
-                        modifier = Modifier
-                            .padding(horizontal = 4.dp)
-                            .clickable { }
-                    )
+                    verticalArrangement = Arrangement.spacedBy(24.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier
+                        .height(400.dp)
+                        .fillMaxWidth()
+                        .padding(bottom = 148.dp),
+                ) {
+                    items(categories) { categories ->
+                        CategoryItemWithBadge(
+                            categoryPainter = painterResource(
+                                id = categories.image
+                                    ?: R.drawable.category
+                            ),
+                            categoryName = categories.title,
+                            categoryImageContentDescription = "Category ${categories.title}",
+                            modifier = Modifier
+                                .padding(horizontal = 4.dp)
+                                .clickable {
+                                    onAction(
+                                        HomeActions.OnEditTaskCategoryChanged(
+                                            categories
+                                        )
+                                    )
+                                }
+                        )
+                    }
                 }
             }
-
 
         }
         Column(
@@ -172,8 +201,8 @@ fun AddTaskContent(
         ) {
             PrimaryButton(
                 modifier = Modifier.fillMaxWidth(),
-                state = ButtonState.DISABLED,
-                onClick = { /* TODO: Handle add task */ },
+//state = if (addButtonclick) ButtonState.IDLE else ButtonState.DISABLED,
+                onClick = { onAction(HomeActions.OnCreateTaskButtonClicked(state.taskUiState)) },
             ) {
                 Text(text = stringResource(R.string.add))
             }
@@ -181,7 +210,7 @@ fun AddTaskContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 12.dp),
-                onClick = { /* TODO: Handle cancel */ },
+                onClick = { onAction(HomeActions.OnCancelButtonClicked) },
             ) {
                 Text(text = stringResource(R.string.cancel))
             }
@@ -211,33 +240,78 @@ private fun AddTaskContentPreview() {
                 image = R.drawable.ic_education
             ),
             CategoryUiState(
-                id = "1",
+                id = "4",
                 title = "Education",
                 image = R.drawable.ic_education
             ),
             CategoryUiState(
-                id = "2",
+                id = "5",
                 title = "Work",
                 image = R.drawable.ic_education
             ),
             CategoryUiState(
-                id = "3",
+                id = "6",
+                title = "Personal",
+                image = R.drawable.ic_education
+            ),
+
+            CategoryUiState(
+                id = "4",
+                title = "Education",
+                image = R.drawable.ic_education
+            ),
+            CategoryUiState(
+                id = "5",
+                title = "Work",
+                image = R.drawable.ic_education
+            ),
+            CategoryUiState(
+                id = "6",
                 title = "Personal",
                 image = R.drawable.ic_education
             )
         )
 
-        AddTaskContent(
-            state = HomeUiState(
-                taskUiState = TaskUiState(
-                    taskTitle = "Sample Task",
-                    taskDescription = "This is a sample description",
-                    taskAssignedDate = LocalDate.parse("2025-06-20"),
-                    taskPriority = TaskPriorityUiState.MEDIUM,
-                    taskCategory = sampleCategories.first()
+
+        var taskUiState by remember {
+            mutableStateOf(
+                TaskUiState(
                 )
-            ),
-            categories = sampleCategories
+            )
+        }
+
+        AddTaskContent(
+            state = HomeUiState(taskUiState = taskUiState),
+            categories = sampleCategories,
+            onAction = { action ->
+                when (action) {
+                    is HomeActions.OnEditTaskTitleChanged -> {
+                        taskUiState = taskUiState.copy(taskTitle = action.title)
+                    }
+
+                    is HomeActions.OnEditTaskDescriptionChanged -> {
+                        taskUiState = taskUiState.copy(taskDescription = action.description)
+                    }
+
+                    is HomeActions.OnEditTaskPriorityChanged -> {
+                        taskUiState = taskUiState.copy(taskPriority = action.priority)
+                    }
+
+                    is HomeActions.OnEditTaskCategoryChanged -> {
+                        taskUiState = taskUiState.copy(taskCategory = action.category)
+                    }
+
+                    is HomeActions.OnCreateTaskButtonClicked -> {
+                    }
+
+                    is HomeActions.OnCancelButtonClicked -> {
+                        taskUiState = TaskUiState()
+                    }
+
+                    else -> {
+                    }
+                }
+            }
         )
     }
 }
