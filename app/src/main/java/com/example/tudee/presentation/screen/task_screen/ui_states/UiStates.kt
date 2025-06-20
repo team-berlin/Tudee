@@ -35,7 +35,6 @@ data class TasksScreenUiState(
 )
 
 data class DateUiState(
-    val selectedMonthAndYear: LocalDate = LocalDate.now(), //usage? todoooo
     val isDatePickerVisible: Boolean = false,
     val selectedYear: String = "",
     val selectedMonth: YearMonth = YearMonth.now(),

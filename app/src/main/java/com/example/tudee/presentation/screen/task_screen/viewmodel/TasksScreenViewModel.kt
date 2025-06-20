@@ -227,7 +227,6 @@ class TasksScreenViewModel(
     }
 
     private fun updateDaysInMonth(month: YearMonth, selectedDate: LocalDate? = null) {
-        Log.d("Emy", " 251 : TasksScreenViewModel updateDaysInMonth ")
         val days = getDaysInMonth(month, selectedDate = selectedDate)
 
         val oldDateUiState = _taskScreenUiState.value.dateUiState
