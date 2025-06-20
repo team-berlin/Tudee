@@ -11,12 +11,6 @@ data class HomeUiState(
     val sliderUiState: SliderUiState = SliderUiState(),
     val tasksUiCount: TasksUiCount = TasksUiCount(),
 
-    val todayTasksDoneCount: String = "",
-
-    val todayTasksTodoCount: String = "",
-
-    val todayTasksInProgressCount: String = "",
-
     val allTasks: List<TaskUiState> = emptyList(),
     val todayTasksInProgress: List<TaskUiState> = emptyList(),
     val todayTasksDone: List<TaskUiState> = emptyList(),
@@ -24,7 +18,7 @@ data class HomeUiState(
 
     val isBottomSheetVisible: Boolean = false,
     val isEditTaskBottomSheetContentVisible: Boolean = false,
-    val selectedTask: TaskUiState? = null,
+    val selectedTask: TaskUiState = TaskUiState(),
     val showSnackBar: Boolean = false,
 
     val navigateTodoTasks: Boolean = false,

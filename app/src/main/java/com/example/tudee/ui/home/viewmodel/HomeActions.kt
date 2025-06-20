@@ -15,6 +15,7 @@ sealed interface HomeActions {
     data class OnEditTaskCategoryChanged(val category: CategoryUiState) : HomeActions
     data class OnEditTaskDescriptionChanged(val description: String) : HomeActions
     data class OnEditTaskPriorityChanged(val priority: TaskPriorityUiState) : HomeActions
+    data class OnEditTaskDateChanged(val date: kotlinx.datetime.LocalDate) : HomeActions
 
     data class OnTaskStatusChanged(val status: TaskStatusUiState) : HomeActions
     data class OnCreateTaskButtonClicked(val taskCreationRequest: TaskUiState) : HomeActions

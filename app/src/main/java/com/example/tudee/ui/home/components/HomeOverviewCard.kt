@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
@@ -116,6 +117,7 @@ private fun OverviewCard(
     Box(
         modifier = modifier
             .fillMaxWidth()
+            .clip(RoundedCornerShape(20.dp))
             .background(
                 color = cardColor, shape = RoundedCornerShape(20.dp)
             )

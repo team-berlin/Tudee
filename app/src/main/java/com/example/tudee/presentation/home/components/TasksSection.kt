@@ -1,6 +1,7 @@
 package com.example.tudee.presentation.home.components
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -20,6 +21,7 @@ fun TasksSection(
     numberOfElement: String,
     tasks: List<TaskUiState>
 ) {
+    Log.d("TasksSection", "Tasks: $tasks")
     Column(modifier = modifier) {
         TitleSection(
             modifier = modifier.padding(top = 24.dp, bottom = 8.dp),

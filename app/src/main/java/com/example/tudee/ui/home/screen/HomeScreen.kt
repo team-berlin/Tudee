@@ -13,7 +13,11 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.BottomSheetDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -27,6 +31,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.presentation.components.AppBar
+import com.example.tudee.presentation.components.TaskContent
+import com.example.tudee.presentation.components.TaskContentMode
 import com.example.tudee.presentation.components.TudeeScaffold
 import com.example.tudee.presentation.composables.buttons.FabButton
 import com.example.tudee.presentation.home.components.TasksSection
@@ -79,7 +85,6 @@ fun HomeContent(
     state: HomeUiState,
     actions: (HomeActions) -> Unit = {}
 ) {
-
     TudeeScaffold(
         showTopAppBar = true,
         topAppBar = {
@@ -134,41 +139,46 @@ fun HomeContent(
                     todayDate = state.taskTodayDateUiState.todayDateNumber,
                     month = state.taskTodayDateUiState.month,
                     year = state.taskTodayDateUiState.year,
-                    tasksDoneCount = state.todayTasksDoneCount,
-                    tasksTodoCount = state.todayTasksTodoCount,
-                    tasksInProgressCount = state.todayTasksInProgressCount,
+                    tasksDoneCount = state.tasksUiCount.tasksDoneCount,
+                    tasksTodoCount = state.tasksUiCount.tasksTodoCount,
+                    tasksInProgressCount = state.tasksUiCount.tasksInProgressCount,
                     sliderUiState = state.sliderUiState
                 )
                     Column(modifier = Modifier.padding(start = 16.dp)) {
-                        if (state.todayTasksTodoCount.isEmpty() &&
-                            state.todayTasksInProgressCount.isEmpty() &&
-                            state.todayTasksTodoCount.isEmpty()) {
+                        if (state.allTasks.isEmpty()) {
                             NoTask()
                         } else {
+                            if(state.todayTasksTodo.isNotEmpty())
                             TasksSection(
                                 actions = actions,
                                 statusTitle = stringResource(R.string.todo),
-                                numberOfElement = state.todayTasksTodoCount,
+                                numberOfElement = state.todayTasksTodo.size.toString(),
                                 tasks = state.todayTasksTodo
                             )
+                            if(state.todayTasksInProgress.isNotEmpty())
                             TasksSection(
                                 actions = actions,
                                 statusTitle = stringResource(R.string.in_progress),
-                                numberOfElement = state.todayTasksInProgressCount,
+                                numberOfElement = state.todayTasksInProgress.size.toString(),
                                 tasks = state.todayTasksInProgress
                             )
+                            if(state.todayTasksDone.isNotEmpty())
                             TasksSection(
                                 actions = actions,
                                 statusTitle = stringResource(R.string.done),
-                                numberOfElement = state.todayTasksDoneCount,
+                                numberOfElement = state.todayTasksDone.size.toString(),
                                 tasks = state.todayTasksDone
                             )
                         }
                     }
             }
         }
-        AnimatedVisibility(state.isBottomSheetVisible) {
-
+        if (state.isBottomSheetVisible) {
+            BottomSheetContent(
+                state = state,
+                onDismiss = { actions(HomeActions.OnBottomSheetDismissed) },
+                actions = actions
+            )
         }
     }
 }
@@ -181,6 +191,29 @@ fun BackgroundBlueCard(modifier: Modifier = Modifier) {
             .height(176.dp)
             .background(color = TudeeTheme.color.primary)
     )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun BottomSheetContent(
+    state: HomeUiState,
+    onDismiss: () -> Unit,
+    actions: (HomeActions) -> Unit
+) {
+    val sheetState = rememberModalBottomSheetState()
+
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = sheetState,
+        containerColor = TudeeTheme.color.surface
+    ) {
+        TaskContent(
+            state = state,
+            categories = state.allTasks.mapNotNull { it.taskCategory }.distinctBy { it.id },
+            onAction = actions,
+            mode = if (state.isEditTaskBottomSheetContentVisible) TaskContentMode.EDIT else TaskContentMode.ADD
+        )
+    }
 }
 
 @Preview(showSystemUi = true, showBackground = true)
