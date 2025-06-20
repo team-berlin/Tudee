@@ -68,6 +68,15 @@
     <string name="cancel">Cancel</string>
     <string name="add">Add</string>
     <string name="skip_button">Skip</string>
+    <string name="high_priority">High</string>
+    <string name="medium_priority">Medium</string>
+    <string name="low_priority">Low</string>
+    <string name="in_progress">In Progress</string>
+    <string name="to_do">To DO</string>
+    <string name="done">Done</string>
+    <string name="upload_image">Upload</string>
+    <string name="edit_uploaded_image">Edit uploaded image</string>
+    <string name="category_image_desc">Category Image</string>
     <string name="addNewTask">Add new task</string>
     <string name="editNewTask">Edit  task</string>
 

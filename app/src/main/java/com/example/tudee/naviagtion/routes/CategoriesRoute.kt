@@ -1,15 +1,13 @@
 package com.example.tudee.naviagtion.routes
 
-import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.example.tudee.naviagtion.Destination
+import com.example.tudee.presentation.screen.category.CategoriesScreen
 
-fun NavGraphBuilder.categoriesRoute (
-    navController: NavController
-) {
+fun NavGraphBuilder.categoriesRoute(navController: NavHostController) {
     composable(route = Destination.CategoriesScreen.route) {
-        // add your screen Composable here
-        // ex: CategoriesScreen(navController)
+        CategoriesScreen(navController = navController)
     }
 }

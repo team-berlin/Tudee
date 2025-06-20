@@ -37,7 +37,6 @@ fun SplashScreen(
             popUpTo(Destination.SplashScreen.route) { inclusive = true }
         }
     }
-
     Box(
         modifier = modifier
             .fillMaxSize()

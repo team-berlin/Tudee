@@ -56,13 +56,12 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.compose)
 
-
-
-
-
     testImplementation(libs.junit)
     implementation(libs.koin.androidx.compose)
+    implementation(libs.koin.androidx.compose.navigation)
 
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

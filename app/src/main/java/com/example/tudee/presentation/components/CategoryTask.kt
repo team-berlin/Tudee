@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
@@ -42,6 +43,7 @@ fun CategoryTaskComponent(
     Column(
         modifier = modifier
             .fillMaxWidth()
+            .clip(RoundedCornerShape(16.dp))
             .border(1.dp, TudeeTheme.color.surfaceHigh, RoundedCornerShape(16.dp))
             .background( TudeeTheme.color.surfaceHigh,RoundedCornerShape(16.dp))
             .padding(top = 4.dp, start = 4.dp, end = 12.dp, bottom = 12.dp)
@@ -120,7 +122,7 @@ private fun CategoryTaskComponentInformation(
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 private fun CategoryTaskComponentPreview() {
     CategoryTaskComponent(
