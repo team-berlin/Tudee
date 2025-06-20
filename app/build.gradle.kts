@@ -57,6 +57,10 @@ dependencies {
     testImplementation(libs.junit)
     implementation(libs.koin.androidx.compose)
     implementation(libs.koin.androidx.compose.navigation)
+
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
+
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
