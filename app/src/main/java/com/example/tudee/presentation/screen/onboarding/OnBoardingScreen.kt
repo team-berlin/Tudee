@@ -12,6 +12,8 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -22,7 +24,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.tudee.R
@@ -33,13 +34,21 @@ import com.example.tudee.presentation.components.BottomPageIndicator
 import com.example.tudee.presentation.components.OnBoardingPage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.koin.compose.getKoin
 
 @Composable
 fun OnBoardingScreen(
     modifier: Modifier = Modifier,
     navController: NavController = rememberNavController(),
+    viewModel: OnBoardingViewModel = getKoin().get()
+) {
 
-    ) {
+    val isFirstEntry by viewModel.isFirstEntry.collectAsState()
+
+    if (!isFirstEntry) {
+        navController.navigate(Destination.HomeScreen.route)
+    }
+
     val onboardingOnBoardingPageUiModels = listOf(
         OnBoardingPageUiModel(
             title = stringResource(R.string.on_boarding_title1),
@@ -73,19 +82,19 @@ fun OnBoardingScreen(
         onBoardingPageUiModels = onboardingOnBoardingPageUiModels,
         orientation = orientation,
         navController = navController,
-        )
+    )
 }
 
 @Composable
 private fun OnBoardingContent(
     modifier: Modifier = Modifier,
-    viewModel: OnBoardingViewModel = viewModel(),
+    viewModel: OnBoardingViewModel = getKoin().get(),
     onBoardingPageUiModels: List<OnBoardingPageUiModel>,
     pageState: PagerState,
     scope: CoroutineScope,
     navController: NavController,
     orientation: Int,
-    ) {
+) {
     Box(
         modifier = modifier
             .fillMaxSize()
