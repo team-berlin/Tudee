@@ -124,7 +124,8 @@ fun TasksScreen(navController: NavController) {
         onCancelButtonClicked = tasksScreenViewModel::onCancelButtonClicked,
         onDismissDatePicker = tasksScreenViewModel::onDismissDatePicker,
         onConfirmDatePicker = tasksScreenViewModel::onConfirmDatePicker,
-        hideSnackBar = tasksScreenViewModel::hideSnackBar
+        hideSnackBar = tasksScreenViewModel::hideSnackBar,
+        version =  tasksScreenViewModel.triggerEffectVersion.collectAsState().value
     )
 }
 
@@ -147,6 +148,7 @@ fun TasksScreenContent(
     hideSnackBar: () -> Unit,
     addTaskBottomSheetUiState: TaskBottomSheetState,
     showAddTaskBottomSheet: () -> Unit,
+    version: Int,
 
     ) {
 
@@ -211,7 +213,8 @@ fun TasksScreenContent(
                 onCalendarClicked = onCalendarClicked,
                 onPreviousArrowClicked = onPreviousArrowClicked,
                 onNextArrowClicked = onNextArrowClicked,
-                onDayCardClicked = onDayCardClicked
+                onDayCardClicked = onDayCardClicked,
+                version = version
             )
 
             TabBarComponent(
@@ -259,6 +262,7 @@ private fun DateSection(
     onDayCardClicked: (Int) -> Unit,
     onPreviousArrowClicked: () -> Unit,
     onNextArrowClicked: () -> Unit,
+    version: Int,
 ) {
     DataHeader(
         selectedMonth = datePickerUiState.selectedMonth.month.getDisplayName(
@@ -272,7 +276,8 @@ private fun DateSection(
     )
     DaysRow(
         listOfDateCardUiState = listOfDateCardUiState,
-        onDayCardClicked = onDayCardClicked
+        onDayCardClicked = onDayCardClicked,
+        version = version
     )
 }
 
@@ -450,14 +455,16 @@ fun SnackBarSection(
 
 @Composable
 fun DaysRow(
-    onDayCardClicked: (Int) -> Unit, listOfDateCardUiState: List<DateCardUiState>
+    onDayCardClicked: (Int) -> Unit,
+    listOfDateCardUiState: List<DateCardUiState>,
+    version: Int
 ) {
 
     val listState = rememberLazyListState()
 
     val selectedIndex = listOfDateCardUiState.indexOfFirst { it.isSelected }.coerceAtLeast(0)
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(version) {
         listState.scrollToItem(selectedIndex)
     }
 
@@ -757,12 +764,15 @@ private fun TaskScreenFloatingActionButton(onFloatingActionClicked: () -> Unit) 
 }
 
 @Composable
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 fun TasksScreenContentPreview() {
     TudeeTheme
     TasksScreenContent(
         taskScreenUiState = TasksScreenUiState(),
         onDayCardClicked = {},
+        onCalendarClicked = {},
+        onPreviousArrowClicked = {},
+        onNextArrowClicked = {},
         onTabSelected = {},
         onTaskCardClicked = {},
         onDeleteIconClicked = { },
@@ -773,10 +783,8 @@ fun TasksScreenContentPreview() {
         onDismissDatePicker = { },
         hideSnackBar = {},
         addTaskBottomSheetUiState = TaskBottomSheetState(),
-        onPreviousArrowClicked = {},
-        onNextArrowClicked = {},
-        onCalendarClicked = {},
-        showAddTaskBottomSheet = {}
+        showAddTaskBottomSheet = {},
+        version = 0
     )
 }
 

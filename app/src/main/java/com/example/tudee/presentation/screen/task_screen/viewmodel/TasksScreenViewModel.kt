@@ -21,6 +21,7 @@ import com.example.tudee.utils.convertMillisToLocalDate
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.YearMonth
@@ -34,6 +35,9 @@ class TasksScreenViewModel(
 ) : ViewModel(), TaskScreenInteractor {
     private val _taskScreenUiState = MutableStateFlow(TasksScreenUiState())
     val taskScreenUiState = _taskScreenUiState
+
+    private val _triggerEffectVersion = MutableStateFlow(0)
+    val triggerEffectVersion: StateFlow<Int> = _triggerEffectVersion
 
     init {
         viewModelScope.launch {
@@ -168,6 +172,7 @@ class TasksScreenViewModel(
                 )
             }
             onDayCardClicked(localPickedDate.dayOfMonth - 1)
+            _triggerEffectVersion.update { it + 1 }
         }
     }
 
