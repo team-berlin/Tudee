@@ -147,7 +147,7 @@ fun HomeContent(
                 )
                     Column(modifier = Modifier.padding(start = 16.dp)) {
                         if (state.allTasks.isEmpty()) {
-                            NoTask()
+                            NoTask(modifier = Modifier.padding(top= 48.dp))
                         } else {
                             if(state.todayTasksTodo.isNotEmpty())
                             TasksSection(
