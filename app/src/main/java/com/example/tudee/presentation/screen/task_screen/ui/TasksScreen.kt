@@ -421,7 +421,14 @@ fun TasksListContent(
                             description = task.description,
                             priority = stringResource(task.priority),
                             priorityBackgroundColor = priorityBackgroundColor,
-                            taskIcon = { task.categoryIcon },
+                            taskIcon = {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_category_book_open),
+                                    contentDescription = "Task Icon",
+                                    modifier = Modifier.size(32.dp),
+                                    tint = Color.Unspecified
+                                )
+                            },
                             onClick = { onTaskCardClicked(task) },
                             priorityIcon = priorityIcon,
                         )

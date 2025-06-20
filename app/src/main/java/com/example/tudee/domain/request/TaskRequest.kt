@@ -11,5 +11,18 @@ data class TaskCreationRequest(
     val categoryId: Long,
     val status: TaskStatus,
     val assignedDate: LocalDate
-)
+){
+fun validateTitle() = {
+    title.isNotEmpty()
+}
 
+    fun validateDescription() = {
+        description.isNotEmpty()
+    }
+//    fun validatePriority() = {
+//        priority != TaskPriority.NONE
+//    }
+    fun validateCategoryId() = {
+        categoryId != 0L
+    }
+}
