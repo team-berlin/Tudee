@@ -55,7 +55,10 @@ fun TudeeDateDialog(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                modifier = Modifier.clickable { onClear() },
+                modifier = Modifier.clickable {
+                    dateState.selectedDateMillis = null
+                    onClear()
+                },
                 text = stringResource(R.string.date_picker_clear_button_text),
                 color = TudeeTheme.color.primary,
                 style = TudeeTheme.textStyle.label.large
