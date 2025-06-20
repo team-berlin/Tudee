@@ -17,13 +17,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
-import com.example.tudee.domain.entity.Task
 import com.example.tudee.domain.entity.TaskPriority
 import com.example.tudee.domain.entity.TaskStatus
 import com.example.tudee.presentation.components.CategoryTaskComponent
+import com.example.tudee.ui.home.viewmodel.CategoryUiState
 import com.example.tudee.ui.home.viewmodel.HomeActions
 import com.example.tudee.ui.home.viewmodel.TaskPriorityUiState
 import com.example.tudee.ui.home.viewmodel.TaskUiState
+import com.example.tudee.ui.mapper.toTaskPriorityUiState
+import com.example.tudee.ui.mapper.toTaskStatusUiState
 import kotlinx.datetime.LocalDate
 
 @Composable
@@ -32,11 +34,12 @@ fun TaskList(
     tasks: List<TaskUiState> = emptyList(),
     actions: (HomeActions) -> Unit = {},
 ) {
+    val rowCount = if (tasks.size > 2) 2 else 1
     LazyHorizontalGrid(
         modifier = modifier
             .fillMaxWidth()
-            .height(230.dp),
-        rows = GridCells.Fixed(2),
+            .height(if (rowCount == 2) 230.dp else 111.dp),
+        rows = GridCells.Fixed(rowCount),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
@@ -80,23 +83,41 @@ fun TaskList(
 
 // Dummy data for preview
 private val dummyTasks = listOf(
-    Task(
-        id = 1,
-        title = "Organize Study Desk",
-        description = "Review cell structure and functions for tomorrow...",
-        priority = TaskPriority.HIGH,
-        categoryId = 1,
-        status = TaskStatus.IN_PROGRESS,
-        assignedDate = LocalDate(2025, 6, 18)
+    TaskUiState(
+        taskId = "1",
+        taskTitle = "Organize Study Desk",
+        taskDescription = "Review cell structure and functions for tomorrow...",
+        taskPriority = TaskPriority.HIGH.toTaskPriorityUiState(),
+        taskCategory = CategoryUiState(
+            id = "1",
+            title = "dcwj"
+        ),
+        taskStatusUiState = TaskStatus.IN_PROGRESS.toTaskStatusUiState(),
+        taskAssignedDate = LocalDate(2025, 6, 18)
     ),
-    Task(
-        id = 2,
-        title = "Organize Study Desk",
-        description = "Description for task 2",
-        priority = TaskPriority.MEDIUM,
-        categoryId = 2,
-        status = TaskStatus.DONE,
-        assignedDate = LocalDate(2025, 6, 19)
+    TaskUiState(
+        taskId = "1",
+        taskTitle = "Organize Study Desk",
+        taskDescription = "Review cell structure and functions for tomorrow...",
+        taskPriority = TaskPriority.HIGH.toTaskPriorityUiState(),
+        taskCategory = CategoryUiState(
+            id = "1",
+            title = "dcwj"
+        ),
+        taskStatusUiState = TaskStatus.IN_PROGRESS.toTaskStatusUiState(),
+        taskAssignedDate = LocalDate(2025, 6, 18)
+    ),
+    TaskUiState(
+        taskId = "1",
+        taskTitle = "Organize Study Desk",
+        taskDescription = "Review cell structure and functions for tomorrow...",
+        taskPriority = TaskPriority.HIGH.toTaskPriorityUiState(),
+        taskCategory = CategoryUiState(
+            id = "1",
+            title = "dcwj"
+        ),
+        taskStatusUiState = TaskStatus.IN_PROGRESS.toTaskStatusUiState(),
+        taskAssignedDate = LocalDate(2025, 6, 18)
     )
 )
 
@@ -105,7 +126,10 @@ private val dummyTasks = listOf(
 @Composable
 private fun TaskListPreview() {
     TudeeTheme {
-        TaskList()
+        TaskList(
+            tasks = dummyTasks,
+            actions = {}
+        )
     }
 
 }
