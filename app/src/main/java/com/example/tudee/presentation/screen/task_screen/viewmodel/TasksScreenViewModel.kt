@@ -1,5 +1,6 @@
 package com.example.tudee.presentation.screen.task_screen.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tudee.domain.TaskCategoryService
@@ -16,18 +17,16 @@ import com.example.tudee.presentation.screen.task_screen.ui_states.DateCardUiSta
 import com.example.tudee.presentation.screen.task_screen.ui_states.TaskUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.TasksScreenUiState
 import com.example.tudee.presentation.viewmodel.taskuistate.TaskDetailsUiState
+import com.example.tudee.utils.convertMillisToLocalDate
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
-import kotlinx.datetime.DateTimeUnit
-import kotlinx.datetime.Instant
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.plus
-import kotlinx.datetime.toLocalDateTime
+import java.time.YearMonth
+import java.util.Locale
+import java.time.LocalDate
+import java.time.format.TextStyle
 
 class TasksScreenViewModel(
     private val taskService: TaskService,
@@ -43,16 +42,22 @@ class TasksScreenViewModel(
             getTasksByStatus(TaskStatus.IN_PROGRESS)
             _taskScreenUiState.update { it.copy(isLoading = false) }
         }
+        updateDaysInMonth(
+            month = YearMonth.now(),
+            selectedDate = LocalDate.now()
+        )
     }
 
     override fun onDayCardClicked(cardIndex: Int) {
         _taskScreenUiState.update {
             it.copy(
-                listOfDateCardUiState = it.listOfDateCardUiState.mapIndexed { i, card ->
-                    card.copy(isSelected = cardIndex == i)
-                })
+                dateUiState = it.dateUiState.copy(
+                    daysCardsData = it.dateUiState.daysCardsData.mapIndexed { i, card ->
+                        card.copy(isSelected = cardIndex == i)
+                    },
+                )
+            )
         }
-
     }
 
     override fun onDeleteIconClicked(idOfTaskToBeDeleted: Long) {
@@ -126,11 +131,13 @@ class TasksScreenViewModel(
         }
     }
 
-    override fun onDateCardClicked() {
+    override fun onCalendarClicked() {
         _taskScreenUiState
             .update {
                 it.copy(
-                    datePickerUiState = it.datePickerUiState.copy(isVisible = true)
+                    dateUiState = it.dateUiState.copy(
+                        isDatePickerVisible = true
+                    )
                 )
             }
     }
@@ -138,27 +145,40 @@ class TasksScreenViewModel(
     override fun onDismissDatePicker() {
         _taskScreenUiState.update {
             it.copy(
-                datePickerUiState = it.datePickerUiState.copy(isVisible = false)
+                dateUiState = it.dateUiState.copy(isDatePickerVisible = false)
             )
         }
     }
 
     fun onConfirmDatePicker(millis: Long?) {
-        val date = millis?.let {
-            Instant.fromEpochMilliseconds(it)
-                .toLocalDateTime(TimeZone.currentSystemDefault())
-                .date
-        }
+        millis?.let {
+            val localPickedDate = convertMillisToLocalDate(millis)
 
-        _taskScreenUiState.update {
-            it.copy(
-                datePickerUiState = it.datePickerUiState.copy(
-                    isVisible = false,
-                    selectedDate = date
-                )
+            val selectedYearMonth = YearMonth.of(
+                localPickedDate.year,
+                localPickedDate.month
             )
-        }
 
+            _taskScreenUiState.update {
+                it.copy(
+                    dateUiState = it.dateUiState.copy(
+                        selectedYear = localPickedDate.year.toString(),
+                        selectedMonth = selectedYearMonth,
+                    )
+                )
+            }
+            onDayCardClicked(localPickedDate.dayOfMonth - 1)
+        }
+    }
+
+    fun onPreviousArrowClicked() {
+        val prevMonth = _taskScreenUiState.value.dateUiState.selectedMonth.minusMonths(1)
+        updateDaysInMonth(prevMonth)
+    }
+
+    fun onNextArrowClicked() {
+        val nextMonth = _taskScreenUiState.value.dateUiState.selectedMonth.plusMonths(1)
+        updateDaysInMonth(nextMonth)
     }
 
     fun showSnackBar() {
@@ -205,21 +225,41 @@ class TasksScreenViewModel(
             }
         }
     }
-}
 
-fun getNextSevenDays(): List<DateCardUiState> {
-    val today: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
+    private fun updateDaysInMonth(month: YearMonth, selectedDate: LocalDate? = null) {
+        Log.d("Emy", " 251 : TasksScreenViewModel updateDaysInMonth ")
+        val days = getDaysInMonth(month, selectedDate = selectedDate)
 
-    return (0 until 7).map { offset ->
-        val date = today.plus(offset, DateTimeUnit.DAY)
-        val dayOfMonth = date.dayOfMonth.toString()
+        val oldDateUiState = _taskScreenUiState.value.dateUiState
 
-        val dayName = date.dayOfWeek.name.lowercase().replaceFirstChar { it.uppercase() }
-        val halfName = dayName.substring(0, 3)
-        DateCardUiState(
-            dayNumber = dayOfMonth, dayName = halfName, isSelected = false
-        )
+        _taskScreenUiState.update { state ->
+            state.copy(
+                dateUiState = oldDateUiState.copy(
+                    selectedMonth = YearMonth.of(
+                        month.year,
+                        month.month
+                    ),
+                    selectedYear = month.year.toString(),
+                    daysCardsData = days,
+                )
+            )
+        }
+    }
 
+    private fun getDaysInMonth(
+        month: YearMonth, selectedDate: LocalDate?
+
+    ): List<DateCardUiState> {
+        val fallbackDate = selectedDate ?: month.atDay(1)
+        val totalDays = month.lengthOfMonth()
+        return (1..totalDays).map { day ->
+            val date = month.atDay(day)
+            DateCardUiState(
+                dayNumber = date.dayOfMonth,
+                dayName = date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault()),
+                isSelected = date == fallbackDate
+            )
+        }
     }
 }
 

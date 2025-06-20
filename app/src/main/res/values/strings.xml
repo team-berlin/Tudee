@@ -79,4 +79,7 @@
     <string name="move_to_done">Move to done</string>
     <string name="save">SAVE</string>
 
+    <string name="previous_week_arrow_content_description">Previous week</string>
+    <string name="next_week_arrow_content_description">Next week</string>
+    <string name="open_calendar_content_description">Open calendar</string>
 </resources>

@@ -33,24 +33,21 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -60,13 +57,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
@@ -77,28 +75,29 @@ import com.example.tudee.presentation.components.NavBar
 import com.example.tudee.presentation.components.SnackBarComponent
 import com.example.tudee.presentation.components.TabBarComponent
 import com.example.tudee.presentation.components.TopAppBar
+import com.example.tudee.presentation.components.TudeeDateDialog
 import com.example.tudee.presentation.components.TudeeDayCard
 import com.example.tudee.presentation.components.TudeeScaffold
 import com.example.tudee.presentation.composables.buttons.ButtonState
 import com.example.tudee.presentation.composables.buttons.FabButton
 import com.example.tudee.presentation.composables.buttons.NegativeButton
 import com.example.tudee.presentation.composables.buttons.SecondaryButton
-import com.example.tudee.presentation.composables.buttons.TextButton
 import com.example.tudee.presentation.screen.TaskDetailsScreen
 import com.example.tudee.presentation.screen.task_screen.mappers.TaskPriorityUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.DateCardUiState
-import com.example.tudee.presentation.screen.task_screen.ui_states.DatePickerUiState
+import com.example.tudee.presentation.screen.task_screen.ui_states.DateUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.TaskUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.TasksScreenUiState
 import com.example.tudee.presentation.screen.task_screen.viewmodel.TasksScreenViewModel
 import com.example.tudee.presentation.screen.taskscreen.addTask.AddBottomSheet
 import com.example.tudee.presentation.screen.taskscreen.editTask.EditeBottomSheet
 import com.example.tudee.presentation.viewmodel.AddTaskBottomSheetViewModel
-import com.example.tudee.presentation.viewmodel.taskuistate.TaskDetailsUiState
 import com.example.tudee.presentation.viewmodel.uistate.TaskBottomSheetState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
+import java.time.format.TextStyle
+import java.util.Locale
 import kotlin.math.roundToInt
 
 @Composable
@@ -111,21 +110,21 @@ fun TasksScreen(navController: NavController) {
 
     TasksScreenContent(
         addTaskBottomSheetUiState = addTaskBottomSheetUiState,
-        addTaskBottomSheetViewModel = addTaskBottomSheetViewModel,
+        showAddTaskBottomSheet = addTaskBottomSheetViewModel::showButtonSheet,
         taskScreenUiState = taskScreenUiState,
         onTabSelected = tasksScreenViewModel::onTabSelected,
         onTaskCardClicked = tasksScreenViewModel::onTaskCardClicked,
         onDayCardClicked = tasksScreenViewModel::onDayCardClicked,
+        onCalendarClicked = tasksScreenViewModel::onCalendarClicked,
+        onPreviousArrowClicked = tasksScreenViewModel::onPreviousArrowClicked,
+        onNextArrowClicked = tasksScreenViewModel::onNextArrowClicked,
         onDeleteIconClicked = tasksScreenViewModel::onDeleteIconClicked,
         onDeleteButtonClicked = tasksScreenViewModel::onConfirmDelete,
         onBottomSheetDismissed = tasksScreenViewModel::onBottomSheetDismissed,
         onCancelButtonClicked = tasksScreenViewModel::onCancelButtonClicked,
-        onDateCardClicked = tasksScreenViewModel::onDateCardClicked,
         onDismissDatePicker = tasksScreenViewModel::onDismissDatePicker,
         onConfirmDatePicker = tasksScreenViewModel::onConfirmDatePicker,
         hideSnackBar = tasksScreenViewModel::hideSnackBar
-
-
     )
 }
 
@@ -134,18 +133,20 @@ fun TasksScreen(navController: NavController) {
 fun TasksScreenContent(
     taskScreenUiState: TasksScreenUiState,
     onDayCardClicked: (Int) -> Unit,
+    onCalendarClicked: () -> Unit,
+    onPreviousArrowClicked: () -> Unit,
+    onNextArrowClicked: () -> Unit,
     onTabSelected: (Int) -> Unit,
     onTaskCardClicked: (TaskUiState) -> Unit,
     onDeleteIconClicked: (Long) -> Unit,
     onDeleteButtonClicked: () -> Unit,
     onBottomSheetDismissed: () -> Unit,
     onCancelButtonClicked: () -> Unit,
-    onDateCardClicked: () -> Unit,
     onConfirmDatePicker: (Long?) -> Unit,
     onDismissDatePicker: () -> Unit,
     hideSnackBar: () -> Unit,
     addTaskBottomSheetUiState: TaskBottomSheetState,
-    addTaskBottomSheetViewModel: AddTaskBottomSheetViewModel,
+    showAddTaskBottomSheet: () -> Unit,
 
     ) {
 
@@ -157,7 +158,7 @@ fun TasksScreenContent(
         showFab = true,
         floatingActionButton = {
             TaskScreenFloatingActionButton {
-                addTaskBottomSheetViewModel.showButtonSheet()
+                showAddTaskBottomSheet()
             }
         })
     { paddingValues ->
@@ -195,18 +196,21 @@ fun TasksScreenContent(
             }
 
 
-            DatePickerScreen(
-                uiState = taskScreenUiState.datePickerUiState,
+        if (taskScreenUiState.dateUiState.isDatePickerVisible) {
+            TudeeDateDialog(
                 onDismiss = onDismissDatePicker,
-                onConfirm = onConfirmDatePicker
-            )
+                onConfirm = onConfirmDatePicker,
+                onClear = {})
+        }
             Column(
-                //verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                HeadingDate(onDateCardClicked)
-
-                DaysRow(
-                    listOfDateCardUiState = taskScreenUiState.listOfDateCardUiState,
+                DateSection(
+                    datePickerUiState = taskScreenUiState.dateUiState,
+                    listOfDateCardUiState = taskScreenUiState.dateUiState.daysCardsData,
+                    onCalendarClicked = onCalendarClicked,
+                    onPreviousArrowClicked = onPreviousArrowClicked,
+                    onNextArrowClicked = onNextArrowClicked,
                     onDayCardClicked = onDayCardClicked
                 )
 
@@ -245,6 +249,100 @@ fun TasksScreenContent(
 
         }
     }
+
+
+@Composable
+private fun DateSection(
+//    taskScreenUiState: TasksScreenUiState,
+    listOfDateCardUiState: List<DateCardUiState>,
+    datePickerUiState: DateUiState,
+    onCalendarClicked: () -> Unit,
+    onDayCardClicked: (Int) -> Unit,
+    onPreviousArrowClicked: () -> Unit,
+    onNextArrowClicked: () -> Unit,
+) {
+    DataHeader(
+//        selectedMonth = datePickerUiState.selectedMonth,
+        selectedMonth = datePickerUiState.selectedMonth.month.getDisplayName(
+            TextStyle.SHORT,
+            Locale.getDefault()
+        ),
+        selectedYear = datePickerUiState.selectedYear,
+        onCalendarClicked = onCalendarClicked,
+        onPreviousArrowClicked = onPreviousArrowClicked,
+        onNextArrowClicked = onNextArrowClicked
+    )
+    DaysRow(
+        listOfDateCardUiState = listOfDateCardUiState,
+        onDayCardClicked = onDayCardClicked
+    )
+}
+
+@Composable
+fun DataHeader(
+    selectedMonth: String,
+    selectedYear: String,
+    onCalendarClicked: () -> Unit,
+    onPreviousArrowClicked: () -> Unit,
+    onNextArrowClicked: () -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        ArrowButton(
+            icon = painterResource(R.drawable.arrow_left),
+            contentDescription = stringResource(R.string.previous_week_arrow_content_description),
+            onClick = onPreviousArrowClicked
+        )
+        Row(
+            modifier = Modifier.clickable { onCalendarClicked() },
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "$selectedMonth, $selectedYear",
+                style = TudeeTheme.textStyle.label.medium,
+                color = TudeeTheme.color.textColors.body
+            )
+            Spacer(modifier = Modifier.width(4.dp))
+            Icon(
+                painter = painterResource(R.drawable.arrow_down),
+                tint = TudeeTheme.color.textColors.body,
+                contentDescription = stringResource(R.string.open_calendar_content_description),
+            )
+        }
+
+        ArrowButton(
+            icon = painterResource(R.drawable.arrow_right),
+            contentDescription = stringResource(R.string.next_week_arrow_content_description),
+            onClick = onNextArrowClicked
+        )
+    }
+}
+
+@Composable
+private fun ArrowButton(
+    icon: Painter,
+    contentDescription: String,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .size(32.dp)
+            .border(1.dp, TudeeTheme.color.stroke, shape = CircleShape)
+            .clickable { onClick() },
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            painter = icon,
+            contentDescription = contentDescription,
+            tint = TudeeTheme.color.textColors.body
+        )
+    }
+}
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -352,40 +450,21 @@ fun SnackBarSection(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun DatePickerScreen(
-    uiState: DatePickerUiState, onDismiss: () -> Unit, onConfirm: (Long?) -> Unit
-) {
-    val datePickerState = rememberDatePickerState()
-
-    if (uiState.isVisible) {
-        DatePickerDialog(
-            onDismissRequest = onDismiss,
-            confirmButton = {
-                TextButton(onClick = {
-                    onConfirm(datePickerState.selectedDateMillis)
-                }) {
-                    Text("OK")
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = onDismiss) {
-                    Text("Cancel")
-                }
-            },
-
-            ) {
-            DatePicker(state = datePickerState)
-        }
-    }
-}
-
 @Composable
 fun DaysRow(
     onDayCardClicked: (Int) -> Unit, listOfDateCardUiState: List<DateCardUiState>
 ) {
+
+    val listState = rememberLazyListState()
+
+    val selectedIndex = listOfDateCardUiState.indexOfFirst { it.isSelected }.coerceAtLeast(0)
+
+    LaunchedEffect(Unit) {
+        listState.scrollToItem(selectedIndex)
+    }
+
     LazyRow(
+        state = listState,
         contentPadding = PaddingValues(start = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
@@ -418,7 +497,7 @@ fun DaysRow(
             }
             TudeeDayCard(
                 modifier = modifier,
-                dayOfMonth = dateCard.dayNumber,
+                dayOfMonth = dateCard.dayNumber.toString(),
                 dayOfWeek = dateCard.dayName,
                 dayOfMonthTextColor = dayOfMonthTextColor,
                 dayOfWeekTextColor = dayOfWeekTextColor,
@@ -679,28 +758,28 @@ private fun TaskScreenFloatingActionButton(onFloatingActionClicked: () -> Unit) 
     })
 }
 
-//@Composable
-//@Preview(showBackground = true)
-//fun TasksScreenContentPreview() {
-//    TudeeTheme
-//    TasksScreenContent(
-//        taskScreenUiState = TasksScreenUiState(),
-//        onDayCardClicked = {},
-//        onTabSelected = {},
-//        onFloatingActionClicked = {},
-//        onTaskCardClicked = {},
-//        onDeleteIconClicked = { },
-//        onDeleteButtonClicked = {},
-//        onBottomSheetDismissed = {},
-//        onCancelButtonClicked = {},
-//        onDateCardClicked = {},
-//        onConfirmDatePicker = {},
-//        onDismissDatePicker = { },
-//        hideSnackBar = {},
-//        addTaskBottomSheetUiState = TaskBottomSheetState(),
-//        addTaskBottomSheetViewModel = addTaskBottomSheetViewModel,
-//        addButtonState = {}
-//    )
-//}
+@Composable
+@Preview(showBackground = true)
+fun TasksScreenContentPreview() {
+    TudeeTheme
+    TasksScreenContent(
+        taskScreenUiState = TasksScreenUiState(),
+        onDayCardClicked = {},
+        onTabSelected = {},
+        onTaskCardClicked = {},
+        onDeleteIconClicked = { },
+        onDeleteButtonClicked = {},
+        onBottomSheetDismissed = {},
+        onCancelButtonClicked = {},
+        onConfirmDatePicker = {},
+        onDismissDatePicker = { },
+        hideSnackBar = {},
+        addTaskBottomSheetUiState = TaskBottomSheetState(),
+        onPreviousArrowClicked = {},
+        onNextArrowClicked = {},
+        onCalendarClicked = {},
+        showAddTaskBottomSheet = {}
+    )
+}
 
 

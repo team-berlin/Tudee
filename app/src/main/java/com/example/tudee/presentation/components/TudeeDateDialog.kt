@@ -73,6 +73,6 @@ fun TudeeDateDialog(
 
 @Preview
 @Composable
-fun TudeeDateDialogPreview() {
-    TudeeDateDialog( { x -> }, {}, {})
+private fun TudeeDateDialogPreview() {
+    TudeeDateDialog( { _ -> }, {}, {})
 }

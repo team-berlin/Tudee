@@ -11,6 +11,6 @@ interface TaskScreenInteractor {
     fun onTaskCardClicked(taskUiState: TaskUiState)
     fun onConfirmDelete()
     fun onCancelButtonClicked()
-    fun onDateCardClicked()
+    fun onCalendarClicked()
     fun onDismissDatePicker()
 }

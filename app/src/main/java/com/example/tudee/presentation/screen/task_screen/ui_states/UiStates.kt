@@ -6,14 +6,13 @@ import com.example.tudee.domain.entity.TaskStatus
 import com.example.tudee.presentation.components.TabBarItem
 import com.example.tudee.presentation.composables.buttons.ButtonState
 import com.example.tudee.presentation.screen.task_screen.viewmodel.defaultTabBarItem
-import com.example.tudee.presentation.screen.task_screen.viewmodel.getNextSevenDays
 import com.example.tudee.presentation.viewmodel.taskuistate.TaskDetailsUiState
-import kotlinx.datetime.LocalDate
+import java.time.LocalDate
+import java.time.YearMonth
 
 data class TasksScreenUiState(
     val screenTitle: String = "",
     val date: String = "",
-    val listOfDateCardUiState: List<DateCardUiState> = getNextSevenDays(),
     val listOfTabBarItem: List<TabBarItem> = defaultTabBarItem,
     val selectedTabIndex: Int = 0,
     val listOfTasksUiState: List<TaskUiState> = emptyList(),
@@ -21,7 +20,7 @@ data class TasksScreenUiState(
     val isBottomSheetVisible: Boolean = false,
     val isAddBottomSheetVisible: Boolean = false,
     val isSnackBarVisible: Boolean = false,
-    val datePickerUiState: DatePickerUiState = DatePickerUiState(),
+    val dateUiState: DateUiState = DateUiState(),
     val deleteBottomSheetUiState: DeleteBottomSheetUiState = DeleteBottomSheetUiState(),
     val idOfTaskToBeDeleted: Long = 0,
     val noCurrentTasks: Boolean = listOfTasksUiState.isEmpty(),
@@ -35,9 +34,12 @@ data class TasksScreenUiState(
     )
 )
 
-data class DatePickerUiState(
-    val isVisible: Boolean = false,
-    val selectedDate: LocalDate? = null
+data class DateUiState(
+    val selectedMonthAndYear: LocalDate = LocalDate.now(), //usage? todoooo
+    val isDatePickerVisible: Boolean = false,
+    val selectedYear: String = "",
+    val selectedMonth: YearMonth = YearMonth.now(),
+    val daysCardsData: List<DateCardUiState> = emptyList()
 )
 
 data class TaskUiState(
@@ -55,9 +57,9 @@ data class TaskUiState(
 )
 
 data class DateCardUiState(
-    val dayNumber: String,
+    val dayNumber: Int,
     val dayName: String,
-    val isSelected: Boolean
+    val isSelected: Boolean = false
 )
 
 data class DeleteBottomSheetUiState(
