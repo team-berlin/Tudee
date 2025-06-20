@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -41,7 +42,6 @@ import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.presentation.components.DefaultLeadingContent
 import com.example.tudee.presentation.components.TudeeTextField
-import com.example.tudee.presentation.composables.buttons.ButtonState
 import com.example.tudee.presentation.composables.buttons.PrimaryButton
 import com.example.tudee.presentation.composables.buttons.SecondaryButton
 import com.example.tudee.presentation.composables.buttons.TextButton
@@ -52,9 +52,6 @@ fun EditCategorySheet(
     modifier: Modifier = Modifier,
     title: String = "Edit category",
     isBottomSheetVisible: Boolean,
-    deleteButtonUiState: ButtonState,
-    saveButtonUiState: ButtonState,
-    cancelButtonUiState: ButtonState,
     onBottomSheetDismissed: () -> Unit,
     onDeleteButtonClicked: () -> Unit,
     onCancelButtonClicked: () -> Unit,
@@ -92,7 +89,10 @@ fun EditCategorySheet(
                     .padding(bottom = 24.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                SheetHeader(title, onDeleteButtonClicked)
+                SheetHeader(
+                    sheetTitle = title,
+                    onDeleteButtonClicked = onDeleteButtonClicked
+                )
 
                 TudeeTextField(
                     value = categoryName,
@@ -117,41 +117,10 @@ fun EditCategorySheet(
                         color = TudeeTheme.color.textColors.title,
                     )
 
-                    Box(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(16.dp))
-                            .background(Color(0x1A000000))
-                            .dashedBorder(
-                                color = TudeeTheme.color.stroke,
-                                shape = RoundedCornerShape(16.dp),
-                                strokeWidth = 2.dp,
-                                dashLength = 6.dp,
-                                gapLength = 6.dp,
-                                cap = StrokeCap.Round
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Image(
-                            modifier = Modifier
-                                .height(113.dp),
-                            painter = categoryImage,
-                            contentDescription = null
-                        )
-
-                        IconButton(onClick = { }) {
-                            Icon(
-                                painter = painterResource(R.drawable.pencil_edit),
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(12.dp))
-                                    .background(TudeeTheme.color.surfaceHigh)
-                                    .padding(6.dp)
-                                    .size(20.dp),
-                                contentDescription = stringResource(R.string.back_button),
-                                tint = TudeeTheme.color.secondary
-                            )
-                        }
-                    }
-
+                    EditCategoryImage(
+                        categoryImage = categoryImage,
+                        onEditImageClicked = onEditCategoryImageClicked
+                    )
                 }
             }
 
@@ -163,39 +132,89 @@ fun EditCategorySheet(
                     .padding(vertical = 12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                PrimaryButton(
-                    modifier = Modifier
-                        .fillMaxWidth(), onClick = {
-                        onDeleteButtonClicked()
-                    }, state = deleteButtonUiState
-                ) {
-                    Text(
-                        text = "Save",
-                        style = TudeeTheme.textStyle.label.large
-                    )
-                }
-                SecondaryButton(modifier = Modifier.fillMaxWidth(), onClick = {
-                    onCancelButtonClicked()
-                }) {
-                    Text(
-                        text = "Cancel",
-                        style = TudeeTheme.textStyle.label.large
-                    )
-                }
+                SaveButton(onSaveButtonClicked)
+                CancelButton(onCancelButtonClicked)
             }
         }
     }
 }
 
 @Composable
-private fun SheetHeader(title: String, onDeleteButtonClicked: () -> Unit) {
+private fun CancelButton(onCancelButtonClicked: () -> Unit) {
+    SecondaryButton(
+        modifier = Modifier.fillMaxWidth(),
+        onClick = onCancelButtonClicked
+    ) {
+        Text(
+            text = "Cancel",
+            style = TudeeTheme.textStyle.label.large
+        )
+    }
+}
+
+@Composable
+private fun SaveButton(onSaveButtonClicked: () -> Unit) {
+    PrimaryButton(
+        modifier = Modifier.fillMaxWidth(),
+        onClick = onSaveButtonClicked
+    ) {
+        Text(
+            text = "Save",
+            style = TudeeTheme.textStyle.label.large
+        )
+    }
+}
+
+@Composable
+private fun EditCategoryImage(
+    categoryImage: Painter,
+    onEditImageClicked: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .clip(RoundedCornerShape(16.dp))
+            .background(Color(0x1A000000))
+            .dashedBorder(
+                color = TudeeTheme.color.stroke,
+                shape = RoundedCornerShape(16.dp),
+                strokeWidth = 2.dp,
+                dashLength = 6.dp,
+                gapLength = 6.dp,
+                cap = StrokeCap.Round
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        Image(
+            modifier = Modifier
+                .height(113.dp),
+            painter = categoryImage,
+            contentDescription = stringResource(R.string.category_image_desc)
+        )
+
+        IconButton(onClick = onEditImageClicked) {
+            Icon(
+                painter = painterResource(R.drawable.pencil_edit),
+                modifier = Modifier
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(TudeeTheme.color.surfaceHigh)
+                    .padding(6.dp)
+                    .size(20.dp),
+                contentDescription = stringResource(R.string.back_button),
+                tint = TudeeTheme.color.secondary
+            )
+        }
+    }
+}
+
+@Composable
+private fun SheetHeader(sheetTitle: String, onDeleteButtonClicked: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        SheetTitle(title)
+        SheetTitle(sheetTitle)
         DeleteButton(onDeleteButtonClicked)
     }
 }
@@ -229,12 +248,9 @@ private fun SheetTitle(title: String) {
 private fun EditCategorySheetPreview() {
     EditCategorySheet(
         isBottomSheetVisible = true,
-        deleteButtonUiState = ButtonState.IDLE,
-        cancelButtonUiState = ButtonState.IDLE,
         onBottomSheetDismissed = {},
         onDeleteButtonClicked = {},
         onCancelButtonClicked = {},
-        saveButtonUiState = ButtonState.IDLE,
         onSaveButtonClicked = {},
         onEditCategoryImageClicked = {}
     )
