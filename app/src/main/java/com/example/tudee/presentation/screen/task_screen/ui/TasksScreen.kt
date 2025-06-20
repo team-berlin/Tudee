@@ -253,7 +253,6 @@ fun TasksScreenContent(
 
 @Composable
 private fun DateSection(
-//    taskScreenUiState: TasksScreenUiState,
     listOfDateCardUiState: List<DateCardUiState>,
     datePickerUiState: DateUiState,
     onCalendarClicked: () -> Unit,
@@ -262,7 +261,6 @@ private fun DateSection(
     onNextArrowClicked: () -> Unit,
 ) {
     DataHeader(
-//        selectedMonth = datePickerUiState.selectedMonth,
         selectedMonth = datePickerUiState.selectedMonth.month.getDisplayName(
             TextStyle.SHORT,
             Locale.getDefault()
