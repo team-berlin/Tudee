@@ -4,7 +4,11 @@ sealed class Destination(val route: String) {
     object SplashScreen : Destination("splashScreen")
     object OnBoardingScreen : Destination("onBoardingScreen")
     object HomeScreen : Destination("homeScreen")
-    object TasksScreen : Destination("tasksScreen")
+    object TasksScreen : Destination("tasksScreen/{status}"){
+        fun createRoute(status: String) = "tasksScreen/$status"
+    }
+
+    object TasksScreenWithParam : Destination("tasksScreen/{status}")
     object CategoriesScreen : Destination("categoriesScreen")
     object CategoryDetailsScreen : Destination("categoryDetailsScreen")
 }
