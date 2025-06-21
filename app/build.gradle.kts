@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp")
+    id("org.jetbrains.kotlinx.kover")
 }
 
 android {
@@ -75,4 +76,24 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.truth)
     testImplementation(libs.kotlinx.coroutines.test)
+}
+
+kover {
+    reports {
+        filters {
+            includes {
+                classes("**ViewModel")
+                classes("**viewModel")
+                classes("**viewmodel")
+                classes("**Viewmodel")
+            }
+        }
+        verify {
+            rule {
+                bound {
+                    minValue = 70
+                }
+            }
+        }
+    }
 }
