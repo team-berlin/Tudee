@@ -1,13 +1,10 @@
 package com.example.tudee.presentation.screen.task_screen.ui_states
 
 import androidx.annotation.StringRes
-import com.example.tudee.domain.entity.TaskPriority
-import com.example.tudee.domain.entity.TaskStatus
 import com.example.tudee.presentation.components.TabBarItem
 import com.example.tudee.presentation.composables.buttons.ButtonState
 import com.example.tudee.presentation.screen.task_screen.viewmodel.defaultTabBarItem
 import com.example.tudee.presentation.viewmodel.taskuistate.TaskDetailsUiState
-import java.time.LocalDate
 import java.time.YearMonth
 
 data class TasksScreenUiState(
@@ -24,7 +21,8 @@ data class TasksScreenUiState(
     val deleteBottomSheetUiState: DeleteBottomSheetUiState = DeleteBottomSheetUiState(),
     val idOfTaskToBeDeleted: Long = 0,
     val noCurrentTasks: Boolean = listOfTasksUiState.isEmpty(),
-    val taskDetailsUiState: TaskDetailsUiState?=null,
+    val taskDetailsUiState: TaskDetailsUiState? = null,
+    val status: String="",
 )
 
 data class DateUiState(

@@ -16,7 +16,6 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -32,12 +31,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.tudee.R
-import com.example.tudee.data.mapper.getCategoryIcon
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.naviagtion.Destination
-import com.example.tudee.presentation.components.BottomNavItem
 import com.example.tudee.presentation.components.CategoryItemWithBadge
-import com.example.tudee.presentation.components.NavBar
 import com.example.tudee.presentation.components.TopAppBar
 import com.example.tudee.presentation.components.TudeeScaffold
 import com.example.tudee.presentation.composables.buttons.ButtonDefaults
@@ -68,7 +64,7 @@ fun CategoriesScreen(
         onCategoryClick = { categoryId ->
             navigateToCategoryDetails(navController, categoryId)
         },
-        onAddCategoryClick = {showAddCategoryBottomSheet()},
+        onAddCategoryClick = { showAddCategoryBottomSheet() },
         currentRoute = currentRoute,
         navController = navController
     )
@@ -136,7 +132,7 @@ fun CategoriesScreenContent(
                         items = state.categories
                     ) { category ->
                         CategoryItemWithBadge(
-                            categoryPainter = painterResource(getCategoryIcon(category.iconResId.toString())),
+                            categoryPainter = painterResource(R.drawable.category),
                             categoryName = category.name,
                             badgeCount = category.tasksCount,
                             categoryImageContentDescription = category.name,
@@ -185,9 +181,6 @@ private fun navigateToCategoryDetails(navController: NavHostController, category
 private fun showAddCategoryBottomSheet() {
     // TODO: Replace with your actual bottom sheet handling logic
 }
-
-
-
 
 
 @Preview(showBackground = true)

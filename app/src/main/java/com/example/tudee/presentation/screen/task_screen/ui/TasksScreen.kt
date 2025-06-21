@@ -9,6 +9,8 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
@@ -66,6 +68,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.tudee.R
+import com.example.tudee.data.mapper.getCategoryIcon
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.naviagtion.Destination
 import com.example.tudee.presentation.components.BottomNavItem
@@ -89,7 +92,6 @@ import com.example.tudee.presentation.screen.task_screen.ui_states.TaskUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.TasksScreenUiState
 import com.example.tudee.presentation.screen.task_screen.viewmodel.TasksScreenViewModel
 import com.example.tudee.presentation.screen.taskscreen.addTask.AddBottomSheet
-import com.example.tudee.presentation.screen.taskscreen.editTask.EditeBottomSheet
 import com.example.tudee.presentation.viewmodel.AddTaskBottomSheetViewModel
 import com.example.tudee.presentation.viewmodel.uistate.TaskBottomSheetState
 import kotlinx.coroutines.delay
@@ -100,19 +102,22 @@ import java.util.Locale
 import kotlin.math.roundToInt
 
 @Composable
-fun TasksScreen(navController: NavController, status: String) {
+fun TasksScreen(navController: NavController, status: Int) {
     val tasksScreenViewModel: TasksScreenViewModel = koinViewModel()
     val taskScreenUiState by tasksScreenViewModel.taskScreenUiState.collectAsState()
 
     val addTaskBottomSheetViewModel: AddTaskBottomSheetViewModel = koinViewModel()
     val addTaskBottomSheetUiState by addTaskBottomSheetViewModel.uiState.collectAsState()
-
+    LaunchedEffect(status) {
+        tasksScreenViewModel.updateStatus(status)
+    }
+    //tasksScreenViewModel.updateStatus(status)
     TasksScreenContent(
         navController = navController,
         addTaskBottomSheetUiState = addTaskBottomSheetUiState,
         showAddTaskBottomSheet = addTaskBottomSheetViewModel::showButtonSheet,
         hideAddTaskBottomSheet = addTaskBottomSheetViewModel::hideButtonSheet,
-        addTaskBottomSheetViewModel=addTaskBottomSheetViewModel,
+        addTaskBottomSheetViewModel = addTaskBottomSheetViewModel,
         taskScreenUiState = taskScreenUiState,
         onTabSelected = tasksScreenViewModel::onTabSelected,
         onTaskCardClicked = tasksScreenViewModel::onTaskCardClicked,
@@ -192,10 +197,10 @@ fun TasksScreenContent(
         }
 
 
-        if (taskScreenUiState.taskDetailsUiState!=null) {
+        if (taskScreenUiState.taskDetailsUiState != null) {
             ModalBottomSheet(
                 onDismissRequest = {
-                   hideDetailsBottomSheet()
+                    hideDetailsBottomSheet()
                 },
                 sheetState = rememberModalBottomSheetState(),
                 containerColor = TudeeTheme.color.surface
@@ -262,7 +267,7 @@ fun TasksScreenContent(
 
 
         }
-        
+
     }
     SnackBarSection(
         isSnackBarVisible = taskScreenUiState.isSnackBarVisible,
@@ -384,7 +389,7 @@ fun TasksListContent(
         AnimatedContent(
             targetState = listOfTasks,
             transitionSpec = {
-                fadeIn(tween(1000)) togetherWith fadeOut(tween(1000))
+                scaleIn(tween(1000)) togetherWith scaleOut(tween(1000))
             },
         ) { listOfTasks ->
             LazyColumn(
@@ -426,7 +431,7 @@ fun TasksListContent(
                             priorityBackgroundColor = priorityBackgroundColor,
                             taskIcon = {
                                 Icon(
-                                    painter = painterResource(id = R.drawable.ic_category_book_open),
+                                    painter = painterResource(getCategoryIcon(task.categoryIcon)),
                                     contentDescription = "Task Icon",
                                     modifier = Modifier.size(32.dp),
                                     tint = Color.Unspecified
@@ -556,8 +561,7 @@ fun SwipeableCardWrapper(
             .fillMaxWidth()
             .clip(RoundedCornerShape(12.dp))
             // .clickable { onTaskCardClicked() }
-            .background(TudeeTheme.color.statusColors.errorVariant)
-          ,
+            .background(TudeeTheme.color.statusColors.errorVariant),
         contentAlignment = Alignment.CenterEnd
     ) {
         IconButton(
@@ -777,8 +781,10 @@ fun TaskScreenBottomAppBar(navController: NavController) {
                 selectedIcon = painterResource(id = R.drawable.category_select),
                 route = Destination.CategoriesScreen.route
             )
-        ), currentRoute = navController.currentDestination?.route ?: Destination.HomeScreen.route, onNavDestinationClicked = { route ->
-            when(route) {
+        ),
+        currentRoute = navController.currentDestination?.route ?: Destination.HomeScreen.route,
+        onNavDestinationClicked = { route ->
+            when (route) {
                 Destination.HomeScreen.route -> {
                     navController.navigate(Destination.HomeScreen.route)
                 }

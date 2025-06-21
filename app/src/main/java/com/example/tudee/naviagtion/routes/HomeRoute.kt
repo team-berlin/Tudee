@@ -13,13 +13,13 @@ fun NavGraphBuilder.homeRoute (
         HomeScreen(
             navController = navController,
             navigateDoneTasks = {
-                navController.navigate(Destination.TasksScreen.route + "/done")
+                navController.navigate(Destination.TasksScreen.createRoute(2))
             },
             navigateInProgressTasks = {
-                navController.navigate(Destination.TasksScreen.route + "/in_progress")
+                navController.navigate(Destination.TasksScreen.createRoute(0))
             },
             navigateTodoTasks = {
-                navController.navigate(Destination.TasksScreen.route + "/todo")
+                navController.navigate(Destination.TasksScreen.createRoute(1))
             }
         )
     }

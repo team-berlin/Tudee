@@ -1,6 +1,5 @@
 package com.example.tudee.presentation.screen.task_screen.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tudee.domain.TaskCategoryService
@@ -40,9 +39,10 @@ class TasksScreenViewModel(
     val triggerEffectVersion: StateFlow<Int> = _triggerEffectVersion
 
     init {
+
         viewModelScope.launch {
             _taskScreenUiState.update { it.copy(isLoading = true) }
-            getTasksByStatus(TaskStatus.IN_PROGRESS)
+            getTasksByStatus(TaskStatus.TODO,1)
             _taskScreenUiState.update { it.copy(isLoading = false) }
         }
 
@@ -92,6 +92,10 @@ class TasksScreenViewModel(
         }
     }
 
+
+    fun updateStatus(status: Int) {
+        _taskScreenUiState.update { it.copy(selectedTabIndex =  status) }
+    }
     override fun onCancelButtonClicked() {
         _taskScreenUiState.update {
             it.copy(isBottomSheetVisible = false)

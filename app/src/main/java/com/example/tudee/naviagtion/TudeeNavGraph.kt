@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.example.tudee.naviagtion.routes.categoriesRoute
 import com.example.tudee.naviagtion.routes.categoryDetailsRoute
+//import com.example.tudee.naviagtion.routes.categoryDetailsRoute
 import com.example.tudee.naviagtion.routes.homeRoute
 import com.example.tudee.naviagtion.routes.onBoardingRoute
 //import com.example.tudee.naviagtion.routes.onBoardingRoute
