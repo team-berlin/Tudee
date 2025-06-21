@@ -1,6 +1,5 @@
 package com.example.tudee.presentation.screen.task_screen.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tudee.domain.TaskCategoryService
@@ -24,10 +23,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.YearMonth
-import java.util.Locale
 import java.time.LocalDate
+import java.time.YearMonth
 import java.time.format.TextStyle
+import java.util.Locale
 
 class TasksScreenViewModel(
     private val taskService: TaskService,
@@ -42,7 +41,7 @@ class TasksScreenViewModel(
     init {
         viewModelScope.launch {
             _taskScreenUiState.update { it.copy(isLoading = true) }
-            getTasksByStatus(TaskStatus.IN_PROGRESS)
+            getTasksByStatus(TaskStatus.TODO)
             _taskScreenUiState.update { it.copy(isLoading = false) }
         }
 
@@ -134,6 +133,7 @@ class TasksScreenViewModel(
 
         }
     }
+
     fun hideDetialsBottomSheet() {
         _taskScreenUiState.update {
             it.copy(
@@ -205,7 +205,7 @@ class TasksScreenViewModel(
         }
     }
 
-    private suspend fun getCategoryIconById(categoryId: Long): String {
+    suspend fun getCategoryIconById(categoryId: Long): String {
         return categoryService.getCategoryIconById(categoryId)
     }
 
@@ -234,6 +234,7 @@ class TasksScreenViewModel(
                     )
                 }
             }
+            //Log.d("WOW", "getTasksByStatus: ${_taskScreenUiState.value.listOfTasksUiState}")
         }
     }
 
