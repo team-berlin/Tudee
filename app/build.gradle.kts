@@ -69,6 +69,14 @@ dependencies {
 
 kover {
     reports {
+        filters {
+            includes {
+                classes("**ViewModel")
+                classes("**viewModel")
+                classes("**viewvodel")
+                classes("**Viewmodel")
+            }
+        }
         verify {
             rule {
                 bound {
