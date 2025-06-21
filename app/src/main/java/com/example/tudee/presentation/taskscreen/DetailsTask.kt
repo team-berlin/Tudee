@@ -27,6 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
+import com.example.tudee.data.mapper.getCategoryIcon
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.domain.entity.TaskPriority
 import com.example.tudee.domain.entity.TaskStatus
@@ -80,8 +81,8 @@ private fun TaskCategoryIcon(categoryIconRes: Int) {
         contentAlignment = Alignment.Center
     ) {
         Icon(
-            painter = painterResource(R.drawable.tudee),
-            contentDescription = stringResource(R.string.category_icon),
+            painter = painterResource(getCategoryIcon(categoryIconRes)),
+            contentDescription = "category icon",
             modifier = Modifier.size(32.dp),
             tint = Color.Unspecified
         )

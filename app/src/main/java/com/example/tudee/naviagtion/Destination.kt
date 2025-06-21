@@ -10,5 +10,9 @@ sealed class Destination(val route: String) {
 
     object TasksScreenWithParam : Destination("tasksScreen/{status}")
     object CategoriesScreen : Destination("categoriesScreen")
-    object CategoryDetailsScreen : Destination("categoryDetailsScreen")
+    object CategoryDetailsScreen : Destination("categoryDetailsScreen") {
+        const val categoryIdArg = "categoryId"
+        fun withArgs(categoryId: Long): String = "$route/$categoryId"
+        val fullRoute = "$route/{$categoryIdArg}"
+    }
 }

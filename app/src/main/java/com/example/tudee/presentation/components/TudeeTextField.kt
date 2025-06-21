@@ -33,6 +33,7 @@ import com.example.tudee.designsystem.theme.TudeeTheme
 @Composable
 fun TudeeTextField(
     value: String,
+    enabled: Boolean = true,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     singleLine: Boolean = true,
@@ -45,6 +46,7 @@ fun TudeeTextField(
     val shape = RoundedCornerShape(12.dp)
 
     BasicTextField(
+        enabled = enabled,
         modifier = modifier
             .fillMaxWidth()
             .clip(shape)

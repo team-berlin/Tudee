@@ -2,6 +2,7 @@ package com.example.tudee
 
 import android.app.Application
 import com.example.tudee.di.appModule
+import com.example.tudee.di.categoryModule
 import com.example.tudee.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -13,7 +14,7 @@ class TudeeApplication : Application(){
         startKoin {
             androidLogger()
             androidContext(this@TudeeApplication)
-            modules(appModule,viewModelModule)
+            modules(appModule,viewModelModule,categoryModule)
         }
     }
 }

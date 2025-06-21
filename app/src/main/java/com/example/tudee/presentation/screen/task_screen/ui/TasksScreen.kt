@@ -64,7 +64,6 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -93,6 +92,8 @@ import com.example.tudee.presentation.screen.task_screen.ui_states.TaskUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.TasksScreenUiState
 import com.example.tudee.presentation.screen.task_screen.viewmodel.TasksScreenViewModel
 
+import com.example.tudee.presentation.screen.taskscreen.addTask.AddBottomSheet
+import com.example.tudee.presentation.screen.taskscreen.editTask.EditeBottomSheet
 import com.example.tudee.presentation.viewmodel.AddTaskBottomSheetViewModel
 import com.example.tudee.presentation.viewmodel.uistate.TaskBottomSheetState
 import kotlinx.coroutines.delay
@@ -112,6 +113,7 @@ fun TasksScreen(navController: NavController) {
     val addButtonState by addTaskBottomSheetViewModel.isTaskValid.collectAsState()
 
     TasksScreenContent(
+        navController = navController,
         addTaskBottomSheetUiState = addTaskBottomSheetUiState,
         showAddTaskBottomSheet = addTaskBottomSheetViewModel::showButtonSheet,
         hideAddTaskBottomSheet = addTaskBottomSheetViewModel::hideButtonSheet,
@@ -139,6 +141,7 @@ fun TasksScreen(navController: NavController) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TasksScreenContent(
+    navController: NavController,
     taskScreenUiState: TasksScreenUiState,
     onDayCardClicked: (Int) -> Unit,
     onCalendarClicked: () -> Unit,
@@ -167,7 +170,7 @@ fun TasksScreenContent(
         showTopAppBar = true,
         topAppBar = { TaskScreenTopAppBar() },
         showBottomBar = true,
-        bottomBarContent = { TaskScreenBottomAppBar() },
+        bottomBarContent = { TaskScreenBottomAppBar(navController) },
         showFab = true,
         floatingActionButton = {
             TaskScreenFloatingActionButton {
@@ -281,13 +284,15 @@ fun TasksScreenContent(
                 deleteButtonUiState = taskScreenUiState.deleteBottomSheetUiState.deleteButtonState,
                 cancelButtonUiState = taskScreenUiState.deleteBottomSheetUiState.cancelButtonState
             )
+
+
         }
 
-        SnackBarSection(
-            isSnackBarVisible = taskScreenUiState.isSnackBarVisible, hideSnackBar = hideSnackBar
-        )
-
     }
+    SnackBarSection(
+        isSnackBarVisible = taskScreenUiState.isSnackBarVisible,
+        hideSnackBar = hideSnackBar
+    )
 }
 
 
@@ -444,7 +449,14 @@ fun TasksListContent(
                             description = task.description,
                             priority = stringResource(task.priority),
                             priorityBackgroundColor = priorityBackgroundColor,
-                            taskIcon = { task.categoryIcon },
+                            taskIcon = {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_category_book_open),
+                                    contentDescription = "Task Icon",
+                                    modifier = Modifier.size(32.dp),
+                                    tint = Color.Unspecified
+                                )
+                            },
                             onClick = { onTaskCardClicked(task) },
                             priorityIcon = priorityIcon,
                         )
@@ -774,8 +786,7 @@ private fun TaskScreenTopAppBar() {
 }
 
 @Composable
-
-private fun TaskScreenBottomAppBar() {
+fun TaskScreenBottomAppBar(navController: NavController) {
     NavBar(
         navDestinations = listOf(
             BottomNavItem(
@@ -791,7 +802,21 @@ private fun TaskScreenBottomAppBar() {
                 selectedIcon = painterResource(id = R.drawable.category_select),
                 route = Destination.CategoriesScreen.route
             )
-        ), currentRoute = Destination.TasksScreen.route, onNavDestinationClicked = {})
+        ), currentRoute = navController.currentDestination?.route ?: Destination.HomeScreen.route, onNavDestinationClicked = { route ->
+            when(route) {
+                Destination.HomeScreen.route -> {
+                    navController.navigate(Destination.HomeScreen.route)
+                }
+
+                Destination.TasksScreen.route -> {
+                    navController.navigate(Destination.TasksScreen.route)
+                }
+
+                Destination.CategoriesScreen.route -> {
+                    navController.navigate(Destination.CategoriesScreen.route)
+                }
+            }
+        })
 }
 
 
