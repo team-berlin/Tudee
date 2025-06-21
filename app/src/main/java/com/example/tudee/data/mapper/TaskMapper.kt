@@ -29,7 +29,7 @@ fun TaskEntity.toDomain(): Task {
         priority = TaskPriority.valueOf(this.priority),
         categoryId = this.categoryId,
         status = TaskStatus.valueOf(this.status),
-        assignedDate = this.assignedDate.toLocalDate()
+        assignedDate = this.assignedDate.toLocalDate().toString()
     )
 }
 

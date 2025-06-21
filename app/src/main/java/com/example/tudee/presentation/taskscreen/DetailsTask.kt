@@ -32,12 +32,14 @@ import com.example.tudee.domain.entity.TaskPriority
 import com.example.tudee.domain.entity.TaskStatus
 import com.example.tudee.presentation.components.TudeeChip
 import com.example.tudee.presentation.composables.buttons.SecondaryButton
+import com.example.tudee.presentation.viewmodel.AddTaskBottomSheetViewModel
 import com.example.tudee.presentation.viewmodel.taskuistate.TaskDetailsUiState
 
 @Composable
 fun TaskDetailsScreen(
     taskDetailsState: TaskDetailsUiState,
-    onEditButtonClicked: () -> Unit,
+    addTaskBottomSheetViewModel: AddTaskBottomSheetViewModel
+
 ) {
     Column(
         modifier = Modifier
@@ -55,7 +57,7 @@ fun TaskDetailsScreen(
             priority = taskDetailsState.priority
         )
         if (taskDetailsState.status != TaskStatus.DONE) {
-            TaskActionButtons( onEditButtonClick = onEditButtonClicked)
+            TaskActionButtons(addTaskBottomSheetViewModel,taskDetailsState)
         }
     }
 }
@@ -112,15 +114,19 @@ private fun TaskStatusAndPriorityChips(status: TaskStatus, priority: TaskPriorit
 }
 
 @Composable
-private fun TaskActionButtons(onEditButtonClick: () -> Unit = {}) {
+private fun TaskActionButtons(
+    addTaskBottomSheetViewModel: AddTaskBottomSheetViewModel,
+    taskDetailsState: TaskDetailsUiState) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         IconFab(
             onClick = {
-                onEditButtonClick()
-            },
+                addTaskBottomSheetViewModel.getTaskInfoById(taskDetailsState.id)
+                addTaskBottomSheetViewModel.run {
+                    showButtonSheet()
+                } },
             icon = painterResource(R.drawable.pencil_edit),
             contentDescription = stringResource(R.string.edit_icon)
         )
@@ -201,18 +207,18 @@ private fun getStatusLabelColor(status: TaskStatus): Color {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun TaskDetailsScreenPreview() {
-    TudeeTheme {
-        val sampleTask = TaskDetailsUiState(
-            id = 1L,
-            title = "Study Jetpack Compose",
-            description = "Finish the layout chapter and preview tips",
-            categoryIconRes = R.drawable.ic_category_book_open,
-            priority = TaskPriority.HIGH,
-            status = TaskStatus.IN_PROGRESS,
-        )
-        TaskDetailsScreen(sampleTask, {})
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun TaskDetailsScreenPreview() {
+//    TudeeTheme {
+//        val sampleTask = TaskDetailsUiState(
+//            id = 1L,
+//            title = "Study Jetpack Compose",
+//            description = "Finish the layout chapter and preview tips",
+//            categoryIconRes = R.drawable.ic_category_book_open,
+//            priority = TaskPriority.HIGH,
+//            status = TaskStatus.IN_PROGRESS,
+//        )
+//        TaskDetailsScreen(sampleTask, {})
+//    }
+//}

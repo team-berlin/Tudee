@@ -36,9 +36,7 @@ class AddTaskBottomSheetViewModel(
 //    private val _isEditModeOn: MutableStateFlow<Boolean> = MutableStateFlow(false)
 //    val isEditModeOn = _isEditModeOn.asStateFlow()
 
-    fun toggleEditMode(on: Boolean) {
-        _uiState.update { it.copy(isEditMode = on) }
-    }
+
 
 
     val isTaskValid: StateFlow<Boolean> = _uiState
