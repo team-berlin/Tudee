@@ -73,7 +73,7 @@ kover {
             includes {
                 classes("**ViewModel")
                 classes("**viewModel")
-                classes("**viewvodel")
+                classes("**viewmodel")
                 classes("**Viewmodel")
             }
         }
