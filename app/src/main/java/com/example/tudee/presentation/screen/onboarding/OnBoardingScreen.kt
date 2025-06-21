@@ -22,7 +22,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.tudee.R
@@ -38,7 +37,7 @@ import kotlinx.coroutines.launch
 fun OnBoardingScreen(
     modifier: Modifier = Modifier,
     navController: NavController = rememberNavController(),
-
+    //viewModel: OnBoardingViewModel = koinViewModel(),
     ) {
     val onboardingOnBoardingPageUiModels = listOf(
         OnBoardingPageUiModel(
@@ -73,13 +72,14 @@ fun OnBoardingScreen(
         onBoardingPageUiModels = onboardingOnBoardingPageUiModels,
         orientation = orientation,
         navController = navController,
+       // viewModel = viewModel
         )
 }
 
 @Composable
-private fun OnBoardingContent(
+ private fun OnBoardingContent(
     modifier: Modifier = Modifier,
-    viewModel: OnBoardingViewModel = viewModel(),
+   // viewModel: OnBoardingViewModel ,
     onBoardingPageUiModels: List<OnBoardingPageUiModel>,
     pageState: PagerState,
     scope: CoroutineScope,
@@ -125,7 +125,7 @@ private fun OnBoardingContent(
                             pageState.animateScrollToPage(pageState.currentPage + Pages.SecondPage.page)
                         } else {
                             navController.navigate(Destination.HomeScreen.route)
-                            viewModel.saveFirstEntry()
+                            //viewModel.saveFirstEntry()
                         }
                     }
                 }
