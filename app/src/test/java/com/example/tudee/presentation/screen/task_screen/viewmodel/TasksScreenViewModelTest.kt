@@ -8,6 +8,7 @@ import com.example.tudee.domain.entity.TaskStatus
 import com.example.tudee.presentation.screen.task_screen.mappers.TaskStatusUiState
 import com.example.tudee.presentation.screen.task_screen.mappers.taskToTaskUiState
 import com.example.tudee.presentation.screen.task_screen.mappers.toDomain
+import com.example.tudee.presentation.screen.task_screen.ui_states.DateCardUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.TaskUiState
 import com.example.tudee.presentation.viewmodel.taskuistate.TaskDetailsUiState
 import com.google.common.truth.Truth.assertThat
@@ -20,6 +21,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
@@ -244,6 +246,60 @@ class TasksScreenViewModelTest {
         )
 
         assertTrue(state.daysCardsData.any { it.isSelected })
+    }
+
+    @Test
+    fun `onDayCardClicked should update selected card only`() = runTest {
+        val initialCards = listOf(
+            DateCardUiState(dayNumber = 1, dayName = "Sat", isSelected = false),
+            DateCardUiState(dayNumber = 2, dayName = "Sun", isSelected = false),
+            DateCardUiState(dayNumber = 3, dayName = "Mon", isSelected = false),
+        )
+        val initialTasks = dummyTasks
+        coEvery { taskService.getTasksByStatus(any()) } returns MutableStateFlow(initialTasks)
+        coEvery { categoryService.getCategoryIconById(any()) } returns "test"
+
+        tasksScreenViewModel.taskScreenUiState.update {
+            it.copy(dateUiState = it.dateUiState.copy(daysCardsData = initialCards))
+        }
+
+        // Act
+        tasksScreenViewModel.onDayCardClicked(1)
+
+        // Assert
+        val updated = tasksScreenViewModel.taskScreenUiState.value.dateUiState.daysCardsData
+        assertTrue(updated[1].isSelected)
+        assertFalse(updated[0].isSelected)
+        assertFalse(updated[2].isSelected)
+    }
+
+    @Test
+    fun `onConfirmDatePicker should update selected date and trigger effects`() = runTest {
+        val millis = 1752556800000L
+        val initialCards = (1..30).map {
+            DateCardUiState(dayNumber = it, dayName = "Sat", isSelected = false)
+        }
+        val initialTasks = dummyTasks
+        coEvery { taskService.getTasksByStatus(any()) } returns MutableStateFlow(initialTasks)
+        coEvery { categoryService.getCategoryIconById(any()) } returns "test"
+        tasksScreenViewModel.taskScreenUiState.update {
+            it.copy(
+                dateUiState = it.dateUiState.copy(
+                    daysCardsData = initialCards
+                )
+            )
+        }
+        val initialTrigger = tasksScreenViewModel.triggerEffectVersion.value
+
+        tasksScreenViewModel.onConfirmDatePicker(millis)
+
+        val updatedUiState = tasksScreenViewModel.taskScreenUiState.value
+        val updatedDateState = updatedUiState.dateUiState
+
+        assertEquals("2025", updatedDateState.selectedYear)
+        assertTrue(updatedDateState.daysCardsData[14].isSelected)
+        assertFalse(updatedDateState.daysCardsData[0].isSelected)
+        assertEquals(initialTrigger + 1, tasksScreenViewModel.triggerEffectVersion.value)
     }
 
     @After
