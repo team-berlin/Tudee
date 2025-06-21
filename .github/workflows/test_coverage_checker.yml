@@ -23,4 +23,4 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build and Run Tests with Coverage Check
-        run: ./gradlew check
+        run: ./gradlew koverVerify
