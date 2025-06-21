@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tudee.domain.TaskCategoryService
 import com.example.tudee.domain.TaskService
+import com.example.tudee.domain.request.CategoryCreationRequest
 import com.example.tudee.presentation.screen.category.mapper.toUiModel
 import com.example.tudee.presentation.screen.category.model.CategoriesUiState
 import kotlinx.coroutines.async
@@ -47,11 +48,24 @@ class CategoriesViewModel(
     }
 
     fun addCategory(name: String, iconUrl: String) {
-        // TODO: Add validation and call taskCategoryService.createCategory()
-    }
+        viewModelScope.launch {
+            try {
+                if (name.isBlank()) {
+                    _uiState.update { it.copy(error = "Category name cannot be empty") }
+                    return@launch
+                }
 
-    fun onCategoryClicked(id: Long) {
-        // TODO: Emit navigation event or update state if needed
+                taskCategoryService.createCategory(
+                    CategoryCreationRequest(
+                        title = name.trim(),
+                        image = iconUrl
+                    )
+                )
+                loadCategories()
+            } catch (e: Exception) {
+                _uiState.update { it.copy(error = e.message ?: "Unknown error") }
+            }
+        }
     }
 }
 
