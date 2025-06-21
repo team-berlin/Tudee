@@ -156,7 +156,7 @@ class TasksScreenViewModelTest {
     }
 
     @Test
-    fun `should onBottomSheetDismissed when onBottomSheetDismissed`() {
+    fun `should hideBottomSheet when onBottomSheetDismissed`() {
         tasksScreenViewModel.onBottomSheetDismissed()
         val state = tasksScreenViewModel.taskScreenUiState.value
         assertFalse(state.isSnackBarVisible)
@@ -172,7 +172,7 @@ class TasksScreenViewModelTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun `should getTasksByStatus when onTabSelected is called`() = runTest {
+    fun `should update list when onTabSelected is called`() = runTest {
         val statusUiState = TaskStatusUiState.entries[0]
         val status = statusUiState.toDomain()
         coEvery { taskService.getTasksByStatus(any()) } returns emptyFlow()

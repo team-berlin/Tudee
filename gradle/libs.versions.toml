@@ -10,7 +10,6 @@ kotlinxCoroutinesTest = "1.8.1"
 kotlinxDatetime = "0.5.0"
 lifecycleRuntimeKtx = "2.9.1"
 activityCompose = "1.10.1"
-mockk = "1.13.8"
 composeBom = "2024.04.01"
 mockk = "1.13.8"
 navigationCompose = "2.9.0"
@@ -26,7 +25,6 @@ androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref =
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRuntime" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
-mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilCompose" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -52,4 +50,3 @@ truth = { module = "com.google.truth:truth", version.ref = "truth" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-
