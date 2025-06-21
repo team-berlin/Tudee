@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
 
             TudeeTheme {
 
-               TasksScreen(navController, status)
+               TasksScreen(navController)
 
                 Column(Modifier.padding(50.dp)) {
                     //   EditeBottomSheet(taskId = 1L)

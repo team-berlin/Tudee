@@ -42,7 +42,7 @@ class TasksScreenViewModel(
     init {
         viewModelScope.launch {
             _taskScreenUiState.update { it.copy(isLoading = true) }
-            getTasksByStatus(TaskStatus.IN_PROGRESS)
+            getTasksByStatus(TaskStatus.DONE)
             _taskScreenUiState.update { it.copy(isLoading = false) }
         }
 
@@ -128,7 +128,7 @@ class TasksScreenViewModel(
                     description = taskUiState.description,
                     categoryIconRes = taskUiState.categoryIcon.toInt(),
                     priority = TaskPriority.LOW,
-                    status = TaskStatus.IN_PROGRESS
+                    status = TaskStatus.TODO
                 )
             )
 

@@ -15,13 +15,13 @@ fun NavGraphBuilder.tasksRoute(navController: NavController) {
         arguments = listOf(navArgument("status") { type = NavType.StringType })
     ) { backStackEntry ->
         val status = backStackEntry.arguments?.getString("status") ?: "IN_PROGRESS"
-        TasksScreen(navController = navController, status = status)
+        TasksScreen(navController = navController)
     }
 
 
     composable(
         route = Destination.TasksScreen.route
     ) {
-        TasksScreen(navController = navController, status = "IN_PROGRESS")
+        TasksScreen(navController = navController)
     }
 }
