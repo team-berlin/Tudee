@@ -1,18 +1,17 @@
-name: BuildChecker
+name: Check Test Coverage
 
 on:
   push:
-    branches: [ develop, main ]
+    branches: [ main ]
   pull_request:
-    branches: [ develop, main ]
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
-  build:
+  coverage-check:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Setup Java JDK
         uses: actions/setup-java@v4
@@ -23,5 +22,5 @@ jobs:
       - name: Give gradlew permission to execute
         run: chmod +x ./gradlew
 
-      - name: Build with Gradle
-        run: ./gradlew build
+      - name: Build and Run Tests with Coverage Check
+        run: ./gradlew check
