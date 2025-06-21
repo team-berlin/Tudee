@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -28,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import com.example.tudee.R
 import com.example.tudee.presentation.viewmodel.uistate.TaskBottomSheetState
 import com.example.tudee.designsystem.theme.TudeeTheme
@@ -126,13 +128,17 @@ fun TaskContent(
             }
         }
     }
+ Box (Modifier
+     .fillMaxWidth()
+     .zIndex(1f)){
+     taskState.snackBarMessage?.let { isSuccess ->
+     SnackBarSection(
+         isSnackBarVisible = isSuccess,
+         hideSnackBar = true
+     )
+ }
+ }
 
-    taskState.snackBarMessage?.let { isSuccess ->
-        SnackBarSection(
-            isSnackBarVisible = isSuccess,
-            hideSnackBar = true
-        )
-    }
 }
 
 @Composable
@@ -193,7 +199,6 @@ fun BottomSheetContent(
                 value = taskState.taskDescription
             )
         }
-        if(isEditMode==true) {
             item {
                 TudeeTextField(
                     value = taskState.taskDueDate?.toString() ?: "2024, 1, 1",
@@ -225,7 +230,7 @@ fun BottomSheetContent(
                     placeholder = stringResource(R.string.set_due_date)
                 )
             }
-        }
+
         item {
             Text(
                 text = stringResource(R.string.priority),
