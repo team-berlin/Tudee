@@ -36,9 +36,9 @@ import com.example.tudee.naviagtion.Destination
 import com.example.tudee.presentation.components.CategoryItemWithBadge
 import com.example.tudee.presentation.components.TopAppBar
 import com.example.tudee.presentation.components.TudeeScaffold
-import com.example.tudee.presentation.composables.buttons.ButtonDefaults
-import com.example.tudee.presentation.composables.buttons.ButtonState
-import com.example.tudee.presentation.composables.buttons.FabButton
+import com.example.tudee.presentation.components.buttons.ButtonDefaults
+import com.example.tudee.presentation.components.buttons.ButtonState
+import com.example.tudee.presentation.components.buttons.FabButton
 import com.example.tudee.presentation.screen.category.model.CategoriesUiState
 import com.example.tudee.presentation.screen.category.model.TaskCategoryUiModel
 import com.example.tudee.presentation.screen.category.model.UiImage

@@ -7,15 +7,15 @@ import com.example.tudee.domain.TaskService
 import com.example.tudee.domain.entity.TaskPriority
 import com.example.tudee.domain.entity.TaskStatus
 import com.example.tudee.presentation.components.TabBarItem
-import com.example.tudee.presentation.composables.buttons.ButtonState
+import com.example.tudee.presentation.components.buttons.ButtonState
 import com.example.tudee.presentation.screen.task_screen.interactors.TaskScreenInteractor
 import com.example.tudee.presentation.screen.task_screen.mappers.TaskStatusUiState
 import com.example.tudee.presentation.screen.task_screen.mappers.taskToTaskUiState
 import com.example.tudee.presentation.screen.task_screen.mappers.toDomain
 import com.example.tudee.presentation.screen.task_screen.ui_states.DateCardUiState
+import com.example.tudee.presentation.screen.task_screen.ui_states.TaskDetailsUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.TaskUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.TasksScreenUiState
-import com.example.tudee.presentation.viewmodel.taskuistate.TaskDetailsUiState
 import com.example.tudee.utils.convertMillisToLocalDate
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -30,7 +30,7 @@ import java.util.Locale
 
 class TasksScreenViewModel(
     private val taskService: TaskService,
-    private val categoryService: TaskCategoryService
+    private val categoryService: TaskCategoryService,
 ) : ViewModel(), TaskScreenInteractor {
     private val _taskScreenUiState = MutableStateFlow(TasksScreenUiState())
     val taskScreenUiState = _taskScreenUiState
@@ -47,9 +47,13 @@ class TasksScreenViewModel(
         }
 
         updateDaysInMonth(
-            month = YearMonth.now(),
-            selectedDate = LocalDate.now()
+            month = YearMonth.now(), selectedDate = LocalDate.now()
         )
+    }
+
+
+    fun updateStatus(status: Int) {
+        _taskScreenUiState.update { it.copy(selectedTabIndex = status) }
     }
 
     override fun onDayCardClicked(cardIndex: Int) {
@@ -92,10 +96,6 @@ class TasksScreenViewModel(
         }
     }
 
-
-    fun updateStatus(status: Int) {
-        _taskScreenUiState.update { it.copy(selectedTabIndex =  status) }
-    }
     override fun onCancelButtonClicked() {
         _taskScreenUiState.update {
             it.copy(isBottomSheetVisible = false)
@@ -111,7 +111,6 @@ class TasksScreenViewModel(
         }
     }
 
-    var job: Job? = null
     override fun onTabSelected(tabIndex: Int) {
         val statusUiState = TaskStatusUiState.entries[tabIndex]
         val status = statusUiState.toDomain()
@@ -139,17 +138,8 @@ class TasksScreenViewModel(
         }
     }
 
-    fun hideDetialsBottomSheet() {
-        _taskScreenUiState.update {
-            it.copy(
-                taskDetailsUiState = null
-            )
-        }
-    }
-
     override fun onCalendarClicked() {
-        _taskScreenUiState
-            .update {
+        _taskScreenUiState.update {
                 it.copy(
                     dateUiState = it.dateUiState.copy(
                         isDatePickerVisible = true
@@ -171,8 +161,7 @@ class TasksScreenViewModel(
             val localPickedDate = convertMillisToLocalDate(millis)
 
             val selectedYearMonth = YearMonth.of(
-                localPickedDate.year,
-                localPickedDate.month
+                localPickedDate.year, localPickedDate.month
             )
 
             _taskScreenUiState.update {
@@ -197,6 +186,16 @@ class TasksScreenViewModel(
         val nextMonth = _taskScreenUiState.value.dateUiState.selectedMonth.plusMonths(1)
         updateDaysInMonth(nextMonth)
     }
+
+    fun hideDetialsBottomSheet() {
+        _taskScreenUiState.update {
+            it.copy(
+                taskDetailsUiState = null
+            )
+        }
+    }
+
+    var job: Job? = null
 
     fun showSnackBar() {
         _taskScreenUiState.update {
@@ -229,14 +228,12 @@ class TasksScreenViewModel(
                         listOfTabBarItem = taskScreenUiState.value.listOfTabBarItem.mapIndexed { index, tabItem ->
                             if (index == tabIndex) {
                                 tabItem.copy(
-                                    isSelected = true,
-                                    taskCount = result.size.toString()
+                                    isSelected = true, taskCount = result.size.toString()
                                 )
                             } else {
                                 tabItem.copy(isSelected = false)
                             }
-                        }
-                    )
+                        })
                 }
             }
         }
@@ -251,8 +248,7 @@ class TasksScreenViewModel(
             state.copy(
                 dateUiState = oldDateUiState.copy(
                     selectedMonth = YearMonth.of(
-                        month.year,
-                        month.month
+                        month.year, month.month
                     ),
                     selectedYear = month.year.toString(),
                     daysCardsData = days,

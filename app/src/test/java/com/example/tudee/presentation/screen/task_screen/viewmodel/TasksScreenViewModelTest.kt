@@ -10,7 +10,7 @@ import com.example.tudee.presentation.screen.task_screen.mappers.taskToTaskUiSta
 import com.example.tudee.presentation.screen.task_screen.mappers.toDomain
 import com.example.tudee.presentation.screen.task_screen.ui_states.DateCardUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.TaskUiState
-import com.example.tudee.presentation.viewmodel.taskuistate.TaskDetailsUiState
+import com.example.tudee.presentation.screen.task_screen.ui_states.TaskDetailsUiState
 import com.google.common.truth.Truth.assertThat
 import io.mockk.clearAllMocks
 import io.mockk.coEvery

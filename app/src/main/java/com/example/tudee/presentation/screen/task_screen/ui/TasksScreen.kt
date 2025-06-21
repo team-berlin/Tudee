@@ -80,10 +80,10 @@ import com.example.tudee.presentation.components.TopAppBar
 import com.example.tudee.presentation.components.TudeeDateDialog
 import com.example.tudee.presentation.components.TudeeDayCard
 import com.example.tudee.presentation.components.TudeeScaffold
-import com.example.tudee.presentation.composables.buttons.ButtonState
-import com.example.tudee.presentation.composables.buttons.FabButton
-import com.example.tudee.presentation.composables.buttons.NegativeButton
-import com.example.tudee.presentation.composables.buttons.SecondaryButton
+import com.example.tudee.presentation.components.buttons.ButtonState
+import com.example.tudee.presentation.components.buttons.FabButton
+import com.example.tudee.presentation.components.buttons.NegativeButton
+import com.example.tudee.presentation.components.buttons.SecondaryButton
 import com.example.tudee.presentation.screen.TaskDetailsScreen
 import com.example.tudee.presentation.screen.task_screen.mappers.TaskPriorityUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.DateCardUiState
@@ -91,9 +91,10 @@ import com.example.tudee.presentation.screen.task_screen.ui_states.DateUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.TaskUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.TasksScreenUiState
 import com.example.tudee.presentation.screen.task_screen.viewmodel.TasksScreenViewModel
-import com.example.tudee.presentation.screen.taskscreen.addTask.AddBottomSheet
-import com.example.tudee.presentation.viewmodel.AddTaskBottomSheetViewModel
-import com.example.tudee.presentation.viewmodel.uistate.TaskBottomSheetState
+import com.example.tudee.presentation.screen.task_screen.addTask.AddBottomSheet
+import com.example.tudee.presentation.screen.task_screen.interactors.TaskScreenInteractor
+import com.example.tudee.presentation.screen.task_screen.viewmodel.AddTaskBottomSheetViewModel
+import com.example.tudee.presentation.screen.task_screen.ui_states.TaskBottomSheetState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -133,7 +134,8 @@ fun TasksScreen(navController: NavController, status: Int) {
         onConfirmDatePicker = tasksScreenViewModel::onConfirmDatePicker,
         hideSnackBar = tasksScreenViewModel::hideSnackBar,
         version = tasksScreenViewModel.triggerEffectVersion.collectAsState().value,
-        hideDetailsBottomSheet = tasksScreenViewModel::hideDetialsBottomSheet
+        hideDetailsBottomSheet = tasksScreenViewModel::hideDetialsBottomSheet,
+        Interactor = tasksScreenViewModel
     )
 }
 
@@ -141,6 +143,7 @@ fun TasksScreen(navController: NavController, status: Int) {
 @Composable
 fun TasksScreenContent(
     navController: NavController,
+    Interactor: TaskScreenInteractor,
     taskScreenUiState: TasksScreenUiState,
     onDayCardClicked: (Int) -> Unit,
     onCalendarClicked: () -> Unit,

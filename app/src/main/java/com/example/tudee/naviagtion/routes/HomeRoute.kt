@@ -4,7 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.example.tudee.naviagtion.Destination
-import com.example.tudee.ui.home.screen.HomeScreen
+import com.example.tudee.presentation.screen.home.screen.HomeScreen
 
 fun NavGraphBuilder.homeRoute (
     navController: NavController

@@ -2,7 +2,7 @@ package com.example.tudee.data.mapper
 
 import com.example.tudee.data.model.TaskCategoryEntity
 import com.example.tudee.domain.entity.TaskCategory
-import com.example.tudee.ui.home.viewmodel.CategoryUiState
+import com.example.tudee.presentation.screen.home.viewmodel.CategoryUiState
 
 fun TaskCategoryEntity.toDomain(): TaskCategory {
     return TaskCategory(
