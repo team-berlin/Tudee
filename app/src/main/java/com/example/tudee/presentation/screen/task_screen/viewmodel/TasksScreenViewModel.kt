@@ -23,10 +23,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.YearMonth
-import java.util.Locale
 import java.time.LocalDate
+import java.time.YearMonth
 import java.time.format.TextStyle
+import java.util.Locale
 
 class TasksScreenViewModel(
     private val taskService: TaskService,
@@ -42,7 +42,7 @@ class TasksScreenViewModel(
 
         viewModelScope.launch {
             _taskScreenUiState.update { it.copy(isLoading = true) }
-            getTasksByStatus(TaskStatus.TODO,1)
+            getTasksByStatus(TaskStatus.TODO)
             _taskScreenUiState.update { it.copy(isLoading = false) }
         }
 
@@ -138,6 +138,7 @@ class TasksScreenViewModel(
 
         }
     }
+
     fun hideDetialsBottomSheet() {
         _taskScreenUiState.update {
             it.copy(
@@ -209,7 +210,7 @@ class TasksScreenViewModel(
         }
     }
 
-    private suspend fun getCategoryIconById(categoryId: Long): String {
+    suspend fun getCategoryIconById(categoryId: Long): String {
         return categoryService.getCategoryIconById(categoryId)
     }
 
