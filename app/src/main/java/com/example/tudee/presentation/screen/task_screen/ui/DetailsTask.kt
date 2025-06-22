@@ -1,5 +1,6 @@
 package com.example.tudee.presentation.screen
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -33,6 +34,9 @@ import com.example.tudee.domain.entity.TaskPriority
 import com.example.tudee.domain.entity.TaskStatus
 import com.example.tudee.presentation.components.TudeeChip
 import com.example.tudee.presentation.components.buttons.SecondaryButton
+import com.example.tudee.presentation.screen.task_screen.mappers.TaskStatusUiState
+import com.example.tudee.presentation.screen.task_screen.mappers.toDomain
+import com.example.tudee.presentation.screen.task_screen.mappers.toUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.TaskDetailsUiState
 import com.example.tudee.presentation.viewmodel.AddTaskBottomSheetViewModel
 
@@ -57,7 +61,7 @@ fun TaskDetailsScreen(
             status = taskDetailsState.status,
             priority = taskDetailsState.priority
         )
-        if (taskDetailsState.status != TaskStatus.DONE) {
+        if (taskDetailsState.status.toDomain() != TaskStatus.DONE) {
             TaskActionButtons(addTaskBottomSheetViewModel,taskDetailsState)
         }
     }
@@ -96,13 +100,13 @@ private fun TaskTitleAndDescription(title: String, description: String) {
 }
 
 @Composable
-private fun TaskStatusAndPriorityChips(status: TaskStatus, priority: TaskPriority) {
+private fun TaskStatusAndPriorityChips(status: TaskStatusUiState, priority: TaskPriority) {
     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
         TudeeChip(
-            label = status.name.lowercase().replaceFirstChar { it.uppercase() },
+            label = stringResource(status.label),
             icon = painterResource(id = R.drawable.ic_task_status),
-            backgroundColor = getStatusLabelColor(status),
-            labelColor = getStatusColor(status),
+            backgroundColor = status.containerColor,
+            labelColor = status.contentColor,
             iconSize = 5.dp
         )
         TudeeChip(
@@ -208,3 +212,18 @@ private fun getStatusLabelColor(status: TaskStatus): Color {
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+fun TaskDetailsScreenPreview() {
+    TudeeTheme {
+        val sampleTask = TaskDetailsUiState(
+            id = 1L,
+            title = "Study Jetpack Compose",
+            description = "Finish the layout chapter and preview tips",
+            categoryIconRes = "education",
+            priority = TaskPriority.HIGH,
+            status = TaskStatus.IN_PROGRESS.toUiState(),
+        )
+        TaskDetailsScreen(sampleTask, {})
+    }
+}

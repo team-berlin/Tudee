@@ -87,11 +87,14 @@ import com.example.tudee.presentation.components.buttons.FabButton
 import com.example.tudee.presentation.components.buttons.NegativeButton
 import com.example.tudee.presentation.components.buttons.SecondaryButton
 import com.example.tudee.presentation.screen.TaskDetailsScreen
-import com.example.tudee.presentation.screen.task_screen.mappers.TaskPriorityUiState
+import com.example.tudee.presentation.screen.task_screen.addTask.AddBottomSheet
+import com.example.tudee.presentation.screen.task_screen.interactors.TaskScreenInteractor
 import com.example.tudee.presentation.screen.task_screen.ui_states.DateCardUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.DateUiState
+import com.example.tudee.presentation.screen.task_screen.ui_states.TaskBottomSheetState
 import com.example.tudee.presentation.screen.task_screen.ui_states.TaskUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.TasksScreenUiState
+import com.example.tudee.presentation.screen.task_screen.viewmodel.AddTaskBottomSheetViewModel
 import com.example.tudee.presentation.screen.task_screen.viewmodel.TasksScreenViewModel
 import com.example.tudee.presentation.screen.task_screen.interactors.TaskScreenInteractor
 import com.example.tudee.presentation.screen.task_screen.ui_states.TaskBottomSheetState
@@ -105,18 +108,14 @@ import java.util.Locale
 import kotlin.math.roundToInt
 
 @Composable
-fun TasksScreen(navController: NavController, status: Int) {
-    val tasksScreenViewModel: TasksScreenViewModel = koinViewModel()
+fun TasksScreen(navController: NavController, tasksScreenViewModel: TasksScreenViewModel) {
+    //val tasksScreenViewModel: TasksScreenViewModel = koinNavViewModel()
     val taskScreenUiState by tasksScreenViewModel.taskScreenUiState.collectAsState()
 
     val addTaskBottomSheetViewModel: AddTaskBottomSheetViewModel = koinViewModel()
     val addTaskBottomSheetUiState by addTaskBottomSheetViewModel.uiState.collectAsState()
     val addButtonState by addTaskBottomSheetViewModel.isTaskValid.collectAsState()
 
-    LaunchedEffect(status) {
-        tasksScreenViewModel.updateStatus(status)
-    }
-    //tasksScreenViewModel.updateStatus(status)
     TasksScreenContent(
         navController = navController,
         addTaskBottomSheetUiState = addTaskBottomSheetUiState,
@@ -143,6 +142,7 @@ fun TasksScreen(navController: NavController, status: Int) {
         addButtonState =addButtonState
     )
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TasksScreenContent(
@@ -251,7 +251,6 @@ fun TasksScreenContent(
 
         Column(
             modifier = Modifier.padding(paddingValues),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             DateSection(
                 datePickerUiState = taskScreenUiState.dateUiState,
@@ -264,6 +263,7 @@ fun TasksScreenContent(
             )
 
             TabBarComponent(
+                modifier = Modifier.padding(top = 12.dp),
                 selectedTabIndex = taskScreenUiState.selectedTabIndex,
                 tabBarItems = taskScreenUiState.listOfTabBarItem,
                 onTabSelected = onTabSelected
@@ -273,10 +273,10 @@ fun TasksScreenContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(TudeeTheme.color.surface)
+                    .padding(top = 12.dp)
                     .weight(1f),
                 listOfTasks = taskScreenUiState.listOfTasksUiState,
-                onTaskCardClicked =
-                    { onTaskCardClicked(it) },
+                onTaskCardClicked = { onTaskCardClicked(it) },
                 onDeleteIconClick = onDeleteIconClicked,
             )
 
@@ -293,7 +293,7 @@ fun TasksScreenContent(
 
 
         }
-        
+
     }
     SnackBarSection(
         isSnackBarVisible = taskScreenUiState.isSnackBarVisible,
@@ -340,7 +340,7 @@ fun DataHeader(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = 16.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -376,16 +376,13 @@ fun DataHeader(
 
 @Composable
 private fun ArrowButton(
-    icon: Painter,
-    contentDescription: String,
-    onClick: () -> Unit
+    icon: Painter, contentDescription: String, onClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
             .size(32.dp)
             .border(1.dp, TudeeTheme.color.stroke, shape = CircleShape)
-            .clickable { onClick() },
-        contentAlignment = Alignment.Center
+            .clickable { onClick() }, contentAlignment = Alignment.Center
     ) {
         Icon(
             painter = icon,
@@ -415,7 +412,7 @@ fun TasksListContent(
         AnimatedContent(
             targetState = listOfTasks,
             transitionSpec = {
-                scaleIn(tween(1000)) togetherWith scaleOut(tween(1000))
+                fadeIn(tween(500)) togetherWith fadeOut(tween(500))
             },
         ) { listOfTasks ->
             LazyColumn(
@@ -426,9 +423,7 @@ fun TasksListContent(
 
                 items(listOfTasks, key = { it.id }) { task ->
                     SwipeableCardWrapper(
-                        onDeleteIconClick =
-                            { onDeleteIconClick(task.id) },
-                        onTaskCardClicked = { onTaskCardClicked(task) }
+                        onDeleteIconClick = { onDeleteIconClick(task.id) },
                     ) {
 
                         var priorityBackgroundColor = Color.Transparent
@@ -453,8 +448,8 @@ fun TasksListContent(
                         CategoryTaskComponent(
                             title = task.title,
                             description = task.description,
-                            priority = stringResource(task.priority),
-                            priorityBackgroundColor = priorityBackgroundColor,
+                            priority = stringResource(task.priority.label),
+                            priorityBackgroundColor = task.priority.containerColor,
                             taskIcon = {
                                 Icon(
                                     painter = painterResource(getCategoryIcon(task.categoryIcon)),
@@ -464,7 +459,7 @@ fun TasksListContent(
                                 )
                             },
                             onClick = { onTaskCardClicked(task) },
-                            priorityIcon = priorityIcon,
+                            priorityIcon = painterResource(task.priority.icon),
                         )
                     }
                 }
@@ -520,10 +515,8 @@ fun DaysRow(
     val selectedIndex = listOfDateCardUiState.indexOfFirst { it.isSelected }.coerceAtLeast(0)
 
     LaunchedEffect(version) {
-        if (selectedIndex > 0)
-            listState.scrollToItem(selectedIndex - 1)
-        else
-            listState.scrollToItem(selectedIndex)
+        if (selectedIndex > 0) listState.scrollToItem(selectedIndex - 1)
+        else listState.scrollToItem(selectedIndex)
     }
 
     LazyRow(
@@ -573,9 +566,7 @@ fun DaysRow(
 
 @Composable
 fun SwipeableCardWrapper(
-    onDeleteIconClick: () -> Unit,
-    onTaskCardClicked: () -> Unit,
-    content: @Composable () -> Unit
+    onDeleteIconClick: () -> Unit, content: @Composable () -> Unit
 ) {
     var hiddenIconWidth by remember { mutableFloatStateOf(0f) }
     var neededOffset = remember { Animatable(initialValue = 0f) }
@@ -586,19 +577,16 @@ fun SwipeableCardWrapper(
         Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(12.dp))
-            // .clickable { onTaskCardClicked() }
             .background(TudeeTheme.color.statusColors.errorVariant),
         contentAlignment = Alignment.CenterEnd
     ) {
-        IconButton(
-            modifier = Modifier
-                .onSizeChanged {
-                    hiddenIconWidth = it.width.toFloat()
-                }
-                .padding(horizontal = 12.dp), onClick = {
-                onDeleteIconClick()
+        IconButton(modifier = Modifier
+            .onSizeChanged {
+                hiddenIconWidth = it.width.toFloat()
             }
-        ) {
+            .padding(horizontal = 12.dp), onClick = {
+            onDeleteIconClick()
+        }) {
             Icon(
                 modifier = Modifier.size(32.dp),
                 painter = painterResource(R.drawable.delete_ic),
@@ -612,7 +600,6 @@ fun SwipeableCardWrapper(
                 .fillMaxWidth()
                 .offset { IntOffset(x = -neededOffset.value.roundToInt(), y = 0) }
                 .clip(RoundedCornerShape(12.dp))
-                // .clickable { onTaskCardClicked() }
                 .pointerInput(hiddenIconWidth) {
                     detectHorizontalDragGestures(onHorizontalDrag = { _, dragAmount ->
                         scope.launch {
@@ -764,7 +751,6 @@ fun DeleteConfirmationBottomSheet(
             ) {
                 NegativeButton(
                     modifier = Modifier.fillMaxWidth(), onClick = {
-
                         onDeleteButtonClicked()
 
                     }, state = deleteButtonUiState

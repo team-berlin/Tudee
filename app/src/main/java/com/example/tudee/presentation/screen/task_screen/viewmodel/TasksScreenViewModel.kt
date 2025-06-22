@@ -1,6 +1,5 @@
 package com.example.tudee.presentation.screen.task_screen.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tudee.domain.TaskCategoryService
@@ -24,25 +23,30 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.YearMonth
-import java.util.Locale
 import java.time.LocalDate
+import java.time.YearMonth
 import java.time.format.TextStyle
+import java.util.Locale
 
 class TasksScreenViewModel(
     private val taskService: TaskService,
-    private val categoryService: TaskCategoryService
+    private val categoryService: TaskCategoryService,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel(), TaskScreenInteractor {
     private val _taskScreenUiState = MutableStateFlow(TasksScreenUiState())
     val taskScreenUiState = _taskScreenUiState
 
+    val args:Int=checkNotNull(savedStateHandle["status"])
     private val _triggerEffectVersion = MutableStateFlow(0)
     val triggerEffectVersion: StateFlow<Int> = _triggerEffectVersion
 
     init {
+        updateStatus(args)
         viewModelScope.launch {
             _taskScreenUiState.update { it.copy(isLoading = true) }
-            getTasksByStatus(TaskStatus.TODO)
+            getTasksByStatus(status = TaskStatus.entries[_taskScreenUiState.value.selectedTabIndex],
+               tabIndex =  _taskScreenUiState.value.selectedTabIndex)
+
             _taskScreenUiState.update { it.copy(isLoading = false) }
         }
 
@@ -111,7 +115,6 @@ class TasksScreenViewModel(
         }
     }
 
-    var job: Job? = null
     override fun onTabSelected(tabIndex: Int) {
         val statusUiState = TaskStatusUiState.entries[tabIndex]
         val status = statusUiState.toDomain()
@@ -132,17 +135,15 @@ class TasksScreenViewModel(
                     description = taskUiState.description,
                     categoryIconRes = taskUiState.categoryIcon,
                     priority = TaskPriority.LOW,
-                    status = TaskStatus.IN_PROGRESS
+                    status = taskUiState.status
                 )
             )
 
         }
     }
 
-
     override fun onCalendarClicked() {
-        _taskScreenUiState
-            .update {
+        _taskScreenUiState.update {
                 it.copy(
                     dateUiState = it.dateUiState.copy(
                         isDatePickerVisible = true
@@ -164,8 +165,7 @@ class TasksScreenViewModel(
             val localPickedDate = convertMillisToLocalDate(millis)
 
             val selectedYearMonth = YearMonth.of(
-                localPickedDate.year,
-                localPickedDate.month
+                localPickedDate.year, localPickedDate.month
             )
 
             _taskScreenUiState.update {
@@ -199,6 +199,8 @@ class TasksScreenViewModel(
         }
     }
 
+    var job: Job? = null
+
     fun showSnackBar() {
         _taskScreenUiState.update {
             it.copy(isSnackBarVisible = true)
@@ -230,14 +232,12 @@ class TasksScreenViewModel(
                         listOfTabBarItem = taskScreenUiState.value.listOfTabBarItem.mapIndexed { index, tabItem ->
                             if (index == tabIndex) {
                                 tabItem.copy(
-                                    isSelected = true,
-                                    taskCount = result.size.toString()
+                                    isSelected = true, taskCount = result.size.toString()
                                 )
                             } else {
                                 tabItem.copy(isSelected = false)
                             }
-                        }
-                    )
+                        })
                 }
             }
         }
