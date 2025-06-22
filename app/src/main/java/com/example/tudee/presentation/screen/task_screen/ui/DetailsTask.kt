@@ -208,18 +208,3 @@ private fun getStatusLabelColor(status: TaskStatus): Color {
     }
 }
 
-//@Preview(showBackground = true)
-//@Composable
-//fun TaskDetailsScreenPreview() {
-//    TudeeTheme {
-//        val sampleTask = TaskDetailsUiState(
-//            id = 1L,
-//            title = "Study Jetpack Compose",
-//            description = "Finish the layout chapter and preview tips",
-//            categoryIconRes = "education",
-//            priority = TaskPriority.HIGH,
-//            status = TaskStatus.IN_PROGRESS,
-//        )
-//        TaskDetailsScreen(sampleTask)
-//    }
-//}

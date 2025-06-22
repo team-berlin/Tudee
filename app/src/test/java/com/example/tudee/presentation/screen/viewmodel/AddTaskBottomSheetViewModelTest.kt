@@ -3,15 +3,19 @@ package com.example.tudee.presentation.viewmodel
 import com.example.tudee.domain.TaskCategoryService
 import com.example.tudee.domain.TaskService
 import com.example.tudee.domain.entity.Task
+import com.example.tudee.domain.entity.TaskCategory
 import com.example.tudee.domain.entity.TaskPriority
 import com.example.tudee.domain.entity.TaskStatus
 import com.example.tudee.domain.request.TaskCreationRequest
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.core.ValueClassSupport.boxedValue
+import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
@@ -36,7 +40,7 @@ class AddTaskBottomSheetViewModelTest
         Dispatchers.setMain(testDispatcher)
         taskService = mockk()
         categoryService = mockk()
-        viewModel = AddTaskBottomSheetViewModel(taskService, categoryService)
+        viewModel =  AddTaskBottomSheetViewModel(taskService, categoryService)
     }
 
     @Test
@@ -141,19 +145,22 @@ class AddTaskBottomSheetViewModelTest
     }
 
     @Test
-    fun `should fetch task info when task id is called`() = runTest{
+    fun `should fetch task info when task id is called`() = runTest {
         // Given
         val taskId = 1L
         val task = Task(
             id = taskId,
-            title ="new title task",
+            title = "new title task",
             description = "new  description",
             priority = TaskPriority.HIGH,
             categoryId = 1L,
             status = TaskStatus.TODO,
-            assignedDate = LocalDate(2025, 6, 21).toString()
+            assignedDate = LocalDate(2025, 6, 21)
         )
+
         coEvery { taskService.getTaskById(taskId) } returns task
+        coEvery { categoryService.getCategories() } throws Exception("Failed to fetch categories")
+
 
         // When
         viewModel.getTaskInfoById(taskId)
@@ -167,8 +174,9 @@ class AddTaskBottomSheetViewModelTest
         assertEquals(task.description, state.taskDescription)
         assertEquals(task.priority, state.selectedTaskPriority)
         assertEquals(task.categoryId, state.selectedCategoryId)
-        assertEquals(task.assignedDate, state.taskDueDate)
+        assertEquals(task.assignedDate.toString(), state.taskDueDate)
     }
+
 
     @Test
     fun `should create task and show snack bar when new task is added successfully`() = runTest{
@@ -178,7 +186,7 @@ class AddTaskBottomSheetViewModelTest
             description ="new  description task",
             priority = TaskPriority.HIGH,
             categoryId = 1L,
-            assignedDate = LocalDate(2025, 6, 21).toString(),
+            assignedDate = LocalDate(2025, 6, 21),
             status = TaskStatus.TODO
         )
         coEvery { taskService.createTask(request) } returns Unit
@@ -199,7 +207,7 @@ class AddTaskBottomSheetViewModelTest
             description = "Task Description",
             priority = TaskPriority.HIGH,
             categoryId = 1L,
-            assignedDate = LocalDate(2025, 6, 21).toString(),
+            assignedDate = LocalDate(2025, 6, 21),
             status = TaskStatus.TODO
         )
         coEvery { taskService.createTask(request) } throws Exception("Creation failed")
@@ -223,7 +231,7 @@ class AddTaskBottomSheetViewModelTest
             priority = TaskPriority.MEDIUM,
             categoryId = 1L,
             status = TaskStatus.IN_PROGRESS,
-            assignedDate = LocalDate(2025, 6, 21).toString()
+            assignedDate = LocalDate(2025, 6, 21)
         )
         coEvery { taskService.editTask(task) } returns Unit
 
