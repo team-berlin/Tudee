@@ -85,7 +85,7 @@ class CategoryTasksViewModelTest {
                         .toLocalDateTime(timeZone = TimeZone.of("Africa/Cairo")).date
                 )
             )
-            coEvery { taskCategoryService.getCategories() } returns flowOf(listOf(category))
+            coEvery { taskCategoryService.getCategoryById(categoryId) } returns flowOf((category))
             coEvery { taskService.getTasksByCategoryId(categoryId) } returns flowOf(testTasks)
 
             // When
@@ -142,7 +142,7 @@ class CategoryTasksViewModelTest {
             )
         )
 
-        coEvery { taskCategoryService.getCategories() } returns flowOf(listOf(category))
+        coEvery { taskCategoryService.getCategoryById(categoryId) } returns flowOf(category)
         coEvery { taskService.getTasksByCategoryId(categoryId) } returns flowOf(testTasks)
 
         viewModel.getTasksByCategoryId(categoryId)
@@ -184,7 +184,7 @@ class CategoryTasksViewModelTest {
         )
 
         coEvery { taskService.getTasksByCategoryId(categoryId) } returns flowOf(listOf(testTask))
-        coEvery { taskCategoryService.getCategories() } returns flowOf(listOf(testCategory))
+        coEvery { taskCategoryService.getCategoryById(categoryId) } returns flowOf(testCategory)
 
         viewModel.getTasksByCategoryId(categoryId)
         advanceUntilIdle()
@@ -242,7 +242,7 @@ class CategoryTasksViewModelTest {
         val testTasks = listOf(todoTask, doneTask)
 
         coEvery { taskService.getTasksByCategoryId(categoryId) } returns flowOf(testTasks)
-        coEvery { taskCategoryService.getCategories() } returns flowOf(listOf(testCategory))
+        coEvery { taskCategoryService.getCategoryById(categoryId) } returns flowOf(testCategory)
         coEvery { taskService.getTasksByStatus(TaskStatusUiState.TODO.toDomain()) } returns flowOf(
             listOf(todoTask)
         )

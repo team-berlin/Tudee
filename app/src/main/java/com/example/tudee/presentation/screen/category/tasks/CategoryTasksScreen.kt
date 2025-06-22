@@ -69,6 +69,9 @@ fun CategoryTasksScreen(
 
     Box(modifier = modifier.fillMaxSize()) {
         if (uiState.categoryTasksUiModel != null) {
+            uiState.categoryTasksUiModel?.let {
+                viewModel.getTasksByStatus(uiState, it.selectedTabIndex)
+            }
             CategoryTasksContent(
                 modifier = modifier,
                 categoryTaskUIState = uiState,

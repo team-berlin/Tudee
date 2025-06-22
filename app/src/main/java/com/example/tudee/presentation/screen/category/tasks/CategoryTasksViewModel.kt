@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 
 class CategoryTasksViewModel(
     private val taskService: TaskService,
-    private val taskCategoryService: TaskCategoryService
+    private val taskCategoryService: TaskCategoryService,
 ) : ViewModel() {
 
     private val _categoryTasksUiState = MutableStateFlow(CategoryTasksUiState(loading = true))
@@ -31,8 +31,6 @@ class CategoryTasksViewModel(
         viewModelScope.launch {
             try {
                 getTasksByCategoryId(1)
-                getTasksByStatus(categoryTasksUiState.value, 0)
-
             } catch (e: Exception) {
                 _snackBarEvent.emit(SnackBarEvent.ShowError)
             }
@@ -41,7 +39,6 @@ class CategoryTasksViewModel(
 
     fun getTasksByCategoryId(categoryId: Long) {
         _categoryTasksUiState.value = _categoryTasksUiState.value.copy(loading = true)
-
         viewModelScope.launch {
             try {
                 taskService.getTasksByCategoryId(categoryId)
@@ -94,23 +91,20 @@ class CategoryTasksViewModel(
         return tasks.groupBy { it.categoryId }
             .mapNotNull { (categoryId, tasksInCategory) ->
                 val category = getCategoryById(categoryId)
-                category?.let {
-                    val categoryTasksUiModel = CategoryTasksUiModel(
-                        id = category.id,
-                        title = category.title,
-                        image = category.image,
-                        isPredefined = category.isPredefined,
-                        tasks = tasksInCategory.map { it.toTaskUIModel() }
-                    )
-                    categoryTasksUiModel
-                }
+                val categoryTasksUiModel = CategoryTasksUiModel(
+                    id = category.id,
+                    title = category.title,
+                    image = category.image,
+                    isPredefined = category.isPredefined,
+                    tasks = tasksInCategory.map { it.toTaskUIModel() }
+                )
+                categoryTasksUiModel
+
             }
     }
 
-    private suspend fun getCategoryById(categoryId: Long): TaskCategory? {
-        return taskCategoryService.getCategories().first().firstOrNull {
-            it.id == categoryId
-        }
+    private suspend fun getCategoryById(categoryId: Long): TaskCategory {
+        return taskCategoryService.getCategoryById(categoryId).first()
     }
 
     fun getTasksByStatus(categoryTasksUiState: CategoryTasksUiState, tabIndex: Int = 0) {
