@@ -8,15 +8,15 @@ import com.example.tudee.domain.TaskService
 import com.example.tudee.domain.entity.TaskPriority
 import com.example.tudee.domain.entity.TaskStatus
 import com.example.tudee.presentation.components.TabBarItem
-import com.example.tudee.presentation.composables.buttons.ButtonState
+import com.example.tudee.presentation.components.buttons.ButtonState
 import com.example.tudee.presentation.screen.task_screen.interactors.TaskScreenInteractor
 import com.example.tudee.presentation.screen.task_screen.mappers.TaskStatusUiState
 import com.example.tudee.presentation.screen.task_screen.mappers.taskToTaskUiState
 import com.example.tudee.presentation.screen.task_screen.mappers.toDomain
 import com.example.tudee.presentation.screen.task_screen.ui_states.DateCardUiState
+import com.example.tudee.presentation.screen.task_screen.ui_states.TaskDetailsUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.TaskUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.TasksScreenUiState
-import com.example.tudee.presentation.viewmodel.taskuistate.TaskDetailsUiState
 import com.example.tudee.utils.convertMillisToLocalDate
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -42,14 +42,18 @@ class TasksScreenViewModel(
     init {
         viewModelScope.launch {
             _taskScreenUiState.update { it.copy(isLoading = true) }
-            getTasksByStatus(TaskStatus.DONE)
+            getTasksByStatus(TaskStatus.TODO)
             _taskScreenUiState.update { it.copy(isLoading = false) }
         }
 
         updateDaysInMonth(
-            month = YearMonth.now(),
-            selectedDate = LocalDate.now()
+            month = YearMonth.now(), selectedDate = LocalDate.now()
         )
+    }
+
+
+    fun updateStatus(status: Int) {
+        _taskScreenUiState.update { it.copy(selectedTabIndex = status) }
     }
 
     override fun onDayCardClicked(cardIndex: Int) {
@@ -128,19 +132,13 @@ class TasksScreenViewModel(
                     description = taskUiState.description,
                     categoryIconRes = taskUiState.categoryIcon,
                     priority = TaskPriority.LOW,
-                    status = TaskStatus.TODO
+                    status = TaskStatus.IN_PROGRESS
                 )
             )
 
         }
     }
-    fun hideDetialsBottomSheet() {
-        _taskScreenUiState.update {
-            it.copy(
-                taskDetailsUiState = null
-            )
-        }
-    }
+
 
     override fun onCalendarClicked() {
         _taskScreenUiState
@@ -193,6 +191,14 @@ class TasksScreenViewModel(
         updateDaysInMonth(nextMonth)
     }
 
+    fun hideDetialsBottomSheet() {
+        _taskScreenUiState.update {
+            it.copy(
+                taskDetailsUiState = null
+            )
+        }
+    }
+
     fun showSnackBar() {
         _taskScreenUiState.update {
             it.copy(isSnackBarVisible = true)
@@ -205,7 +211,7 @@ class TasksScreenViewModel(
         }
     }
 
-    private suspend fun getCategoryIconById(categoryId: Long): String {
+    suspend fun getCategoryIconById(categoryId: Long): String {
         return categoryService.getCategoryIconById(categoryId)
     }
 
@@ -246,8 +252,7 @@ class TasksScreenViewModel(
             state.copy(
                 dateUiState = oldDateUiState.copy(
                     selectedMonth = YearMonth.of(
-                        month.year,
-                        month.month
+                        month.year, month.month
                     ),
                     selectedYear = month.year.toString(),
                     daysCardsData = days,

@@ -40,9 +40,9 @@ import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.presentation.components.DefaultLeadingContent
 import com.example.tudee.presentation.components.TudeeTextField
-import com.example.tudee.presentation.composables.buttons.PrimaryButton
-import com.example.tudee.presentation.composables.buttons.SecondaryButton
-import com.example.tudee.presentation.composables.buttons.TextButton
+import com.example.tudee.presentation.components.buttons.PrimaryButton
+import com.example.tudee.presentation.components.buttons.SecondaryButton
+import com.example.tudee.presentation.components.buttons.TextButton
 import com.example.tudee.presentation.screen.category.model.CategoryData
 import com.example.tudee.presentation.screen.category.model.UiImage
 

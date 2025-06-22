@@ -25,7 +25,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
-import com.example.tudee.presentation.composables.buttons.FabButton
+import com.example.tudee.presentation.components.buttons.FabButton
 import com.example.tudee.presentation.screen.onboarding.OnBoardingPageUiModel
 
 @Composable

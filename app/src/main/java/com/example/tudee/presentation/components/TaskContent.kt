@@ -38,14 +38,14 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
-import com.example.tudee.presentation.composables.buttons.ButtonState
-import com.example.tudee.presentation.composables.buttons.PrimaryButton
-import com.example.tudee.presentation.composables.buttons.SecondaryButton
-import com.example.tudee.ui.home.viewmodel.CategoryUiState
-import com.example.tudee.ui.home.viewmodel.HomeActions
-import com.example.tudee.ui.home.viewmodel.HomeUiState
-import com.example.tudee.ui.home.viewmodel.TaskPriorityUiState
-import com.example.tudee.ui.home.viewmodel.TaskUiState
+import com.example.tudee.presentation.components.buttons.ButtonState
+import com.example.tudee.presentation.components.buttons.PrimaryButton
+import com.example.tudee.presentation.components.buttons.SecondaryButton
+import com.example.tudee.presentation.screen.home.viewmodel.CategoryUiState
+import com.example.tudee.presentation.screen.home.viewmodel.HomeActions
+import com.example.tudee.presentation.screen.home.viewmodel.HomeUiState
+import com.example.tudee.presentation.screen.home.viewmodel.TaskPriorityUiState
+import com.example.tudee.presentation.screen.home.viewmodel.TaskUiState
 
 enum class TaskContentMode {
     ADD,

@@ -13,10 +13,11 @@ import com.example.tudee.domain.TaskService
 import com.example.tudee.domain.AppEntryImpl
 import com.example.tudee.presentation.screen.category.tasks.CategoryTasksViewModel
 import com.example.tudee.presentation.screen.onboarding.OnBoardingViewModel
-import com.example.tudee.ui.home.viewmodel.HomeViewModel
+import com.example.tudee.presentation.screen.home.viewmodel.HomeViewModel
 
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
 
 val appModule = module {
@@ -47,5 +48,6 @@ val appModule = module {
 
     single<AppEntryDao> { get<AppDatabase>().appEntryDao() }
     single<AppEntry> { AppEntryImpl(get()) }
+
 
 }
