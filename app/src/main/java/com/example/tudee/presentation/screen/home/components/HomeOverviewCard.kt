@@ -55,6 +55,7 @@ fun HomeOverviewCard(
             Icon(
                 modifier = Modifier.size(16.dp),
                 imageVector = ImageVector.vectorResource(R.drawable.ic_calendar),
+                tint =TudeeTheme.color.textColors.body ,
                 contentDescription = null
             )
             Text(
