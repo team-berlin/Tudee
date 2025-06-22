@@ -1,5 +1,6 @@
 package com.example.tudee.presentation.screen.task_screen.viewmodel
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tudee.domain.TaskCategoryService
@@ -280,14 +281,12 @@ class TasksScreenViewModel(
 
 val defaultTabBarItem = listOf(
     TabBarItem(
-        title = TaskStatusUiState.IN_PROGRESS.status, taskCount = "0", isSelected = true
+        title = TaskStatusUiState.IN_PROGRESS.label, taskCount = "0", isSelected = true
     ),
     TabBarItem(
-        title = TaskStatusUiState.TODO.status, taskCount = "0", isSelected = false
+        title = TaskStatusUiState.TODO.label, taskCount = "0", isSelected = false
     ),
     TabBarItem(
-        title = TaskStatusUiState.DONE.status, taskCount = "0", isSelected = false
+        title = TaskStatusUiState.DONE.label, taskCount = "0", isSelected = false
     ),
-
     )
-

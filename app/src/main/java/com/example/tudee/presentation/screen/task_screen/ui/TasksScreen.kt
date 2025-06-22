@@ -87,17 +87,14 @@ import com.example.tudee.presentation.components.buttons.FabButton
 import com.example.tudee.presentation.components.buttons.NegativeButton
 import com.example.tudee.presentation.components.buttons.SecondaryButton
 import com.example.tudee.presentation.screen.TaskDetailsScreen
-import com.example.tudee.presentation.screen.task_screen.addTask.AddBottomSheet
-import com.example.tudee.presentation.screen.task_screen.interactors.TaskScreenInteractor
 import com.example.tudee.presentation.screen.task_screen.ui_states.DateCardUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.DateUiState
-import com.example.tudee.presentation.screen.task_screen.ui_states.TaskBottomSheetState
-import com.example.tudee.presentation.screen.task_screen.ui_states.TaskUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.TasksScreenUiState
-import com.example.tudee.presentation.screen.task_screen.viewmodel.AddTaskBottomSheetViewModel
 import com.example.tudee.presentation.screen.task_screen.viewmodel.TasksScreenViewModel
 import com.example.tudee.presentation.screen.task_screen.interactors.TaskScreenInteractor
+import com.example.tudee.presentation.screen.task_screen.mappers.TaskPriorityUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.TaskBottomSheetState
+import com.example.tudee.presentation.screen.task_screen.ui_states.TaskUiState
 
 import com.example.tudee.presentation.viewmodel.AddTaskBottomSheetViewModel
 import kotlinx.coroutines.delay
@@ -426,24 +423,6 @@ fun TasksListContent(
                         onDeleteIconClick = { onDeleteIconClick(task.id) },
                     ) {
 
-                        var priorityBackgroundColor = Color.Transparent
-                        var priorityIcon = painterResource(R.drawable.ic_priority_medium)
-                        when (task.priority) {
-                            TaskPriorityUiState.HIGH.priority -> {
-                                priorityBackgroundColor = TudeeTheme.color.statusColors.pinkAccent
-                                priorityIcon = painterResource(R.drawable.ic_priority_high)
-                            }
-
-                            TaskPriorityUiState.MEDIUM.priority -> {
-                                priorityBackgroundColor = TudeeTheme.color.statusColors.yellowAccent
-                                priorityIcon = painterResource(R.drawable.ic_priority_medium)
-                            }
-
-                            TaskPriorityUiState.LOW.priority -> {
-                                priorityBackgroundColor = TudeeTheme.color.statusColors.greenAccent
-                                priorityIcon = painterResource(R.drawable.ic_priority_low)
-                            }
-                        }
                         Modifier.clip(RoundedCornerShape(16.dp))
                         CategoryTaskComponent(
                             title = task.title,
@@ -467,7 +446,6 @@ fun TasksListContent(
         }
     }
 }
-
 @Composable
 fun SnackBarSection(
     isSnackBarVisible: Boolean, hideSnackBar: () -> Unit
