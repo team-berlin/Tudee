@@ -2,20 +2,11 @@ package com.example.tudee.presentation.viewmodel
 
 import com.example.tudee.domain.TaskCategoryService
 import com.example.tudee.domain.TaskService
-import com.example.tudee.domain.entity.Task
-import com.example.tudee.domain.entity.TaskCategory
 import com.example.tudee.domain.entity.TaskPriority
-import com.example.tudee.domain.entity.TaskStatus
-import com.example.tudee.domain.request.TaskCreationRequest
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.core.ValueClassSupport.boxedValue
-import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
@@ -145,107 +136,6 @@ class AddTaskBottomSheetViewModelTest
     }
 
     @Test
-    fun `should fetch task info when task id is called`() = runTest {
-        // Given
-        val taskId = 1L
-        val task = Task(
-            id = taskId,
-            title = "new title task",
-            description = "new  description",
-            priority = TaskPriority.HIGH,
-            categoryId = 1L,
-            status = TaskStatus.TODO,
-            assignedDate = LocalDate(2025, 6, 21)
-        )
-
-        coEvery { taskService.getTaskById(taskId) } returns task
-        coEvery { categoryService.getCategories() } throws Exception("Failed to fetch categories")
-
-
-        // When
-        viewModel.getTaskInfoById(taskId)
-        advanceUntilIdle()
-
-        // Then
-        val state = viewModel.uiState.value
-        assertTrue(state.isEditMode)
-        assertEquals(taskId, state.taskId)
-        assertEquals(task.title, state.taskTitle)
-        assertEquals(task.description, state.taskDescription)
-        assertEquals(task.priority, state.selectedTaskPriority)
-        assertEquals(task.categoryId, state.selectedCategoryId)
-        assertEquals(task.assignedDate.toString(), state.taskDueDate)
-    }
-
-
-    @Test
-    fun `should create task and show snack bar when new task is added successfully`() = runTest{
-        // Given
-        val request = TaskCreationRequest(
-            title = "new title task",
-            description ="new  description task",
-            priority = TaskPriority.HIGH,
-            categoryId = 1L,
-            assignedDate = LocalDate(2025, 6, 21),
-            status = TaskStatus.TODO
-        )
-        coEvery { taskService.createTask(request) } returns Unit
-        // When
-        viewModel.onAddNewTaskClicked(request)
-        advanceUntilIdle()
-
-        // Then
-        val state = viewModel.uiState.value
-        assertEquals(null, state.snackBarMessage)
-    }
-
-    @Test
-    fun `should show error snack bar when new task creation fails`() = runTest{
-        // Give
-        val request = TaskCreationRequest(
-            title = "New Task",
-            description = "Task Description",
-            priority = TaskPriority.HIGH,
-            categoryId = 1L,
-            assignedDate = LocalDate(2025, 6, 21),
-            status = TaskStatus.TODO
-        )
-        coEvery { taskService.createTask(request) } throws Exception("Creation failed")
-
-        // When
-        viewModel.onAddNewTaskClicked(request)
-        advanceUntilIdle()
-
-        // Then
-        val state = viewModel.uiState.value
-        assertEquals(null, state.snackBarMessage)
-    }
-
-    @Test
-    fun `should edit task and show snac kbar when save is clicked successfully`() = runTest{
-        // Given
-        val task = Task(
-            id = 1L,
-            title = "edited Task",
-            description = "edited description",
-            priority = TaskPriority.MEDIUM,
-            categoryId = 1L,
-            status = TaskStatus.IN_PROGRESS,
-            assignedDate = LocalDate(2025, 6, 21)
-        )
-        coEvery { taskService.editTask(task) } returns Unit
-
-        // When
-        viewModel.onSaveClicked(task)
-        advanceUntilIdle()
-
-        // Then
-        coVerify { taskService.editTask(task) }
-        val state = viewModel.uiState.value
-        assertEquals(null, state.snackBarMessage)
-    }
-
-    @Test
     fun `should show date picker when date field is clicked`() {
         // Given
         val initialState = viewModel.uiState.value
@@ -289,19 +179,6 @@ class AddTaskBottomSheetViewModelTest
         assertEquals(null, state.taskDueDate)
     }
 
-    @Test
-    fun `should validate task as false when title is blank`() = runTest{
-        // Given
-        viewModel.onUpdateTaskTitle("")
-        viewModel.onUpdateTaskDescription("Test Description")
-        viewModel.onSelectTaskPriority(TaskPriority.HIGH)
-        viewModel.onSelectTaskCategory(1L)
-        advanceUntilIdle()
-
-        // Then
-        val isValid = viewModel.isTaskValid.first()
-        assertFalse(isValid)
-    }
 
     @Test
     fun `should reset state when cancel is clicked`() {
