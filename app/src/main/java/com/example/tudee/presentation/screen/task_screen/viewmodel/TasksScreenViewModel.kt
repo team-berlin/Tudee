@@ -1,5 +1,6 @@
 package com.example.tudee.presentation.screen.task_screen.viewmodel
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tudee.domain.TaskCategoryService
@@ -12,6 +13,7 @@ import com.example.tudee.presentation.screen.task_screen.interactors.TaskScreenI
 import com.example.tudee.presentation.screen.task_screen.mappers.TaskStatusUiState
 import com.example.tudee.presentation.screen.task_screen.mappers.taskToTaskUiState
 import com.example.tudee.presentation.screen.task_screen.mappers.toDomain
+import com.example.tudee.presentation.screen.task_screen.mappers.toUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.DateCardUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.TaskDetailsUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.TaskUiState
@@ -31,18 +33,22 @@ import java.util.Locale
 class TasksScreenViewModel(
     private val taskService: TaskService,
     private val categoryService: TaskCategoryService,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel(), TaskScreenInteractor {
     private val _taskScreenUiState = MutableStateFlow(TasksScreenUiState())
     val taskScreenUiState = _taskScreenUiState
 
+    val args:Int=checkNotNull(savedStateHandle["status"])
     private val _triggerEffectVersion = MutableStateFlow(0)
     val triggerEffectVersion: StateFlow<Int> = _triggerEffectVersion
 
     init {
-
+        updateStatus(args)
         viewModelScope.launch {
             _taskScreenUiState.update { it.copy(isLoading = true) }
-            getTasksByStatus(TaskStatus.TODO)
+            getTasksByStatus(status = TaskStatus.entries[_taskScreenUiState.value.selectedTabIndex],
+               tabIndex =  _taskScreenUiState.value.selectedTabIndex)
+
             _taskScreenUiState.update { it.copy(isLoading = false) }
         }
 
@@ -50,7 +56,6 @@ class TasksScreenViewModel(
             month = YearMonth.now(), selectedDate = LocalDate.now()
         )
     }
-
 
     fun updateStatus(status: Int) {
         _taskScreenUiState.update { it.copy(selectedTabIndex = status) }
@@ -131,7 +136,7 @@ class TasksScreenViewModel(
                     description = taskUiState.description,
                     categoryIconRes = taskUiState.categoryIcon,
                     priority = TaskPriority.LOW,
-                    status = TaskStatus.IN_PROGRESS
+                    status = taskUiState.status
                 )
             )
 
@@ -276,13 +281,13 @@ class TasksScreenViewModel(
 
 val defaultTabBarItem = listOf(
     TabBarItem(
-        title = TaskStatusUiState.IN_PROGRESS.status, taskCount = "0", isSelected = true
+        title = TaskStatusUiState.IN_PROGRESS.label, taskCount = "0", isSelected = true
     ),
     TabBarItem(
-        title = TaskStatusUiState.TODO.status, taskCount = "0", isSelected = false
+        title = TaskStatusUiState.TODO.label, taskCount = "0", isSelected = false
     ),
     TabBarItem(
-        title = TaskStatusUiState.DONE.status, taskCount = "0", isSelected = false
+        title = TaskStatusUiState.DONE.label, taskCount = "0", isSelected = false
     ),
 
     )
