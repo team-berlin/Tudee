@@ -135,7 +135,10 @@ private fun TaskActionButtons(
             contentDescription = stringResource(R.string.edit_icon)
         )
         SecondaryButton(
-            onClick = {hideAddTaskBottomSheet() },
+            onClick = {
+                taskBottomSheetViewModel.updateTaskStatusToDone(taskDetailsState.id)
+                hideAddTaskBottomSheet()
+                      },
             modifier = Modifier.weight(1f),
             content = {
                 Text(

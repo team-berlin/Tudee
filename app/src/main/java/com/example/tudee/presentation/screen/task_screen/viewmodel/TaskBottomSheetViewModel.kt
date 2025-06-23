@@ -7,6 +7,7 @@ import com.example.tudee.domain.TaskCategoryService
 import com.example.tudee.domain.TaskService
 import com.example.tudee.domain.entity.Task
 import com.example.tudee.domain.entity.TaskPriority
+import com.example.tudee.domain.entity.TaskStatus
 import com.example.tudee.domain.request.TaskCreationRequest
 import com.example.tudee.presentation.screen.task_screen.ui_states.TaskBottomSheetState
 import kotlinx.coroutines.delay
@@ -112,7 +113,7 @@ class TaskBottomSheetViewModel(
                     }
                 }
             } catch (e: Exception) {
-                Log.e("TaskViewModel", "Error fetching task: ${e.message}")
+                Log.e("TaskViewModel", "Error  ${e.message}")
             }
         }
     }
@@ -176,5 +177,19 @@ class TaskBottomSheetViewModel(
 
     fun onCancelClicked() {
         hideButtonSheet()
+    }
+    fun updateTaskStatusToDone(taskId: Long) {
+        viewModelScope.launch {
+            try {
+                val task = taskService.getTaskById(taskId)
+                val updatedTask = task.copy(status = TaskStatus.DONE)
+                taskService.editTask(updatedTask)
+                _taskBottomSheetUiState.update { it.copy(snackBarMessage = true) }
+                delay(2000)
+                hideButtonSheet()
+            } catch (e: Exception) {
+                _taskBottomSheetUiState.update { it.copy(snackBarMessage = false) }
+            }
+        }
     }
 }
