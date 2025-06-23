@@ -86,7 +86,14 @@ fun TabBarComponent(
 @Composable
 private fun TabIndicatorScope.DefaultTabIndicator(selectedTabIndex: Int, modifier: Modifier) {
         TabRowDefaults.PrimaryIndicator(
-            modifier = modifier.tabIndicatorOffset(
+            modifier =
+                modifier.run {
+                    if (LocalLayoutDirection.current == LayoutDirection.Rtl)
+                        scale(-1f, 1f)
+                    else
+                        this
+                }
+                .tabIndicatorOffset(
                 selectedTabIndex,
                 matchContentSize = true
             ),
