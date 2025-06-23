@@ -69,30 +69,28 @@ fun CategoryTasksScreen(
     TudeeScaffold(
         showTopAppBar = true,
         topAppBar = {
-            Column {
-                TopAppBar(
-                    onBackButtonClicked = { navController.navigateUp() },
-                    showBackButton = true,
-                    title = uiState.categoryTasksUiModel?.title,
-                    trailingComposable = {
-                        IconButton(onClick = {
-                            isEditCategorySheetVisible = true
-                        }) {
-                            Icon(
-                                modifier = Modifier
-                                    .border(
-                                        1.dp, TudeeTheme.color.stroke, RoundedCornerShape(100.dp)
-                                    )
-                                    .padding(10.dp)
-                                    .size(20.dp),
-                                painter = painterResource(R.drawable.pencil_edit),
-                                contentDescription = null,
-                                tint = TudeeTheme.color.textColors.body
-                            )
-                        }
+            TopAppBar(
+                onBackButtonClicked = { navController.navigateUp() },
+                showBackButton = true,
+                title = uiState.categoryTasksUiModel?.title,
+                trailingComposable = {
+                    IconButton(onClick = {
+                        isEditCategorySheetVisible = true
+                    }) {
+                        Icon(
+                            modifier = Modifier
+                                .border(
+                                    1.dp, TudeeTheme.color.stroke, RoundedCornerShape(100.dp)
+                                )
+                                .padding(10.dp)
+                                .size(20.dp),
+                            painter = painterResource(R.drawable.pencil_edit),
+                            contentDescription = null,
+                            tint = TudeeTheme.color.textColors.body
+                        )
                     }
-                )
-            }
+                }
+            )
         }
     ) { paddingValues ->
         if (uiState.categoryTasksUiModel != null) {

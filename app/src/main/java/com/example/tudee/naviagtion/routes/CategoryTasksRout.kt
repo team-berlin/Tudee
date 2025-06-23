@@ -8,7 +8,7 @@ import androidx.navigation.navArgument
 import com.example.tudee.naviagtion.Destination
 import com.example.tudee.presentation.screen.category.tasks.CategoryTasksScreen
 
-fun NavGraphBuilder.categoryTasksRout(navController: NavHostController) {
+fun NavGraphBuilder.categoryTasksRoute(navController: NavHostController) {
     composable(
         route = Destination.CategoryTasksScreen.route,
         arguments = listOf(
