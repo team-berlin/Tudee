@@ -1,6 +1,5 @@
 package com.example.tudee.presentation.screen.task_screen.ui_states
 
-import androidx.annotation.StringRes
 import com.example.tudee.domain.entity.TaskStatus
 import com.example.tudee.presentation.components.TabBarItem
 import com.example.tudee.presentation.components.buttons.ButtonState
@@ -30,7 +29,7 @@ data class TasksScreenUiState(
 data class DateUiState(
     val isDatePickerVisible: Boolean = false,
     val selectedYear: String = "",
-    val selectedMonth: YearMonth = YearMonth.now(),
+    val selectedYearMonth: YearMonth = YearMonth.now(), // should be string
     val daysCardsData: List<DateCardUiState> = emptyList()
 )
 

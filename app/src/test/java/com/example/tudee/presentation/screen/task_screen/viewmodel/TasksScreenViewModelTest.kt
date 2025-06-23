@@ -129,7 +129,7 @@ class TasksScreenViewModelTest {
     @Test
     fun `should hideDetailsBottomSheet when hideDetailsBottomSheet is called`() {
         //when
-        tasksScreenViewModel.hideDetialsBottomSheet()
+        tasksScreenViewModel.hideDetailsBottomSheet()
         //then
         val state = tasksScreenViewModel.taskScreenUiState.value
         assertTrue(state.taskDetailsUiState == null)
@@ -205,14 +205,14 @@ class TasksScreenViewModelTest {
 
     @Test
     fun `onPreviousArrowClicked should update selectedMonth and daysCardsData`() = runTest {
-        val initialMonth = tasksScreenViewModel.taskScreenUiState.value.dateUiState.selectedMonth
+        val initialMonth = tasksScreenViewModel.taskScreenUiState.value.dateUiState.selectedYearMonth
         val expectedMonth = initialMonth.minusMonths(1)
         coEvery { taskService.getTasksByStatus(TaskStatus.TODO) } returns flowOf(emptyList())
         tasksScreenViewModel.onPreviousArrowClicked()
 
         val state = tasksScreenViewModel.taskScreenUiState.value.dateUiState
 
-        assertEquals(expectedMonth, state.selectedMonth)
+        assertEquals(expectedMonth, state.selectedYearMonth)
 
         assertEquals(expectedMonth.lengthOfMonth(), state.daysCardsData.size)
 
@@ -227,7 +227,7 @@ class TasksScreenViewModelTest {
 
     @Test
     fun `onNextArrowClicked should update selectedMonth and daysCardsData`() = runTest {
-        val initialMonth = tasksScreenViewModel.taskScreenUiState.value.dateUiState.selectedMonth
+        val initialMonth = tasksScreenViewModel.taskScreenUiState.value.dateUiState.selectedYearMonth
         val expectedMonth = initialMonth.plusMonths(1)
         coEvery { taskService.getTasksByStatus(TaskStatus.TODO) } returns flowOf(emptyList())
         tasksScreenViewModel.onNextArrowClicked()
@@ -235,7 +235,7 @@ class TasksScreenViewModelTest {
         val state = tasksScreenViewModel.taskScreenUiState.value.dateUiState
 
 
-        assertEquals(expectedMonth, state.selectedMonth)
+        assertEquals(expectedMonth, state.selectedYearMonth)
 
         assertEquals(expectedMonth.lengthOfMonth(), state.daysCardsData.size)
 

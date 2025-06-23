@@ -9,8 +9,6 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
@@ -130,7 +128,7 @@ fun TasksScreen(navController: NavController, tasksScreenViewModel: TasksScreenV
         onConfirmDatePicker = tasksScreenViewModel::onConfirmDatePicker,
         hideSnackBar = tasksScreenViewModel::hideSnackBar,
         version = tasksScreenViewModel.triggerEffectVersion.collectAsState().value,
-        hideDetailsBottomSheet = tasksScreenViewModel::hideDetialsBottomSheet,
+        hideDetailsBottomSheet = tasksScreenViewModel::hideDetailsBottomSheet,
         Interactor = tasksScreenViewModel
     )
 }
@@ -279,7 +277,7 @@ private fun DateSection(
     version: Int,
 ) {
     DataHeader(
-        selectedMonth = datePickerUiState.selectedMonth.month.getDisplayName(
+        selectedMonth = datePickerUiState.selectedYearMonth.month.getDisplayName(
             TextStyle.SHORT, Locale.getDefault()
         ),
         selectedYear = datePickerUiState.selectedYear,
