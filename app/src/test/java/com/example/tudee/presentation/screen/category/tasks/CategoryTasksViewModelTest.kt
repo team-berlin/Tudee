@@ -1,5 +1,6 @@
 package com.example.tudee.presentation.screen.category.tasks
 
+import androidx.lifecycle.SavedStateHandle
 import com.example.tudee.data.dao.TaskCategoryDao
 import com.example.tudee.domain.TaskCategoryService
 import com.example.tudee.domain.TaskService
@@ -43,6 +44,7 @@ class CategoryTasksViewModelTest {
     private lateinit var taskCategoryService: TaskCategoryService
     private lateinit var viewModel: CategoryTasksViewModel
     private lateinit var categoryDao: TaskCategoryDao
+    private lateinit var savedStateHandle: SavedStateHandle
     private val testDispatcher = StandardTestDispatcher()
 
     @Before
@@ -51,7 +53,8 @@ class CategoryTasksViewModelTest {
         taskService = mockk(relaxed = true)
         taskCategoryService = mockk(relaxed = true)
         categoryDao = mockk(relaxed = true)
-        viewModel = CategoryTasksViewModel(taskService, taskCategoryService)
+        savedStateHandle = SavedStateHandle().apply { set("categoryId", 1) }
+        viewModel = CategoryTasksViewModel(savedStateHandle, taskService, taskCategoryService)
     }
 
     @After
@@ -87,7 +90,6 @@ class CategoryTasksViewModelTest {
             )
             coEvery { taskCategoryService.getCategoryById(categoryId) } returns flowOf((category))
             coEvery { taskService.getTasksByCategoryId(categoryId) } returns flowOf(testTasks)
-
             // When
             viewModel.getTasksByCategoryId(categoryId)
             advanceUntilIdle()
