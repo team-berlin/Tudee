@@ -1,15 +1,9 @@
 package com.example.tudee.presentation.components
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
-import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -93,16 +87,7 @@ fun TabBarComponent(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun TabIndicatorScope.DefaultTabIndicator(selectedTabIndex: Int, modifier: Modifier) =
-
-
-    AnimatedContent(
-        targetState = selectedTabIndex,
-        transitionSpec = {
-            slideInVertically(tween(500)) togetherWith slideOutVertically(tween(500))
-        },
-    )  {
-
+private fun TabIndicatorScope.DefaultTabIndicator(selectedTabIndex: Int, modifier: Modifier) {
         TabRowDefaults.PrimaryIndicator(
             modifier =
                 modifier.run {
