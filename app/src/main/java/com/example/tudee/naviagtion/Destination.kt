@@ -1,5 +1,7 @@
 package com.example.tudee.naviagtion
 
+import kotlinx.serialization.Serializable
+
 sealed class Destination(val route: String) {
     object SplashScreen : Destination("splashScreen")
     object OnBoardingScreen : Destination("onBoardingScreen")
@@ -7,14 +9,16 @@ sealed class Destination(val route: String) {
     object TasksScreen : Destination("tasksScreen/{status}") {
         fun createRoute(status: Int) = "tasksScreen/$status"
     }
-
     object CategoriesScreen : Destination("categoriesScreen")
     object CategoryDetailsScreen : Destination("categoryDetailsScreen") {
         const val categoryIdArg = "categoryId"
         fun withArgs(categoryId: Long): String = "$route/$categoryId"
         val fullRoute = "$route/{$categoryIdArg}"
     }
-    object CategoryTasksScreen : Destination("categoryTasksScreen/{categoryId}") {
-        fun createRoute(categoryId: Long) = "categoryTasksScreen/$categoryId"
-    }
+
+    @Serializable
+    data class CategoryTasksScreen(
+        val categoryId: Long
+    )
 }
+
