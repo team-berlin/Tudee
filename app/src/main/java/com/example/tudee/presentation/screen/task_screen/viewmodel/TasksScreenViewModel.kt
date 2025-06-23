@@ -32,12 +32,12 @@ import java.util.Locale
 class TasksScreenViewModel(
     private val taskService: TaskService,
     private val categoryService: TaskCategoryService,
-    private val savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle
 ) : ViewModel(), TaskScreenInteractor {
     private val _taskScreenUiState = MutableStateFlow(TasksScreenUiState())
     val taskScreenUiState = _taskScreenUiState
 
-    val args:Int=checkNotNull(savedStateHandle["status"])
+    private val args: Int = checkNotNull(savedStateHandle["status"])
     private val _triggerEffectVersion = MutableStateFlow(0)
     val triggerEffectVersion: StateFlow<Int> = _triggerEffectVersion
 
