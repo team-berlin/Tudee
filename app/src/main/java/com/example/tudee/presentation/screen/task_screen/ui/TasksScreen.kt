@@ -222,9 +222,6 @@ fun TasksScreenContent(
             onDismissDatePicker = addTaskBottomSheetViewModel::onDismissDatePicker
         )
 
-
-
-
         if (taskScreenUiState.dateUiState.isDatePickerVisible) {
             TudeeDateDialog(
                 onDismiss = onDismissDatePicker, onConfirm = onConfirmDatePicker, onClear = {})
@@ -319,7 +316,6 @@ fun DataHeader(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-
             .padding(horizontal = 16.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
@@ -468,7 +464,9 @@ fun SnackBarSection(
 
 @Composable
 fun DaysRow(
-    onDayCardClicked: (Int) -> Unit, listOfDateCardUiState: List<DateCardUiState>, version: Int
+    onDayCardClicked: (Int) -> Unit,
+    listOfDateCardUiState: List<DateCardUiState>,
+    version: Int
 ) {
 
     val listState = rememberLazyListState()
@@ -495,7 +493,7 @@ fun DaysRow(
 
             val modifier = if (dateCard.isSelected) {
                 Modifier
-                    .size(width = 56.dp, height = 65.dp)
+                    .width(width = 56.dp)
                     .background(
                         brush = (Brush.linearGradient(
                             colors = TudeeTheme.color.primaryGradient,
@@ -507,7 +505,7 @@ fun DaysRow(
                     )
             } else {
                 Modifier
-                    .size(width = 56.dp, height = 65.dp)
+                    .width(width = 56.dp)
                     .background(
                         TudeeTheme.color.surface, shape = RoundedCornerShape(16.dp)
                     )
@@ -585,66 +583,7 @@ fun SwipeableCardWrapper(
     }
 }
 
-@Composable
-fun HeadingDate(onDateCardClicked: () -> Unit) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(32.dp)
-                    .border(
-                        1.dp, TudeeTheme.color.stroke, shape = CircleShape
-                    ),
-                contentAlignment = Alignment.Center,
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.arrow_left),
-                    contentDescription = stringResource(R.string.back_button),
-                    tint = TudeeTheme.color.textColors.body
-                )
-            }
-            Spacer(modifier = Modifier.weight(1f))
-            Box(
-                modifier = Modifier
-                    .size(32.dp)
-                    .border(
-                        1.dp, TudeeTheme.color.stroke, RoundedCornerShape(100.dp)
-                    ),
-                contentAlignment = Alignment.Center,
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.arrow_right),
-                    contentDescription = stringResource(R.string.back_button),
-                    tint = TudeeTheme.color.textColors.body
-                )
-            }
-        }
 
-        Row(
-            Modifier.clickable { onDateCardClicked() },
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "Jun, 2025",
-                style = TudeeTheme.textStyle.label.medium,
-                color = TudeeTheme.color.textColors.body
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            Icon(
-                painter = painterResource(R.drawable.arrow_down),
-                tint = TudeeTheme.color.textColors.body,
-                contentDescription = ""
-            )
-        }
-    }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
