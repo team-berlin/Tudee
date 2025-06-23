@@ -36,6 +36,9 @@ interface TaskDao {
     @Query("SELECT * FROM task_table WHERE status = :status")
     fun getTasksByStatus(status: TaskStatus): Flow<List<TaskEntity>>
 
+    @Query("SELECT * FROM task_table WHERE status = :status AND assigned_date = :date")
+    fun getTasksByStatusAndDate(status: TaskStatus, date: String): Flow<List<TaskEntity>>
+
     @Query("SELECT * FROM task_table WHERE assigned_date = :date")
     fun getTasksByAssignedDate(date: String): Flow<List<TaskEntity>>
 
