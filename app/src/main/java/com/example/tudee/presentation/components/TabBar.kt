@@ -1,9 +1,15 @@
 package com.example.tudee.presentation.components
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -23,10 +29,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.example.tudee.designsystem.theme.TudeeTheme
 
@@ -85,14 +94,24 @@ fun TabBarComponent(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TabIndicatorScope.DefaultTabIndicator(selectedTabIndex: Int, modifier: Modifier) =
-    AnimatedVisibility(
-        visible = true,
-        enter = fadeIn(tween(1000)),
-        exit = fadeOut(tween(1000))
-    ) {
+
+
+    AnimatedContent(
+        targetState = selectedTabIndex,
+        transitionSpec = {
+            slideInVertically(tween(500)) togetherWith slideOutVertically(tween(500))
+        },
+    )  {
 
         TabRowDefaults.PrimaryIndicator(
-            modifier = modifier.tabIndicatorOffset(
+            modifier =
+                modifier.run {
+                    if (LocalLayoutDirection.current == LayoutDirection.Rtl)
+                        scale(-1f, 1f)
+                    else
+                        this
+                }
+                .tabIndicatorOffset(
                 selectedTabIndex,
                 matchContentSize = true
             ),

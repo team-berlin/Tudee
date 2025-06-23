@@ -11,13 +11,12 @@ import com.example.tudee.presentation.screen.task_screen.mappers.TaskStatusUiSta
 import com.example.tudee.presentation.screen.task_screen.mappers.taskToTaskUiState
 import com.example.tudee.presentation.screen.task_screen.mappers.toDomain
 import com.example.tudee.presentation.screen.task_screen.ui_states.DateCardUiState
-import com.example.tudee.presentation.screen.task_screen.ui_states.TaskUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.TaskDetailsUiState
+import com.example.tudee.presentation.screen.task_screen.ui_states.TaskUiState
 import com.google.common.truth.Truth.assertThat
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -55,7 +54,10 @@ class TasksScreenViewModelTest {
         Dispatchers.setMain(testDispatcher)
         taskService = mockk()
         categoryService = mockk()
-        tasksScreenViewModel = TasksScreenViewModel(taskService = taskService, categoryService = categoryService, savedStateHandle = savedStateHandle)
+        tasksScreenViewModel = TasksScreenViewModel(
+            taskService = taskService,
+            categoryService = categoryService,
+            savedStateHandle = savedStateHandle)
     }
 
 

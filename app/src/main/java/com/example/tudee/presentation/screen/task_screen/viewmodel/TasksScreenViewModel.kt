@@ -7,7 +7,6 @@ import com.example.tudee.domain.TaskCategoryService
 import com.example.tudee.domain.TaskService
 import com.example.tudee.domain.entity.TaskPriority
 import com.example.tudee.domain.entity.TaskStatus
-import com.example.tudee.presentation.components.TabBarItem
 import com.example.tudee.presentation.components.buttons.ButtonState
 import com.example.tudee.presentation.screen.task_screen.interactors.TaskScreenInteractor
 import com.example.tudee.presentation.screen.task_screen.mappers.TaskStatusUiState
@@ -193,11 +192,13 @@ class TasksScreenViewModel(
             _triggerEffectVersion.update { it + 1 }
         }
         val statusUiState = TaskStatusUiState.entries[_taskScreenUiState.value.selectedTabIndex]
+        val date = getSelectedDate()
+
         val status = statusUiState.toDomain()
         getTasksByStatusAndDate(
             status = status,
             tabIndex = _taskScreenUiState.value.selectedTabIndex,
-            date = getSelectedDate()
+            date = date
         )
     }
 
@@ -316,16 +317,5 @@ class TasksScreenViewModel(
     }
 }
 
-val defaultTabBarItem = listOf(
-    TabBarItem(
-        title = TaskStatusUiState.IN_PROGRESS.label, taskCount = "0", isSelected = true
-    ),
-    TabBarItem(
-        title = TaskStatusUiState.TODO.label, taskCount = "0", isSelected = false
-    ),
-    TabBarItem(
-        title = TaskStatusUiState.DONE.label, taskCount = "0", isSelected = false
-    ),
 
-    )
 

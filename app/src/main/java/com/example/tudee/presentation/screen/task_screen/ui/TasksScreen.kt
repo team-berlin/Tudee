@@ -1,6 +1,7 @@
 package com.example.tudee.presentation.screen.task_screen.ui
 
 
+import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
@@ -83,8 +84,11 @@ import com.example.tudee.presentation.components.buttons.FabButton
 import com.example.tudee.presentation.components.buttons.NegativeButton
 import com.example.tudee.presentation.components.buttons.SecondaryButton
 import com.example.tudee.presentation.screen.TaskDetailsScreen
+import com.example.tudee.presentation.screen.task_screen.interactors.TaskScreenInteractor
 import com.example.tudee.presentation.screen.task_screen.ui_states.DateCardUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.DateUiState
+import com.example.tudee.presentation.screen.task_screen.ui_states.TaskBottomSheetState
+import com.example.tudee.presentation.screen.task_screen.ui_states.TaskUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.TasksScreenUiState
 import com.example.tudee.presentation.screen.task_screen.viewmodel.TasksScreenViewModel
 import com.example.tudee.presentation.screen.task_screen.interactors.TaskScreenInteractor
@@ -157,7 +161,7 @@ fun TasksScreenContent(
     taskBottomSheetViewModel: TaskBottomSheetViewModel,
     isEditeMode:Boolean
 
-    ) {
+) {
 
     TudeeScaffold(
         showTopAppBar = true,
@@ -179,7 +183,7 @@ fun TasksScreenContent(
                 .padding(paddingValues)
         ) {
 
-            if(taskScreenUiState.taskDetailsUiState!=null){
+            if (taskScreenUiState.taskDetailsUiState != null) {
                 ModalBottomSheet(
                     onDismissRequest = {
                         hideDetailsBottomSheet()
@@ -400,8 +404,9 @@ fun TasksListContent(
                         onDeleteIconClick = { onDeleteIconClick(task.id) },
                     ) {
 
-                        Modifier.clip(RoundedCornerShape(16.dp))
+
                         CategoryTaskComponent(
+                            Modifier.clip(RoundedCornerShape(16.dp)),
                             title = task.title,
                             description = task.description,
                             priority = stringResource(task.priority.label),
@@ -461,7 +466,9 @@ fun SnackBarSection(
 
 @Composable
 fun DaysRow(
-    onDayCardClicked: (Int) -> Unit, listOfDateCardUiState: List<DateCardUiState>, version: Int
+    onDayCardClicked: (Int) -> Unit,
+    listOfDateCardUiState: List<DateCardUiState>,
+    version: Int
 ) {
 
     val listState = rememberLazyListState()
@@ -488,7 +495,7 @@ fun DaysRow(
 
             val modifier = if (dateCard.isSelected) {
                 Modifier
-                    .size(width = 56.dp, height = 65.dp)
+                    .width(width = 56.dp)
                     .background(
                         brush = (Brush.linearGradient(
                             colors = TudeeTheme.color.primaryGradient,
@@ -500,7 +507,7 @@ fun DaysRow(
                     )
             } else {
                 Modifier
-                    .size(width = 56.dp, height = 65.dp)
+                    .width(width = 56.dp)
                     .background(
                         TudeeTheme.color.surface, shape = RoundedCornerShape(16.dp)
                     )
@@ -530,15 +537,16 @@ fun SwipeableCardWrapper(
     Box(
         Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
+            .clip(RoundedCornerShape(16.dp))
             .background(TudeeTheme.color.statusColors.errorVariant),
         contentAlignment = Alignment.CenterEnd
     ) {
-        IconButton(modifier = Modifier
-            .onSizeChanged {
-                hiddenIconWidth = it.width.toFloat()
-            }
-            .padding(horizontal = 12.dp), onClick = {
+        IconButton(
+            modifier = Modifier
+                .onSizeChanged {
+                    hiddenIconWidth = it.width.toFloat()
+                }
+                .padding(horizontal = 16.dp), onClick = {
             onDeleteIconClick()
         }) {
             Icon(
@@ -553,7 +561,7 @@ fun SwipeableCardWrapper(
             modifier = Modifier
                 .fillMaxWidth()
                 .offset { IntOffset(x = -neededOffset.value.roundToInt(), y = 0) }
-                .clip(RoundedCornerShape(12.dp))
+                .clip(RoundedCornerShape(16.dp))
                 .pointerInput(hiddenIconWidth) {
                     detectHorizontalDragGestures(onHorizontalDrag = { _, dragAmount ->
                         scope.launch {
@@ -577,66 +585,7 @@ fun SwipeableCardWrapper(
     }
 }
 
-@Composable
-fun HeadingDate(onDateCardClicked: () -> Unit) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(32.dp)
-                    .border(
-                        1.dp, TudeeTheme.color.stroke, shape = CircleShape
-                    ),
-                contentAlignment = Alignment.Center,
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.arrow_left),
-                    contentDescription = stringResource(R.string.back_button),
-                    tint = TudeeTheme.color.textColors.body
-                )
-            }
-            Spacer(modifier = Modifier.weight(1f))
-            Box(
-                modifier = Modifier
-                    .size(32.dp)
-                    .border(
-                        1.dp, TudeeTheme.color.stroke, RoundedCornerShape(100.dp)
-                    ),
-                contentAlignment = Alignment.Center,
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.arrow_right),
-                    contentDescription = stringResource(R.string.back_button),
-                    tint = TudeeTheme.color.textColors.body
-                )
-            }
-        }
 
-        Row(
-            Modifier.clickable { onDateCardClicked() },
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "Jun, 2025",
-                style = TudeeTheme.textStyle.label.medium,
-                color = TudeeTheme.color.textColors.body
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            Icon(
-                painter = painterResource(R.drawable.arrow_down),
-                tint = TudeeTheme.color.textColors.body,
-                contentDescription = ""
-            )
-        }
-    }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
