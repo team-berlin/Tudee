@@ -1,7 +1,6 @@
 package com.example.tudee.presentation.screen.task_screen.ui
 
 
-import android.content.res.Configuration
 import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
@@ -85,15 +84,13 @@ import com.example.tudee.presentation.components.buttons.FabButton
 import com.example.tudee.presentation.components.buttons.NegativeButton
 import com.example.tudee.presentation.components.buttons.SecondaryButton
 import com.example.tudee.presentation.screen.TaskDetailsScreen
+import com.example.tudee.presentation.screen.task_screen.interactors.TaskScreenInteractor
 import com.example.tudee.presentation.screen.task_screen.ui_states.DateCardUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.DateUiState
-import com.example.tudee.presentation.screen.task_screen.ui_states.TasksScreenUiState
-import com.example.tudee.presentation.screen.task_screen.viewmodel.TasksScreenViewModel
-import com.example.tudee.presentation.screen.task_screen.interactors.TaskScreenInteractor
-import com.example.tudee.presentation.screen.task_screen.mappers.TaskPriorityUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.TaskBottomSheetState
 import com.example.tudee.presentation.screen.task_screen.ui_states.TaskUiState
-
+import com.example.tudee.presentation.screen.task_screen.ui_states.TasksScreenUiState
+import com.example.tudee.presentation.screen.task_screen.viewmodel.TasksScreenViewModel
 import com.example.tudee.presentation.viewmodel.AddTaskBottomSheetViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -163,9 +160,9 @@ fun TasksScreenContent(
     hideAddTaskBottomSheet: () -> Unit,
     hideDetailsBottomSheet: () -> Unit,
     addTaskBottomSheetViewModel: AddTaskBottomSheetViewModel,
-    addButtonState : Boolean
+    addButtonState: Boolean
 
-    ) {
+) {
 
     TudeeScaffold(
         showTopAppBar = true,
@@ -176,7 +173,8 @@ fun TasksScreenContent(
         floatingActionButton = {
             TaskScreenFloatingActionButton {
                 Log.d("MainScreen", "Add button clicked")
-                addTaskBottomSheetViewModel.showButtonSheet()            }
+                addTaskBottomSheetViewModel.showButtonSheet()
+            }
         })
     { paddingValues ->
 
@@ -187,7 +185,7 @@ fun TasksScreenContent(
                 .padding(paddingValues)
         ) {
 
-            if(taskScreenUiState.taskDetailsUiState!=null){
+            if (taskScreenUiState.taskDetailsUiState != null) {
                 ModalBottomSheet(
                     onDismissRequest = {
                         hideDetailsBottomSheet()
@@ -221,7 +219,7 @@ fun TasksScreenContent(
             onCancelButtonClicked = addTaskBottomSheetViewModel::onCancelClicked,
             onDateFieldClicked = addTaskBottomSheetViewModel::onDateFieldClicked,
             onConfirmDatePicker = addTaskBottomSheetViewModel::onConfirmDatePicker,
-            onDismissDatePicker =addTaskBottomSheetViewModel::onDismissDatePicker
+            onDismissDatePicker = addTaskBottomSheetViewModel::onDismissDatePicker
         )
 
 
@@ -408,8 +406,9 @@ fun TasksListContent(
                         onDeleteIconClick = { onDeleteIconClick(task.id) },
                     ) {
 
-                        Modifier.clip(RoundedCornerShape(16.dp))
+
                         CategoryTaskComponent(
+                            Modifier.clip(RoundedCornerShape(16.dp)),
                             title = task.title,
                             description = task.description,
                             priority = stringResource(task.priority.label),
@@ -538,15 +537,16 @@ fun SwipeableCardWrapper(
     Box(
         Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
+            .clip(RoundedCornerShape(16.dp))
             .background(TudeeTheme.color.statusColors.errorVariant),
         contentAlignment = Alignment.CenterEnd
     ) {
-        IconButton(modifier = Modifier
-            .onSizeChanged {
-                hiddenIconWidth = it.width.toFloat()
-            }
-            .padding(horizontal = 12.dp), onClick = {
+        IconButton(
+            modifier = Modifier
+                .onSizeChanged {
+                    hiddenIconWidth = it.width.toFloat()
+                }
+                .padding(horizontal = 16.dp), onClick = {
             onDeleteIconClick()
         }) {
             Icon(
@@ -561,7 +561,7 @@ fun SwipeableCardWrapper(
             modifier = Modifier
                 .fillMaxWidth()
                 .offset { IntOffset(x = -neededOffset.value.roundToInt(), y = 0) }
-                .clip(RoundedCornerShape(12.dp))
+                .clip(RoundedCornerShape(16.dp))
                 .pointerInput(hiddenIconWidth) {
                     detectHorizontalDragGestures(onHorizontalDrag = { _, dragAmount ->
                         scope.launch {

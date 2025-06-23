@@ -95,9 +95,11 @@ private fun TabIndicatorScope.DefaultTabIndicator(selectedTabIndex: Int, modifie
             modifier = modifier.tabIndicatorOffset(
                 selectedTabIndex,
                 matchContentSize = true
-            ),
+            )
+
+            ,
             height = 4.dp,
-            color = TudeeTheme.color.secondary,
+            color = Color.White,
             shape = (RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)),
             width = Dp.Unspecified
         )

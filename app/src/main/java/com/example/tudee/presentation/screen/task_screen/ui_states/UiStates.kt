@@ -5,7 +5,6 @@ import com.example.tudee.presentation.components.TabBarItem
 import com.example.tudee.presentation.components.buttons.ButtonState
 import com.example.tudee.presentation.screen.task_screen.mappers.TaskPriorityUiState
 import com.example.tudee.presentation.screen.task_screen.mappers.TaskStatusUiState
-import com.example.tudee.presentation.screen.task_screen.viewmodel.defaultTabBarItem
 import java.time.YearMonth
 
 data class TasksScreenUiState(
@@ -55,3 +54,16 @@ data class DeleteBottomSheetUiState(
     val deleteButtonState: ButtonState = ButtonState.IDLE,
     val cancelButtonState: ButtonState = ButtonState.IDLE,
 )
+
+val defaultTabBarItem = listOf(
+    TabBarItem(
+        title = TaskStatusUiState.IN_PROGRESS.label, taskCount = "0", isSelected = true
+    ),
+    TabBarItem(
+        title = TaskStatusUiState.TODO.label, taskCount = "0", isSelected = false
+    ),
+    TabBarItem(
+        title = TaskStatusUiState.DONE.label, taskCount = "0", isSelected = false
+    ),
+
+    )

@@ -4,10 +4,8 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
-import com.example.tudee.designsystem.theme.color.TudeeColors
 import com.example.tudee.domain.entity.Task
 import com.example.tudee.domain.entity.TaskPriority
 import com.example.tudee.domain.entity.TaskStatus
@@ -49,7 +47,7 @@ enum class TaskPriorityUiState(
     @DrawableRes val icon: Int,
 ) {
     LOW(label=R.string.low_priority
-        ,containerColorProvider = { TudeeTheme.color.statusColors.pinkAccent }
+        ,containerColorProvider = { TudeeTheme.color.statusColors.greenAccent }
         ,contentColorProvider = { TudeeTheme.color.textColors.onPrimary }
         , icon = R.drawable.ic_priority_low
     ),
@@ -60,7 +58,7 @@ enum class TaskPriorityUiState(
         , icon = R.drawable.ic_priority_medium
     ),
     HIGH(label=R.string.high_priority
-        ,containerColorProvider = { TudeeTheme.color.statusColors.greenAccent }
+        ,containerColorProvider = { TudeeTheme.color.statusColors.pinkAccent }
         ,contentColorProvider = { TudeeTheme.color.textColors.onPrimary}
         , icon = R.drawable.ic_priority_high
     );
