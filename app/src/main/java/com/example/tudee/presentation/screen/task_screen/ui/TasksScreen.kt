@@ -109,6 +109,7 @@ fun TasksScreen(navController: NavController, tasksScreenViewModel: TasksScreenV
 
     val addTaskBottomSheetViewModel: AddTaskBottomSheetViewModel = koinViewModel()
     val addTaskBottomSheetUiState by addTaskBottomSheetViewModel.uiState.collectAsState()
+    val addButtonState by addTaskBottomSheetViewModel.isTaskValid.collectAsState()
 
     TasksScreenContent(
         navController = navController,
@@ -131,10 +132,9 @@ fun TasksScreen(navController: NavController, tasksScreenViewModel: TasksScreenV
         onConfirmDatePicker = tasksScreenViewModel::onConfirmDatePicker,
         hideSnackBar = tasksScreenViewModel::hideSnackBar,
         version = tasksScreenViewModel.triggerEffectVersion.collectAsState().value,
-        hideDetailsBottomSheet = tasksScreenViewModel::hideDetialsBottomSheet,
-        Interactor = tasksScreenViewModel,
-        addButtonState =addButtonState
         hideDetailsBottomSheet = tasksScreenViewModel::hideDetailsBottomSheet,
+        Interactor = tasksScreenViewModel,
+        addButtonState = addButtonState,
     )
 }
 
