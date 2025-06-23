@@ -26,7 +26,6 @@ class CategoryTasksViewModel(
     private val _snackBarEvent = MutableSharedFlow<SnackBarEvent>()
     val snackBarEvent = _snackBarEvent.asSharedFlow()
 
-
     init {
         viewModelScope.launch {
             try {
@@ -35,34 +34,42 @@ class CategoryTasksViewModel(
                 _snackBarEvent.emit(SnackBarEvent.ShowError)
             }
         }
-    }
-
-    fun getTasksByCategoryId(categoryId: Long) {
-        _categoryTasksUiState.value = _categoryTasksUiState.value.copy(loading = true)
         viewModelScope.launch {
-            try {
-                taskService.getTasksByCategoryId(categoryId)
-                    .map { tasks -> groupTasksByCategory(tasks) }
-                    .collect { categoryTasks ->
-                        _categoryTasksUiState.value = if (categoryTasks.isNotEmpty()) {
-                            _categoryTasksUiState.value.copy(
-                                loading = false,
-                                categoryTasksUiModel = categoryTasks.first()
-                            )
-                        } else {
-                            _categoryTasksUiState.value.copy(
-                                loading = false,
-                                categoryTasksUiModel = null
-                            )
-                        }
-                    }
-            } catch (e: Exception) {
-                _categoryTasksUiState.value = _categoryTasksUiState.value.copy(loading = false)
-                _snackBarEvent.emit(SnackBarEvent.ShowError)
+            _categoryTasksUiState.collect { state ->
+                if (!state.loading && state.categoryTasksUiModel != null) {
+                    getTasksByStatus(state, state.categoryTasksUiModel.selectedTabIndex)
+                }
             }
         }
     }
 
+    suspend fun getTasksByCategoryId(categoryId: Long) {
+        _categoryTasksUiState.value = _categoryTasksUiState.value.copy(loading = true)
+        try {
+            taskService.getTasksByCategoryId(categoryId)
+                .map { tasks -> groupTasksByCategory(tasks) }
+                .collect { categoryTasks ->
+                    _categoryTasksUiState.value = if (categoryTasks.isNotEmpty()) {
+                        _categoryTasksUiState.value.copy(
+                            loading = false,
+                            categoryTasksUiModel = categoryTasks.first()
+                        )
+                    } else {
+                        _categoryTasksUiState.value.copy(
+                            loading = false,
+                            categoryTasksUiModel = null
+                        )
+                    }
+                }
+            _categoryTasksUiState.value.categoryTasksUiModel?.selectedTabIndex?.let { tabIndex ->
+                getTasksByStatus(_categoryTasksUiState.value, tabIndex)
+            }
+        } catch (e: Exception) {
+            _categoryTasksUiState.value = _categoryTasksUiState.value.copy(loading = false)
+            _snackBarEvent.emit(SnackBarEvent.ShowError)
+        }
+
+    }
 
     fun deleteCategory() {
         _categoryTasksUiState.value.categoryTasksUiModel?.let {
@@ -139,5 +146,13 @@ class CategoryTasksViewModel(
         }
     }
 
+    fun updateSelectedIndex(index: Int) {
+        _categoryTasksUiState.value = _categoryTasksUiState.value.copy(
+            categoryTasksUiModel = _categoryTasksUiState.value.categoryTasksUiModel?.copy(
+                selectedTabIndex = index,
+            )
+        )
+        getTasksByStatus(_categoryTasksUiState.value, index)
+    }
 
 }

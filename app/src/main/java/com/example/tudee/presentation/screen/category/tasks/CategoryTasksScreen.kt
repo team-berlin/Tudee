@@ -96,7 +96,6 @@ fun CategoryTasksScreen(
         }
     ) { paddingValues ->
         if (uiState.categoryTasksUiModel != null) {
-            viewModel.getTasksByStatus(uiState, uiState.categoryTasksUiModel!!.selectedTabIndex)
             CategoryTasksContent(
                 modifier = modifier.padding(paddingValues),
                 categoryTaskUIState = uiState,
@@ -107,7 +106,7 @@ fun CategoryTasksScreen(
                 },
                 onTabSelected = { index ->
                     selectedTabIndex = index
-                    viewModel.getTasksByStatus(uiState, index)
+                    viewModel.updateSelectedIndex(index)
                 },
                 onBottomSheetDismissed = { isEditCategorySheetVisible = false },
                 onCancelButtonClicked = { isEditCategorySheetVisible = false },
