@@ -40,7 +40,7 @@ import com.example.tudee.presentation.viewmodel.TaskBottomSheetViewModel
 @Composable
 fun TaskDetailsScreen(
     taskDetailsState: TaskDetailsUiState,
-    addTaskBottomSheetViewModel: TaskBottomSheetViewModel,
+    taskBottomSheetViewModel: TaskBottomSheetViewModel,
     hideAddTaskBottomSheet: () -> Unit,
 ) {
     Column(
@@ -59,7 +59,7 @@ fun TaskDetailsScreen(
             priority = taskDetailsState.priority
         )
         if (taskDetailsState.status.toDomain() != TaskStatus.DONE) {
-            TaskActionButtons(addTaskBottomSheetViewModel,taskDetailsState,hideAddTaskBottomSheet)
+            TaskActionButtons(taskBottomSheetViewModel,taskDetailsState,hideAddTaskBottomSheet)
         }
     }
 }
@@ -117,7 +117,7 @@ private fun TaskStatusAndPriorityChips(status: TaskStatusUiState, priority: Task
 
 @Composable
 private fun TaskActionButtons(
-    addTaskBottomSheetViewModel: TaskBottomSheetViewModel,
+    taskBottomSheetViewModel: TaskBottomSheetViewModel,
     taskDetailsState: TaskDetailsUiState,
     hideAddTaskBottomSheet: () -> Unit) {
     Row(
@@ -126,8 +126,8 @@ private fun TaskActionButtons(
     ) {
         IconFab(
             onClick = {
-                addTaskBottomSheetViewModel.getTaskInfoById(taskDetailsState.id)
-                addTaskBottomSheetViewModel.run {
+                taskBottomSheetViewModel.getTaskInfoById(taskDetailsState.id)
+                taskBottomSheetViewModel.run {
                     hideAddTaskBottomSheet()
                     showButtonSheet()
                 } },

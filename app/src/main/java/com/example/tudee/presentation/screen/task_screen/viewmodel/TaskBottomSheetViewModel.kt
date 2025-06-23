@@ -29,13 +29,13 @@ class TaskBottomSheetViewModel(
     private val categoryService: TaskCategoryService
 ) : ViewModel() {
 
-    private val _addTaskBottomSheetUiState: MutableStateFlow<TaskBottomSheetState> =
+    private val _taskBottomSheetUiState: MutableStateFlow<TaskBottomSheetState> =
         MutableStateFlow(TaskBottomSheetState())
-    val uiState: StateFlow<TaskBottomSheetState> = _addTaskBottomSheetUiState.asStateFlow()
+    val uiState: StateFlow<TaskBottomSheetState> = _taskBottomSheetUiState.asStateFlow()
 
     init {
         viewModelScope.launch {
-            _addTaskBottomSheetUiState.update {
+            _taskBottomSheetUiState.update {
                 it.copy(
                     categories = categoryService.getCategories().first()
                 )
@@ -43,7 +43,7 @@ class TaskBottomSheetViewModel(
         }
     }
 
-    val isTaskValid: StateFlow<Boolean> = _addTaskBottomSheetUiState
+    val isTaskValid: StateFlow<Boolean> = _taskBottomSheetUiState
         .map { state ->
             state.taskTitle.isNotBlank() &&
                     state.taskDescription.isNotBlank() &&
@@ -56,31 +56,31 @@ class TaskBottomSheetViewModel(
         )
 
     fun onUpdateTaskTitle(newTitle: String) {
-        _addTaskBottomSheetUiState.update { it.copy(taskTitle = newTitle) }
+        _taskBottomSheetUiState.update { it.copy(taskTitle = newTitle) }
     }
 
     fun onUpdateTaskDescription(newDescription: String) {
-        _addTaskBottomSheetUiState.update { it.copy(taskDescription = newDescription) }
+        _taskBottomSheetUiState.update { it.copy(taskDescription = newDescription) }
     }
 
     fun onUpdateTaskDueDate(newDueDate: LocalDate) {
-        _addTaskBottomSheetUiState.update { it.copy(taskDueDate = newDueDate.toString()) }
+        _taskBottomSheetUiState.update { it.copy(taskDueDate = newDueDate.toString()) }
     }
 
     fun onSelectTaskPriority(newPriority: TaskPriority) {
-        _addTaskBottomSheetUiState.update { it.copy(selectedTaskPriority = newPriority) }
+        _taskBottomSheetUiState.update { it.copy(selectedTaskPriority = newPriority) }
     }
 
     fun onSelectTaskCategory(selectedCategoryId: Long) {
-        _addTaskBottomSheetUiState.update { it.copy(selectedCategoryId = selectedCategoryId) }
+        _taskBottomSheetUiState.update { it.copy(selectedCategoryId = selectedCategoryId) }
     }
 
     fun showButtonSheet() {
-        _addTaskBottomSheetUiState.update { it.copy(isButtonSheetVisible = true) }
+        _taskBottomSheetUiState.update { it.copy(isButtonSheetVisible = true) }
     }
 
     fun hideButtonSheet() {
-        _addTaskBottomSheetUiState.update {
+        _taskBottomSheetUiState.update {
             it.copy(
                 isButtonSheetVisible = false,
                 isEditMode = false,
@@ -98,7 +98,7 @@ class TaskBottomSheetViewModel(
         viewModelScope.launch {
             try {
                 with(taskService.getTaskById(taskId)) {
-                    _addTaskBottomSheetUiState.update {
+                    _taskBottomSheetUiState.update {
                         it.copy(
                             isEditMode = true,
                             taskId = taskId,
@@ -121,11 +121,11 @@ class TaskBottomSheetViewModel(
         viewModelScope.launch {
             try {
                 taskService.createTask(taskCreationRequest)
-                _addTaskBottomSheetUiState.update { it.copy(snackBarMessage = true) }
+                _taskBottomSheetUiState.update { it.copy(snackBarMessage = true) }
                 delay(2000)
                 hideButtonSheet()
             } catch (e: Exception) {
-                _addTaskBottomSheetUiState.update { it.copy(snackBarMessage = false) }
+                _taskBottomSheetUiState.update { it.copy(snackBarMessage = false) }
                 delay(2000)
                 hideButtonSheet()
             }
@@ -136,21 +136,21 @@ class TaskBottomSheetViewModel(
         viewModelScope.launch {
             try {
                 taskService.editTask(editedTask)
-                _addTaskBottomSheetUiState.update { it.copy(snackBarMessage = true) }
+                _taskBottomSheetUiState.update { it.copy(snackBarMessage = true) }
                 delay(2000)
                 hideButtonSheet()
             } catch (e: Exception) {
-                _addTaskBottomSheetUiState.update { it.copy(snackBarMessage = false) }
+                _taskBottomSheetUiState.update { it.copy(snackBarMessage = false) }
                 delay(2000)
                 hideButtonSheet()
             }
         }
     }
     fun onDateFieldClicked(){
-        _addTaskBottomSheetUiState.update { it.copy(isDatePickerVisible = true) }
+        _taskBottomSheetUiState.update { it.copy(isDatePickerVisible = true) }
     }
     fun onDismissDatePicker() {
-        _addTaskBottomSheetUiState.update { it.copy(isDatePickerVisible = false)
+        _taskBottomSheetUiState.update { it.copy(isDatePickerVisible = false)
 
         }
     }
@@ -166,7 +166,7 @@ class TaskBottomSheetViewModel(
                 monthNumber = localDateTime.date.monthNumber,
                 dayOfMonth = localDateTime.date.dayOfMonth
             )
-            _addTaskBottomSheetUiState.update {
+            _taskBottomSheetUiState.update {
                 it.copy(
                     taskDueDate = selectedDate.toString())
             }

@@ -1,7 +1,6 @@
 package com.example.tudee.presentation.screen.task_screen.ui
 
 
-import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
@@ -104,14 +103,14 @@ import kotlin.math.roundToInt
 fun TasksScreen(navController: NavController, tasksScreenViewModel: TasksScreenViewModel) {
     val taskScreenUiState by tasksScreenViewModel.taskScreenUiState.collectAsState()
 
-    val addTaskBottomSheetViewModel: TaskBottomSheetViewModel = koinViewModel()
-    val addTaskBottomSheetUiState by addTaskBottomSheetViewModel.uiState.collectAsState()
-    val addButtonState by addTaskBottomSheetViewModel.isTaskValid.collectAsState()
+    val taskBottomSheetViewModel: TaskBottomSheetViewModel = koinViewModel()
+    val taskBottomSheetUiState by taskBottomSheetViewModel.uiState.collectAsState()
+    val isEditeMode by taskBottomSheetViewModel.isTaskValid.collectAsState()
 
     TasksScreenContent(
         navController = navController,
-        addTaskBottomSheetUiState = addTaskBottomSheetUiState,
-        taskBottomSheetViewModel = addTaskBottomSheetViewModel,
+        taskBottomSheetUiState = taskBottomSheetUiState,
+        taskBottomSheetViewModel = taskBottomSheetViewModel,
         taskScreenUiState = taskScreenUiState,
         onTabSelected = tasksScreenViewModel::onTabSelected,
         onTaskCardClicked = tasksScreenViewModel::onTaskCardClicked,
@@ -129,7 +128,7 @@ fun TasksScreen(navController: NavController, tasksScreenViewModel: TasksScreenV
         version = tasksScreenViewModel.triggerEffectVersion.collectAsState().value,
         hideDetailsBottomSheet = tasksScreenViewModel::hideDetailsBottomSheet,
         Interactor = tasksScreenViewModel,
-        addButtonState = addButtonState,
+        isEditeMode = isEditeMode,
     )
 }
 
@@ -152,11 +151,11 @@ fun TasksScreenContent(
     onConfirmDatePicker: (Long?) -> Unit,
     onDismissDatePicker: () -> Unit,
     hideSnackBar: () -> Unit,
-    addTaskBottomSheetUiState: TaskBottomSheetState,
+    taskBottomSheetUiState: TaskBottomSheetState,
     version: Int,
     hideDetailsBottomSheet: () -> Unit,
     taskBottomSheetViewModel: TaskBottomSheetViewModel,
-    addButtonState : Boolean
+    isEditeMode:Boolean
 
     ) {
 
@@ -201,15 +200,14 @@ fun TasksScreenContent(
 
 
         TaskContent(
-            taskState = addTaskBottomSheetUiState,
+            taskState = taskBottomSheetUiState,
             onTaskTitleChanged = taskBottomSheetViewModel::onUpdateTaskTitle,
             onTaskDescriptionChanged = taskBottomSheetViewModel::onUpdateTaskDescription,
             onUpdateTaskDueDate = taskBottomSheetViewModel::onUpdateTaskDueDate,
             onUpdateTaskPriority = taskBottomSheetViewModel::onSelectTaskPriority,
             onSelectTaskCategory = taskBottomSheetViewModel::onSelectTaskCategory,
-            addButtonState = addButtonState,
             hideButtonSheet = taskBottomSheetViewModel::hideButtonSheet,
-            isEditMode = addTaskBottomSheetUiState.isEditMode,
+            isEditMode =isEditeMode,
             onSaveClicked = taskBottomSheetViewModel::onSaveClicked,
             onAddClicked = taskBottomSheetViewModel::onAddNewTaskClicked,
             onCancelButtonClicked = taskBottomSheetViewModel::onCancelClicked,

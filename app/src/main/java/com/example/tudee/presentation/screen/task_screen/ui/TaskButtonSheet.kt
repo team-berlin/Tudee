@@ -62,7 +62,6 @@ fun TaskContent(
     onUpdateTaskDueDate: (LocalDate) -> Unit,
     onUpdateTaskPriority: (TaskPriority) -> Unit,
     onSelectTaskCategory: (Long) -> Unit,
-    addButtonState: Boolean,
     hideButtonSheet: () -> Unit,
     isEditMode: Boolean,
     onSaveClicked: (Task) -> Unit,
@@ -105,7 +104,6 @@ fun TaskContent(
                 )
                 AddOrSaveButtons(
                     modifier = Modifier.align(Alignment.BottomCenter),
-                    addButtonState = addButtonState,
                     taskState = taskState,
                     isEditMode = isEditMode,
                     onCancelButtonClicked = {
@@ -312,7 +310,6 @@ private fun Title_operation(title:String) {
 fun AddOrSaveButtons(
     modifier: Modifier = Modifier,
     taskState: TaskBottomSheetState,
-    addButtonState: Boolean,
     isEditMode: Boolean,
     onSaveClicked: (Task) -> Unit,
     onAddClicked: (TaskCreationRequest) -> Unit,
@@ -357,7 +354,7 @@ fun AddOrSaveButtons(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
-            state = if (addButtonState) ButtonState.IDLE else ButtonState.DISABLED
+            state = if (isEditMode) ButtonState.IDLE else ButtonState.DISABLED
         ) {
             Text(
                 text = stringResource(if (taskState.isEditMode) R.string.save else R.string.add),
