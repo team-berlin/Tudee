@@ -84,13 +84,7 @@ fun TabBarComponent(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun TabIndicatorScope.DefaultTabIndicator(selectedTabIndex: Int, modifier: Modifier) =
-    AnimatedVisibility(
-        visible = true,
-        enter = fadeIn(tween(1000)),
-        exit = fadeOut(tween(1000))
-    ) {
-
+private fun TabIndicatorScope.DefaultTabIndicator(selectedTabIndex: Int, modifier: Modifier) {
         TabRowDefaults.PrimaryIndicator(
             modifier = modifier.tabIndicatorOffset(
                 selectedTabIndex,
