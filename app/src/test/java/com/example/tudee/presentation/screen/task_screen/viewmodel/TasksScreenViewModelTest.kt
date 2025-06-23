@@ -1,10 +1,12 @@
 package com.example.tudee.presentation.screen.task_screen.viewmodel
 
+import androidx.lifecycle.SavedStateHandle
 import com.example.tudee.domain.TaskCategoryService
 import com.example.tudee.domain.TaskService
 import com.example.tudee.domain.entity.Task
 import com.example.tudee.domain.entity.TaskPriority
 import com.example.tudee.domain.entity.TaskStatus
+import com.example.tudee.presentation.screen.task_screen.mappers.TaskPriorityUiState
 import com.example.tudee.presentation.screen.task_screen.mappers.TaskStatusUiState
 import com.example.tudee.presentation.screen.task_screen.mappers.taskToTaskUiState
 import com.example.tudee.presentation.screen.task_screen.mappers.toDomain
@@ -15,6 +17,7 @@ import com.google.common.truth.Truth.assertThat
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -46,10 +49,13 @@ class TasksScreenViewModelTest {
     @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setup() {
+        val savedStateHandle = SavedStateHandle().apply {
+            set("status", 1)
+        }
         Dispatchers.setMain(testDispatcher)
         taskService = mockk()
         categoryService = mockk()
-        tasksScreenViewModel = TasksScreenViewModel(taskService, categoryService)
+        tasksScreenViewModel = TasksScreenViewModel(taskService = taskService, categoryService = categoryService, savedStateHandle = savedStateHandle)
     }
 
 
@@ -81,7 +87,7 @@ class TasksScreenViewModelTest {
         val tasksFlow = MutableStateFlow(initialTasks)
         coEvery { categoryService.getCategoryIconById(any()) } returns "test"
 
-        coEvery { taskService.getTasksByStatus(any()) } returns tasksFlow
+        coEvery { taskService.getTasksByStatusAndDate(any(), any()) } returns tasksFlow
         coEvery { taskService.deleteTask(taskToDelete.id) } answers {
             tasksFlow.value = updatedTasks
         }
@@ -118,7 +124,7 @@ class TasksScreenViewModelTest {
             description = taskUiState.description,
             categoryIconRes = taskUiState.categoryIcon,
             priority = TaskPriority.LOW,
-            status = TaskStatus.IN_PROGRESS
+            status = TaskStatusUiState.IN_PROGRESS
         )
         tasksScreenViewModel.onTaskCardClicked(taskUiState)
         val state = tasksScreenViewModel.taskScreenUiState.value
@@ -129,7 +135,7 @@ class TasksScreenViewModelTest {
     @Test
     fun `should hideDetailsBottomSheet when hideDetailsBottomSheet is called`() {
         //when
-        tasksScreenViewModel.hideDetialsBottomSheet()
+        tasksScreenViewModel.hideDetailsBottomSheet()
         //then
         val state = tasksScreenViewModel.taskScreenUiState.value
         assertTrue(state.taskDetailsUiState == null)
@@ -166,7 +172,7 @@ class TasksScreenViewModelTest {
 
     @Test
     fun `should return categoryIcon when getCategoryIconById is called`() = runTest {
-        coEvery { taskService.getTasksByStatus(any()) } returns flowOf(emptyList())
+        coEvery { taskService.getTasksByStatusAndDate(any(), any()) } returns flowOf(emptyList())
         coEvery { categoryService.getCategoryIconById(1L) } returns "ic_shopping_cart"
         val categoryicn = tasksScreenViewModel.getCategoryIconById(1L)
         assertEquals("ic_shopping_cart", categoryicn)
@@ -177,17 +183,17 @@ class TasksScreenViewModelTest {
     fun `should update list when onTabSelected is called`() = runTest {
         val statusUiState = TaskStatusUiState.entries[0]
         val status = statusUiState.toDomain()
-        coEvery { taskService.getTasksByStatus(any()) } returns emptyFlow()
+        coEvery { taskService.getTasksByStatusAndDate(any(), any()) } returns emptyFlow()
         coEvery { categoryService.getCategoryIconById(1L) } returns "ic_shopping_cart"
 
         tasksScreenViewModel.onTabSelected(0)
         advanceUntilIdle()
-        coVerify { taskService.getTasksByStatus(status) }
+        coVerify { taskService.getTasksByStatusAndDate(status, any()) }
     }
 
     @Test
     fun `should show datePicker when onCalendarClicked called`() = runTest {
-        coEvery { taskService.getTasksByStatus(TaskStatus.TODO) } returns flowOf(emptyList())
+        coEvery { taskService.getTasksByStatusAndDate(TaskStatus.TODO, any()) } returns flowOf(emptyList())
 
         tasksScreenViewModel.onCalendarClicked()
         val state = tasksScreenViewModel.taskScreenUiState.value
@@ -196,7 +202,7 @@ class TasksScreenViewModelTest {
 
     @Test
     fun `should show datePicker when onDismissDatePicker called`() = runTest {
-        coEvery { taskService.getTasksByStatus(TaskStatus.TODO) } returns flowOf(emptyList())
+        coEvery { taskService.getTasksByStatusAndDate(TaskStatus.TODO, any()) } returns flowOf(emptyList())
 
         tasksScreenViewModel.onDismissDatePicker()
         val state = tasksScreenViewModel.taskScreenUiState.value
@@ -205,14 +211,14 @@ class TasksScreenViewModelTest {
 
     @Test
     fun `onPreviousArrowClicked should update selectedMonth and daysCardsData`() = runTest {
-        val initialMonth = tasksScreenViewModel.taskScreenUiState.value.dateUiState.selectedMonth
+        val initialMonth = tasksScreenViewModel.taskScreenUiState.value.dateUiState.selectedYearMonth
         val expectedMonth = initialMonth.minusMonths(1)
-        coEvery { taskService.getTasksByStatus(TaskStatus.TODO) } returns flowOf(emptyList())
+        coEvery { taskService.getTasksByStatusAndDate(TaskStatus.TODO, any()) } returns flowOf(emptyList())
         tasksScreenViewModel.onPreviousArrowClicked()
 
         val state = tasksScreenViewModel.taskScreenUiState.value.dateUiState
 
-        assertEquals(expectedMonth, state.selectedMonth)
+        assertEquals(expectedMonth, state.selectedYearMonth)
 
         assertEquals(expectedMonth.lengthOfMonth(), state.daysCardsData.size)
 
@@ -227,15 +233,15 @@ class TasksScreenViewModelTest {
 
     @Test
     fun `onNextArrowClicked should update selectedMonth and daysCardsData`() = runTest {
-        val initialMonth = tasksScreenViewModel.taskScreenUiState.value.dateUiState.selectedMonth
+        val initialMonth = tasksScreenViewModel.taskScreenUiState.value.dateUiState.selectedYearMonth
         val expectedMonth = initialMonth.plusMonths(1)
-        coEvery { taskService.getTasksByStatus(TaskStatus.TODO) } returns flowOf(emptyList())
+        coEvery { taskService.getTasksByStatusAndDate(TaskStatus.TODO, any()) } returns flowOf(emptyList())
         tasksScreenViewModel.onNextArrowClicked()
 
         val state = tasksScreenViewModel.taskScreenUiState.value.dateUiState
 
 
-        assertEquals(expectedMonth, state.selectedMonth)
+        assertEquals(expectedMonth, state.selectedYearMonth)
 
         assertEquals(expectedMonth.lengthOfMonth(), state.daysCardsData.size)
 
@@ -256,7 +262,7 @@ class TasksScreenViewModelTest {
             DateCardUiState(dayNumber = 3, dayName = "Mon", isSelected = false),
         )
         val initialTasks = dummyTasks
-        coEvery { taskService.getTasksByStatus(any()) } returns MutableStateFlow(initialTasks)
+        coEvery { taskService.getTasksByStatusAndDate(any(), any()) } returns MutableStateFlow(initialTasks)
         coEvery { categoryService.getCategoryIconById(any()) } returns "test"
 
         tasksScreenViewModel.taskScreenUiState.update {
@@ -280,7 +286,7 @@ class TasksScreenViewModelTest {
             DateCardUiState(dayNumber = it, dayName = "Sat", isSelected = false)
         }
         val initialTasks = dummyTasks
-        coEvery { taskService.getTasksByStatus(any()) } returns MutableStateFlow(initialTasks)
+        coEvery { taskService.getTasksByStatusAndDate(any(), any()) } returns MutableStateFlow(initialTasks)
         coEvery { categoryService.getCategoryIconById(any()) } returns "test"
         tasksScreenViewModel.taskScreenUiState.update {
             it.copy(
@@ -314,8 +320,8 @@ val dummyTasksUiState = mutableListOf(
         id = 1L,
         title = "Buy groceries",
         description = "Milk, eggs, bread, and coffee",
-        priority = 0,
-        status = 1,
+        priority = TaskPriorityUiState.LOW,
+        status = TaskStatusUiState.IN_PROGRESS,
         categoryTitle = "Shopping",
         categoryIcon = "ic_shopping_cart"
     ),
@@ -323,8 +329,8 @@ val dummyTasksUiState = mutableListOf(
         id = 2L,
         title = "Workout",
         description = "45 minutes of cardio and strength",
-        priority = 0,
-        status = 1,
+        priority = TaskPriorityUiState.LOW,
+        status = TaskStatusUiState.IN_PROGRESS,
         categoryTitle = "Health",
         categoryIcon = "ic_fitness"
     ),
@@ -332,8 +338,8 @@ val dummyTasksUiState = mutableListOf(
         id = 3L,
         title = "Finish report",
         description = "Complete the Q2 performance report",
-        priority = 0,
-        status = 1,
+        priority = TaskPriorityUiState.LOW,
+        status = TaskStatusUiState.IN_PROGRESS,
         categoryTitle = "Work",
         categoryIcon = "ic_work"
     ),
@@ -341,8 +347,8 @@ val dummyTasksUiState = mutableListOf(
         id = 4L,
         title = "Read a book",
         description = "Read at least 50 pages of the current book",
-        priority = 0,
-        status = 1,
+        priority = TaskPriorityUiState.LOW,
+        status = TaskStatusUiState.IN_PROGRESS,
         categoryTitle = "Leisure",
         categoryIcon = "ic_book"
     )

@@ -11,8 +11,6 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
@@ -111,7 +109,6 @@ fun TasksScreen(navController: NavController, tasksScreenViewModel: TasksScreenV
 
     val addTaskBottomSheetViewModel: AddTaskBottomSheetViewModel = koinViewModel()
     val addTaskBottomSheetUiState by addTaskBottomSheetViewModel.uiState.collectAsState()
-    val addButtonState by addTaskBottomSheetViewModel.isTaskValid.collectAsState()
 
     TasksScreenContent(
         navController = navController,
@@ -137,6 +134,7 @@ fun TasksScreen(navController: NavController, tasksScreenViewModel: TasksScreenV
         hideDetailsBottomSheet = tasksScreenViewModel::hideDetialsBottomSheet,
         Interactor = tasksScreenViewModel,
         addButtonState =addButtonState
+        hideDetailsBottomSheet = tasksScreenViewModel::hideDetailsBottomSheet,
     )
 }
 
@@ -231,9 +229,7 @@ fun TasksScreenContent(
 
         if (taskScreenUiState.dateUiState.isDatePickerVisible) {
             TudeeDateDialog(
-                onDismiss = onDismissDatePicker,
-                onConfirm = onConfirmDatePicker,
-                onClear = {})
+                onDismiss = onDismissDatePicker, onConfirm = onConfirmDatePicker, onClear = {})
         }
 
         Column(
@@ -283,8 +279,7 @@ fun TasksScreenContent(
 
     }
     SnackBarSection(
-        isSnackBarVisible = taskScreenUiState.isSnackBarVisible,
-        hideSnackBar = hideSnackBar
+        isSnackBarVisible = taskScreenUiState.isSnackBarVisible, hideSnackBar = hideSnackBar
     )
 }
 
@@ -300,9 +295,8 @@ private fun DateSection(
     version: Int,
 ) {
     DataHeader(
-        selectedMonth = datePickerUiState.selectedMonth.month.getDisplayName(
-            TextStyle.SHORT,
-            Locale.getDefault()
+        selectedMonth = datePickerUiState.selectedYearMonth.month.getDisplayName(
+            TextStyle.SHORT, Locale.getDefault()
         ),
         selectedYear = datePickerUiState.selectedYear,
         onCalendarClicked = onCalendarClicked,
@@ -327,6 +321,7 @@ fun DataHeader(
     Row(
         modifier = Modifier
             .fillMaxWidth()
+
             .padding(horizontal = 16.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
@@ -436,6 +431,7 @@ fun TasksListContent(
         }
     }
 }
+
 @Composable
 fun SnackBarSection(
     isSnackBarVisible: Boolean, hideSnackBar: () -> Unit
@@ -473,9 +469,7 @@ fun SnackBarSection(
 
 @Composable
 fun DaysRow(
-    onDayCardClicked: (Int) -> Unit,
-    listOfDateCardUiState: List<DateCardUiState>,
-    version: Int
+    onDayCardClicked: (Int) -> Unit, listOfDateCardUiState: List<DateCardUiState>, version: Int
 ) {
 
     val listState = rememberLazyListState()

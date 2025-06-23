@@ -37,25 +37,30 @@ class TasksScreenViewModel(
     private val _taskScreenUiState = MutableStateFlow(TasksScreenUiState())
     val taskScreenUiState = _taskScreenUiState
 
-    val args:Int=checkNotNull(savedStateHandle["status"])
+    private val args: Int = checkNotNull(savedStateHandle["status"])
     private val _triggerEffectVersion = MutableStateFlow(0)
     val triggerEffectVersion: StateFlow<Int> = _triggerEffectVersion
 
     init {
-        updateStatus(args)
+        initStatus(args)
         viewModelScope.launch {
             _taskScreenUiState.update { it.copy(isLoading = true) }
-            getTasksByStatus(status = TaskStatus.entries[_taskScreenUiState.value.selectedTabIndex],
-               tabIndex =  _taskScreenUiState.value.selectedTabIndex)
-
+            getTasksByStatusAndDate(
+                status = TaskStatus.entries[_taskScreenUiState.value.selectedTabIndex],
+                date = getSelectedDate(),
+                tabIndex = _taskScreenUiState.value.selectedTabIndex
+            )
             _taskScreenUiState.update { it.copy(isLoading = false) }
         }
+    }
+
+    private fun initStatus(status: Int) {
+        _taskScreenUiState.update { it.copy(selectedTabIndex = status) }
 
         updateDaysInMonth(
             month = YearMonth.now(), selectedDate = LocalDate.now()
         )
     }
-
 
     fun updateStatus(status: Int) {
         _taskScreenUiState.update { it.copy(selectedTabIndex = status) }
@@ -71,6 +76,13 @@ class TasksScreenViewModel(
                 )
             )
         }
+        val statusUiState = TaskStatusUiState.entries[_taskScreenUiState.value.selectedTabIndex]
+        val status = statusUiState.toDomain()
+        getTasksByStatusAndDate(
+            status = status,
+            date = getSelectedDate(),
+            tabIndex = _taskScreenUiState.value.selectedTabIndex
+        )
     }
 
     override fun onDeleteIconClicked(idOfTaskToBeDeleted: Long) {
@@ -117,10 +129,10 @@ class TasksScreenViewModel(
     }
 
     override fun onTabSelected(tabIndex: Int) {
+        _taskScreenUiState.update { it.copy(selectedTabIndex = tabIndex) }
         val statusUiState = TaskStatusUiState.entries[tabIndex]
         val status = statusUiState.toDomain()
-        getTasksByStatus(status = status, tabIndex = tabIndex)
-
+        getTasksByStatusAndDate(status = status, tabIndex = tabIndex, date = getSelectedDate())
     }
 
     override fun onFloatingActionClicked() {
@@ -145,12 +157,12 @@ class TasksScreenViewModel(
 
     override fun onCalendarClicked() {
         _taskScreenUiState.update {
-                it.copy(
-                    dateUiState = it.dateUiState.copy(
-                        isDatePickerVisible = true
-                    )
+            it.copy(
+                dateUiState = it.dateUiState.copy(
+                    isDatePickerVisible = true
                 )
-            }
+            )
+        }
     }
 
     override fun onDismissDatePicker() {
@@ -173,26 +185,33 @@ class TasksScreenViewModel(
                 it.copy(
                     dateUiState = it.dateUiState.copy(
                         selectedYear = localPickedDate.year.toString(),
-                        selectedMonth = selectedYearMonth,
+                        selectedYearMonth = selectedYearMonth,
                     )
                 )
             }
             onDayCardClicked(localPickedDate.dayOfMonth - 1)
             _triggerEffectVersion.update { it + 1 }
         }
+        val statusUiState = TaskStatusUiState.entries[_taskScreenUiState.value.selectedTabIndex]
+        val status = statusUiState.toDomain()
+        getTasksByStatusAndDate(
+            status = status,
+            tabIndex = _taskScreenUiState.value.selectedTabIndex,
+            date = getSelectedDate()
+        )
     }
 
     fun onPreviousArrowClicked() {
-        val prevMonth = _taskScreenUiState.value.dateUiState.selectedMonth.minusMonths(1)
+        val prevMonth = _taskScreenUiState.value.dateUiState.selectedYearMonth.minusMonths(1)
         updateDaysInMonth(prevMonth)
     }
 
     fun onNextArrowClicked() {
-        val nextMonth = _taskScreenUiState.value.dateUiState.selectedMonth.plusMonths(1)
+        val nextMonth = _taskScreenUiState.value.dateUiState.selectedYearMonth.plusMonths(1)
         updateDaysInMonth(nextMonth)
     }
 
-    fun hideDetialsBottomSheet() {
+    fun hideDetailsBottomSheet() {
         _taskScreenUiState.update {
             it.copy(
                 taskDetailsUiState = null
@@ -218,10 +237,10 @@ class TasksScreenViewModel(
         return categoryService.getCategoryIconById(categoryId)
     }
 
-    private fun getTasksByStatus(status: TaskStatus, tabIndex: Int = 0) {
+    private fun getTasksByStatusAndDate(status: TaskStatus, date: String, tabIndex: Int = 0) {
         job?.cancel()
         job = viewModelScope.launch {
-            taskService.getTasksByStatus(status).collect {
+            taskService.getTasksByStatusAndDate(status, date).collect {
                 val result = it.map { task ->
                     val categoryIcon = getCategoryIconById(task.categoryId)
                     task.taskToTaskUiState(categoryIcon)
@@ -247,12 +266,10 @@ class TasksScreenViewModel(
     private fun updateDaysInMonth(month: YearMonth, selectedDate: LocalDate? = null) {
         val days = getDaysInMonth(month, selectedDate = selectedDate)
 
-        val oldDateUiState = _taskScreenUiState.value.dateUiState
-
-        _taskScreenUiState.update { state ->
-            state.copy(
-                dateUiState = oldDateUiState.copy(
-                    selectedMonth = YearMonth.of(
+        _taskScreenUiState.update { currentState ->
+            currentState.copy(
+                dateUiState = currentState.dateUiState.copy(
+                    selectedYearMonth = YearMonth.of(
                         month.year, month.month
                     ),
                     selectedYear = month.year.toString(),
@@ -264,18 +281,38 @@ class TasksScreenViewModel(
 
     private fun getDaysInMonth(
         month: YearMonth, selectedDate: LocalDate?
-
     ): List<DateCardUiState> {
-        val fallbackDate = selectedDate ?: month.atDay(1)
+
         val totalDays = month.lengthOfMonth()
+
+        val fallbackDate = selectedDate ?: run {
+            val selectedDayNumber =
+                _taskScreenUiState.value.dateUiState.daysCardsData.firstOrNull { it.isSelected }?.dayNumber
+            val safeDay = selectedDayNumber?.coerceAtMost(totalDays) ?: 1
+            month.atDay(safeDay)
+        }
+
         return (1..totalDays).map { day ->
             val date = month.atDay(day)
             DateCardUiState(
                 dayNumber = date.dayOfMonth,
                 dayName = date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault()),
-                isSelected = date == fallbackDate
+                isSelected = date == fallbackDate,
             )
         }
+    }
+
+    private fun getSelectedDate(): String {
+        val dateUiState = _taskScreenUiState.value.dateUiState
+        val selectedDay = dateUiState.daysCardsData.find { it.isSelected }?.dayNumber
+        return selectedDay?.let {
+            LocalDate.of(
+                dateUiState.selectedYearMonth.year,
+                dateUiState.selectedYearMonth.month,
+                it
+            )
+                .toString()
+        } ?: LocalDate.now().toString()
     }
 }
 
@@ -289,4 +326,6 @@ val defaultTabBarItem = listOf(
     TabBarItem(
         title = TaskStatusUiState.DONE.label, taskCount = "0", isSelected = false
     ),
+
     )
+
