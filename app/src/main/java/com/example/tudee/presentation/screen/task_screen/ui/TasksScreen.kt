@@ -198,7 +198,8 @@ fun TasksScreenContent(
                     TaskDetailsScreen(
                         taskDetailsState =
                             taskScreenUiState.taskDetailsUiState!!,
-                        addTaskBottomSheetViewModel
+                        addTaskBottomSheetViewModel,
+                         hideDetailsBottomSheet
                     )
                 }
             }

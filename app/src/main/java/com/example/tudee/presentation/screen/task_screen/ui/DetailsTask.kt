@@ -38,13 +38,14 @@ import com.example.tudee.presentation.screen.task_screen.mappers.TaskStatusUiSta
 import com.example.tudee.presentation.screen.task_screen.mappers.toDomain
 import com.example.tudee.presentation.screen.task_screen.mappers.toUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.TaskDetailsUiState
+import com.example.tudee.presentation.screen.task_screen.viewmodel.TasksScreenViewModel
 import com.example.tudee.presentation.viewmodel.AddTaskBottomSheetViewModel
 
 @Composable
 fun TaskDetailsScreen(
     taskDetailsState: TaskDetailsUiState,
-    addTaskBottomSheetViewModel: AddTaskBottomSheetViewModel
-
+    addTaskBottomSheetViewModel: AddTaskBottomSheetViewModel,
+    hideAddTaskBottomSheet: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -62,7 +63,7 @@ fun TaskDetailsScreen(
             priority = taskDetailsState.priority
         )
         if (taskDetailsState.status.toDomain() != TaskStatus.DONE) {
-            TaskActionButtons(addTaskBottomSheetViewModel,taskDetailsState)
+            TaskActionButtons(addTaskBottomSheetViewModel,taskDetailsState,hideAddTaskBottomSheet)
         }
     }
 }
@@ -121,7 +122,8 @@ private fun TaskStatusAndPriorityChips(status: TaskStatusUiState, priority: Task
 @Composable
 private fun TaskActionButtons(
     addTaskBottomSheetViewModel: AddTaskBottomSheetViewModel,
-    taskDetailsState: TaskDetailsUiState) {
+    taskDetailsState: TaskDetailsUiState,
+    hideAddTaskBottomSheet: () -> Unit) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -130,13 +132,14 @@ private fun TaskActionButtons(
             onClick = {
                 addTaskBottomSheetViewModel.getTaskInfoById(taskDetailsState.id)
                 addTaskBottomSheetViewModel.run {
+                    hideAddTaskBottomSheet()
                     showButtonSheet()
                 } },
             icon = painterResource(R.drawable.pencil_edit),
             contentDescription = stringResource(R.string.edit_icon)
         )
         SecondaryButton(
-            onClick = {},
+            onClick = {hideAddTaskBottomSheet() },
             modifier = Modifier.weight(1f),
             content = {
                 Text(
