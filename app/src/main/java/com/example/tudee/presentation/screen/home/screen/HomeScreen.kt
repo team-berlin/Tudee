@@ -213,7 +213,7 @@ fun BackgroundBlueCard(modifier: Modifier = Modifier) {
     Box(
         modifier
             .fillMaxWidth()
-            .height(176.dp)
+            .height(55.dp)
             .background(color = TudeeTheme.color.primary)
     )
 }
@@ -241,7 +241,7 @@ fun BottomSheetContent(
     }
 }
 
-@Preview(showSystemUi = true, showBackground = true, locale = "ar")
+@Preview(showSystemUi = true, showBackground = true, locale = "en")
 @Composable
 private fun HomeScreenPreview() {
     TudeeTheme {
