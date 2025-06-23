@@ -1,7 +1,6 @@
 package com.example.tudee.presentation.screen.task_screen.ui
 
 
-import android.content.res.Configuration
 import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
@@ -90,11 +89,10 @@ import com.example.tudee.presentation.screen.task_screen.ui_states.DateUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.TasksScreenUiState
 import com.example.tudee.presentation.screen.task_screen.viewmodel.TasksScreenViewModel
 import com.example.tudee.presentation.screen.task_screen.interactors.TaskScreenInteractor
-import com.example.tudee.presentation.screen.task_screen.mappers.TaskPriorityUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.TaskBottomSheetState
 import com.example.tudee.presentation.screen.task_screen.ui_states.TaskUiState
 
-import com.example.tudee.presentation.viewmodel.AddTaskBottomSheetViewModel
+import com.example.tudee.presentation.viewmodel.TaskBottomSheetViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -104,19 +102,16 @@ import kotlin.math.roundToInt
 
 @Composable
 fun TasksScreen(navController: NavController, tasksScreenViewModel: TasksScreenViewModel) {
-    //val tasksScreenViewModel: TasksScreenViewModel = koinNavViewModel()
     val taskScreenUiState by tasksScreenViewModel.taskScreenUiState.collectAsState()
 
-    val addTaskBottomSheetViewModel: AddTaskBottomSheetViewModel = koinViewModel()
+    val addTaskBottomSheetViewModel: TaskBottomSheetViewModel = koinViewModel()
     val addTaskBottomSheetUiState by addTaskBottomSheetViewModel.uiState.collectAsState()
     val addButtonState by addTaskBottomSheetViewModel.isTaskValid.collectAsState()
 
     TasksScreenContent(
         navController = navController,
         addTaskBottomSheetUiState = addTaskBottomSheetUiState,
-        showAddTaskBottomSheet = addTaskBottomSheetViewModel::showButtonSheet,
-        hideAddTaskBottomSheet = addTaskBottomSheetViewModel::hideButtonSheet,
-        addTaskBottomSheetViewModel = addTaskBottomSheetViewModel,
+        taskBottomSheetViewModel = addTaskBottomSheetViewModel,
         taskScreenUiState = taskScreenUiState,
         onTabSelected = tasksScreenViewModel::onTabSelected,
         onTaskCardClicked = tasksScreenViewModel::onTaskCardClicked,
@@ -158,11 +153,9 @@ fun TasksScreenContent(
     onDismissDatePicker: () -> Unit,
     hideSnackBar: () -> Unit,
     addTaskBottomSheetUiState: TaskBottomSheetState,
-    showAddTaskBottomSheet: () -> Unit,
     version: Int,
-    hideAddTaskBottomSheet: () -> Unit,
     hideDetailsBottomSheet: () -> Unit,
-    addTaskBottomSheetViewModel: AddTaskBottomSheetViewModel,
+    taskBottomSheetViewModel: TaskBottomSheetViewModel,
     addButtonState : Boolean
 
     ) {
@@ -175,8 +168,8 @@ fun TasksScreenContent(
         showFab = true,
         floatingActionButton = {
             TaskScreenFloatingActionButton {
-                Log.d("MainScreen", "Add button clicked")
-                addTaskBottomSheetViewModel.showButtonSheet()            }
+                taskBottomSheetViewModel.showButtonSheet()
+            }
         })
     { paddingValues ->
 
@@ -198,7 +191,7 @@ fun TasksScreenContent(
                     TaskDetailsScreen(
                         taskDetailsState =
                             taskScreenUiState.taskDetailsUiState!!,
-                        addTaskBottomSheetViewModel,
+                        taskBottomSheetViewModel,
                          hideDetailsBottomSheet
                     )
                 }
@@ -209,20 +202,20 @@ fun TasksScreenContent(
 
         TaskContent(
             taskState = addTaskBottomSheetUiState,
-            onTaskTitleChanged = addTaskBottomSheetViewModel::onUpdateTaskTitle,
-            onTaskDescriptionChanged = addTaskBottomSheetViewModel::onUpdateTaskDescription,
-            onUpdateTaskDueDate = addTaskBottomSheetViewModel::onUpdateTaskDueDate,
-            onUpdateTaskPriority = addTaskBottomSheetViewModel::onSelectTaskPriority,
-            onSelectTaskCategory = addTaskBottomSheetViewModel::onSelectTaskCategory,
+            onTaskTitleChanged = taskBottomSheetViewModel::onUpdateTaskTitle,
+            onTaskDescriptionChanged = taskBottomSheetViewModel::onUpdateTaskDescription,
+            onUpdateTaskDueDate = taskBottomSheetViewModel::onUpdateTaskDueDate,
+            onUpdateTaskPriority = taskBottomSheetViewModel::onSelectTaskPriority,
+            onSelectTaskCategory = taskBottomSheetViewModel::onSelectTaskCategory,
             addButtonState = addButtonState,
-            hideButtonSheet = addTaskBottomSheetViewModel::hideButtonSheet,
+            hideButtonSheet = taskBottomSheetViewModel::hideButtonSheet,
             isEditMode = addTaskBottomSheetUiState.isEditMode,
-            onSaveClicked = addTaskBottomSheetViewModel::onSaveClicked,
-            onAddClicked = addTaskBottomSheetViewModel::onAddNewTaskClicked,
-            onCancelButtonClicked = addTaskBottomSheetViewModel::onCancelClicked,
-            onDateFieldClicked = addTaskBottomSheetViewModel::onDateFieldClicked,
-            onConfirmDatePicker = addTaskBottomSheetViewModel::onConfirmDatePicker,
-            onDismissDatePicker =addTaskBottomSheetViewModel::onDismissDatePicker
+            onSaveClicked = taskBottomSheetViewModel::onSaveClicked,
+            onAddClicked = taskBottomSheetViewModel::onAddNewTaskClicked,
+            onCancelButtonClicked = taskBottomSheetViewModel::onCancelClicked,
+            onDateFieldClicked = taskBottomSheetViewModel::onDateFieldClicked,
+            onConfirmDatePicker = taskBottomSheetViewModel::onConfirmDatePicker,
+            onDismissDatePicker =taskBottomSheetViewModel::onDismissDatePicker
         )
 
 

@@ -24,7 +24,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
-class AddTaskBottomSheetViewModel(
+class TaskBottomSheetViewModel(
     private val taskService: TaskService,
     private val categoryService: TaskCategoryService
 ) : ViewModel() {

@@ -1,6 +1,5 @@
 package com.example.tudee.presentation.screen
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -25,7 +24,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
 import com.example.tudee.data.mapper.getCategoryIcon
@@ -36,15 +34,13 @@ import com.example.tudee.presentation.components.TudeeChip
 import com.example.tudee.presentation.components.buttons.SecondaryButton
 import com.example.tudee.presentation.screen.task_screen.mappers.TaskStatusUiState
 import com.example.tudee.presentation.screen.task_screen.mappers.toDomain
-import com.example.tudee.presentation.screen.task_screen.mappers.toUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.TaskDetailsUiState
-import com.example.tudee.presentation.screen.task_screen.viewmodel.TasksScreenViewModel
-import com.example.tudee.presentation.viewmodel.AddTaskBottomSheetViewModel
+import com.example.tudee.presentation.viewmodel.TaskBottomSheetViewModel
 
 @Composable
 fun TaskDetailsScreen(
     taskDetailsState: TaskDetailsUiState,
-    addTaskBottomSheetViewModel: AddTaskBottomSheetViewModel,
+    addTaskBottomSheetViewModel: TaskBottomSheetViewModel,
     hideAddTaskBottomSheet: () -> Unit,
 ) {
     Column(
@@ -121,7 +117,7 @@ private fun TaskStatusAndPriorityChips(status: TaskStatusUiState, priority: Task
 
 @Composable
 private fun TaskActionButtons(
-    addTaskBottomSheetViewModel: AddTaskBottomSheetViewModel,
+    addTaskBottomSheetViewModel: TaskBottomSheetViewModel,
     taskDetailsState: TaskDetailsUiState,
     hideAddTaskBottomSheet: () -> Unit) {
     Row(

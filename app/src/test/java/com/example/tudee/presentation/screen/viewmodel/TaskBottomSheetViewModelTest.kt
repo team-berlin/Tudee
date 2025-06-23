@@ -6,9 +6,7 @@ import com.example.tudee.domain.entity.Task
 import com.example.tudee.domain.entity.TaskCategory
 import com.example.tudee.domain.entity.TaskPriority
 import com.example.tudee.domain.entity.TaskStatus
-import com.example.tudee.domain.request.TaskCreationRequest
 import io.mockk.coEvery
-import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
@@ -16,7 +14,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -28,8 +25,8 @@ import org.junit.Before
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class AddTaskBottomSheetViewModelTest {
-    private lateinit var viewModel: AddTaskBottomSheetViewModel
+class TaskBottomSheetViewModelTest {
+    private lateinit var viewModel: TaskBottomSheetViewModel
     private lateinit var taskService: TaskService
     private lateinit var categoryService: TaskCategoryService
     private val testDispatcher = StandardTestDispatcher()
@@ -42,7 +39,7 @@ class AddTaskBottomSheetViewModelTest {
         every { categoryService.getCategories() } returns flowOf(
             listOf(TaskCategory(id = 1L, title = "Work", isPredefined = false, image = ""))
         )
-        viewModel = AddTaskBottomSheetViewModel(taskService, categoryService)
+        viewModel = TaskBottomSheetViewModel(taskService, categoryService)
     }
 
     @Test

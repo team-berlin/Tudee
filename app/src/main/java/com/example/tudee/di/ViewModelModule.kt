@@ -6,7 +6,7 @@ import com.example.tudee.presentation.screen.task_screen.viewmodel.TasksScreenVi
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
-import com.example.tudee.presentation.viewmodel.AddTaskBottomSheetViewModel
+import com.example.tudee.presentation.viewmodel.TaskBottomSheetViewModel
 
 val viewModelModule = module {
     viewModel { (handle: SavedStateHandle) ->
@@ -16,5 +16,5 @@ val viewModelModule = module {
             savedStateHandle = handle
         )
     }
-    viewModelOf(::AddTaskBottomSheetViewModel)
+    viewModelOf(::TaskBottomSheetViewModel)
 }
