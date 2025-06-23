@@ -32,7 +32,7 @@ import java.util.Locale
 class TasksScreenViewModel(
     private val taskService: TaskService,
     private val categoryService: TaskCategoryService,
-    savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel(), TaskScreenInteractor {
     private val _taskScreenUiState = MutableStateFlow(TasksScreenUiState())
     val taskScreenUiState = _taskScreenUiState
@@ -60,6 +60,10 @@ class TasksScreenViewModel(
         updateDaysInMonth(
             month = YearMonth.now(), selectedDate = LocalDate.now()
         )
+    }
+
+    fun updateStatus(status: Int) {
+        _taskScreenUiState.update { it.copy(selectedTabIndex = status) }
     }
 
     override fun onDayCardClicked(cardIndex: Int) {

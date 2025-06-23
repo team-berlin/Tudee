@@ -1,4 +1,4 @@
-package com.example.tudee.presentation.screen.task_screen.viewmodel
+package com.example.tudee.presentation.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -42,14 +42,6 @@ class AddTaskBottomSheetViewModel(
             }
         }
     }
-
-//    private val _isEditModeOn: MutableStateFlow<Boolean> = MutableStateFlow(false)
-//    val isEditModeOn = _isEditModeOn.asStateFlow()
-
-    fun toggleEditMode(on: Boolean) {
-        _addTaskBottomSheetUiState.update { it.copy(isEditMode = on) }
-    }
-
 
     val isTaskValid: StateFlow<Boolean> = _addTaskBottomSheetUiState
         .map { state ->

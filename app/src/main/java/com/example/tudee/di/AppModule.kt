@@ -48,4 +48,5 @@ val appModule = module {
     single<AppEntryDao> { get<AppDatabase>().appEntryDao() }
     single<AppEntry> { AppEntryImpl(get()) }
 
+
 }
