@@ -42,13 +42,13 @@ import com.example.tudee.presentation.screen.category.EditCategorySheet
 import com.example.tudee.presentation.screen.category.model.CategoryData
 import com.example.tudee.presentation.screen.category.model.toUiImage
 import kotlinx.coroutines.delay
-import org.koin.compose.getKoin
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun CategoryTasksScreen(
     modifier: Modifier = Modifier,
     navController: NavController = rememberNavController(),
-    viewModel: CategoryTasksViewModel = getKoin().get()
+    viewModel: CategoryTasksViewModel = koinViewModel()
 ) {
     val uiState by viewModel.categoryTasksUiState.collectAsState()
     val showSnackBar = remember { mutableStateOf(false) }

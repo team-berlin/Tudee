@@ -14,4 +14,7 @@ sealed class Destination(val route: String) {
         fun withArgs(categoryId: Long): String = "$route/$categoryId"
         val fullRoute = "$route/{$categoryIdArg}"
     }
+    object CategoryTasksScreen : Destination("categoryTasksScreen/{categoryId}") {
+        fun createRoute(categoryId: Long) = "categoryTasksScreen/$categoryId"
+    }
 }

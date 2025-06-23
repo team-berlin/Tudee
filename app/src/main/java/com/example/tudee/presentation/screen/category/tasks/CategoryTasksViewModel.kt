@@ -1,5 +1,6 @@
 package com.example.tudee.presentation.screen.category.tasks
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tudee.domain.TaskCategoryService
@@ -16,10 +17,12 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class CategoryTasksViewModel(
+    savedStateHandle: SavedStateHandle,
     private val taskService: TaskService,
-    private val taskCategoryService: TaskCategoryService,
+    private val taskCategoryService: TaskCategoryService
 ) : ViewModel() {
 
+    private val categoryId: Long = checkNotNull(savedStateHandle["categoryId"])
     private val _categoryTasksUiState = MutableStateFlow(CategoryTasksUiState(loading = true))
     val categoryTasksUiState: StateFlow<CategoryTasksUiState> = _categoryTasksUiState
 
@@ -29,8 +32,8 @@ class CategoryTasksViewModel(
     init {
         viewModelScope.launch {
             try {
-                getTasksByCategoryId(1)
-            } catch (e: Exception) {
+                getTasksByCategoryId(categoryId)
+            } catch (_: Exception) {
                 _snackBarEvent.emit(SnackBarEvent.ShowError)
             }
         }
@@ -64,7 +67,7 @@ class CategoryTasksViewModel(
             _categoryTasksUiState.value.categoryTasksUiModel?.selectedTabIndex?.let { tabIndex ->
                 getTasksByStatus(_categoryTasksUiState.value, tabIndex)
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             _categoryTasksUiState.value = _categoryTasksUiState.value.copy(loading = false)
             _snackBarEvent.emit(SnackBarEvent.ShowError)
         }
