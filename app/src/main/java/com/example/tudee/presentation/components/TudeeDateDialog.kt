@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
+import com.example.tudee.presentation.components.buttons.TextButton
 import com.example.tudee.utils.convertMillisToDate
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
@@ -50,8 +51,7 @@ fun TudeeDateDialog(
             , titleContentColor = TudeeTheme.color.textColors.title
         ),
 
-
-    )
+        )
     {
         DatePicker(
             state = dateState,
@@ -96,6 +96,7 @@ fun TudeeDateDialog(
                     color = TudeeTheme.color.primary,
                     style = TudeeTheme.textStyle.label.large
                 )
+
                 Text(
                     modifier = Modifier.clickable {
                         onConfirm(dateState.selectedDateMillis)
