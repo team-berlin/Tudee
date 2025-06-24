@@ -1,38 +1,10 @@
 package com.example.tudee.presentation.screen.category.tasks
 
-import com.example.tudee.R
 import com.example.tudee.domain.entity.Task
 import com.example.tudee.domain.entity.TaskCategory
 import com.example.tudee.domain.entity.TaskPriority
 import com.example.tudee.domain.entity.TaskStatus
 
-fun TaskPriority.toTaskPriorityUi(): TaskPriorityUiModel {
-    return when (this) {
-        TaskPriority.HIGH -> {
-            TaskPriorityUiModel(
-                tasPriorityType = TaskPriorityType.HIGH,
-                priorityTextId = R.string.high_priority,
-                priorityIconDrawable = R.drawable.ic_priority_high,
-            )
-        }
-
-        TaskPriority.MEDIUM -> {
-            TaskPriorityUiModel(
-                tasPriorityType = TaskPriorityType.MEDIUM,
-                priorityTextId = R.string.medium_priority,
-                priorityIconDrawable = R.drawable.ic_priority_medium,
-            )
-        }
-
-        TaskPriority.LOW -> {
-            TaskPriorityUiModel(
-                tasPriorityType = TaskPriorityType.LOW,
-                priorityTextId = R.string.low_priority,
-                priorityIconDrawable = R.drawable.ic_priority_low,
-            )
-        }
-    }
-}
 
 fun Task.toTaskUIModel(): TaskUIModel {
     return TaskUIModel(
@@ -43,6 +15,14 @@ fun Task.toTaskUIModel(): TaskUIModel {
         status = this.status.toUiState(),
         assignedDate = this.assignedDate.toString()
     )
+}
+
+fun TaskPriority.toTaskPriorityUi(): TaskPriorityUiModel {
+    return when (this) {
+        TaskPriority.HIGH -> TaskPriorityUiModel.HIGH
+        TaskPriority.MEDIUM -> TaskPriorityUiModel.MEDIUM
+        TaskPriority.LOW -> TaskPriorityUiModel.LOW
+    }
 }
 
 fun TaskCategory.toTaskCategoryUiModel(tasks: List<Task>): CategoryTasksUiModel {
