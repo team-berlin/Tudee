@@ -47,7 +47,7 @@ fun OnBoardingPage(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            OnBoardingPageContent(Modifier.padding(end = 32.dp), onBoardingPageUiModel, onClick)
+            OnBoardingPageContent(Modifier.padding(horizontal =  32.dp), onBoardingPageUiModel, onClick)
         }
     }
 }
@@ -60,13 +60,12 @@ private fun OnBoardingPageContent(
 ) {
 
     Image(
-        modifier = modifier,
         contentDescription = stringResource(R.string.image_for_on_boarding_page),
         painter = onBoardingPageUiModel.image,
     )
     Box {
         Box(
-            modifier = Modifier.padding(vertical = 32.dp)
+            modifier = modifier.padding(vertical = 32.dp)
         ) {
             Column(
                 modifier = modifier
