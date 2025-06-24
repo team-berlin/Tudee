@@ -29,7 +29,7 @@ import com.example.tudee.designsystem.theme.TudeeTheme
 
 @Preview(showBackground = true)
 @Composable
-fun NotTaskForTodayDialogue() {
+fun NotTaskForTodayDialogue(modifier: Modifier=Modifier) {
     Box(
         Modifier
             .background(TudeeTheme.color.surface)
