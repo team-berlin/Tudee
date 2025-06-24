@@ -5,6 +5,7 @@ sealed class Destination(val route: String) {
     object OnBoardingScreen : Destination("onBoardingScreen")
     object HomeScreen : Destination("homeScreen")
     object TasksScreen : Destination("tasksScreen?status={status}") {
+
         fun createRoute(status: Int) = "tasksScreen?status=$status"
     }
 

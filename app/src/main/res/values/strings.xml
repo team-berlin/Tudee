@@ -23,6 +23,10 @@
     <string name="medium">Medium</string>
     <string name="high">High</string>
 
+    <string name="delete_task">Delete Task</string>
+    <string name="delete_task_check">Are you sure to continue ?</string>
+    <string name="delete">Delete</string>
+
     <string name="task_deleted_success">Deleted task successfully.</string>
 
     <string name="no_tasks">No tasks here!</string>
@@ -57,7 +61,7 @@
     <string name="on_boarding_description3">Progress is progress. Tudee will
         celebrate you on for every win, big or
         small.</string>
-
+    <string name="Tasks">Tasks</string>
     <string name="Title_Error">Title Not Valid</string>
     <string name="task_title">Task title</string>
     <string name="description">Description</string>
@@ -70,9 +74,11 @@
     <string name="high_priority">High</string>
     <string name="medium_priority">Medium</string>
     <string name="low_priority">Low</string>
+
     <string name="in_progress">In Progress</string>
     <string name="to_do">To DO</string>
     <string name="done">Done</string>
+
     <string name="upload_image">Upload</string>
     <string name="edit_uploaded_image">Edit uploaded image</string>
     <string name="category_image_desc">Category Image</string>

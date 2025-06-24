@@ -17,7 +17,7 @@ fun NavGraphBuilder.tasksRoute(navController: NavController) {
         arguments = listOf(
             navArgument("status") {
                 type = NavType.IntType
-                defaultValue = 0
+                defaultValue = 1
             }
         ),
     ) { backStackEntry ->
