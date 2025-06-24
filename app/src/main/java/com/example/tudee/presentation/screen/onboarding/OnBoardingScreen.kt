@@ -16,9 +16,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -49,7 +49,7 @@ fun OnBoardingScreen(
         navController.navigate(Destination.HomeScreen.route)
     }
 
-    val onboardingOnBoardingPageUiModels = listOf(
+    val listOfOnBoardingPageUiModels = listOf(
         OnBoardingPageUiModel(
             title = stringResource(R.string.on_boarding_title1),
             description = stringResource(R.string.on_boarding_description1),
@@ -67,19 +67,17 @@ fun OnBoardingScreen(
         )
     )
     val onBoardingPageState = rememberPagerState(initialPage = 0) {
-        onboardingOnBoardingPageUiModels.size
+        listOfOnBoardingPageUiModels.size
     }
     val coroutineScope = rememberCoroutineScope()
 
-    val configuration = LocalConfiguration.current
-
-    val orientation = rememberSaveable { configuration.orientation }
+    val orientation = LocalConfiguration.current.orientation
 
     OnBoardingContent(
         modifier = modifier,
         pageState = onBoardingPageState,
         scope = coroutineScope,
-        onBoardingPageUiModels = onboardingOnBoardingPageUiModels,
+        onBoardingPageUiModels = listOfOnBoardingPageUiModels,
         orientation = orientation,
         navController = navController,
     )
@@ -103,9 +101,10 @@ private fun OnBoardingContent(
             .background(TudeeTheme.color.statusColors.overlay),
     ) {
         Image(
-            modifier = Modifier.align(alignment = Alignment.TopEnd),
+            modifier = Modifier.fillMaxSize(),
             painter = painterResource(R.drawable.background_ellipse),
-            contentDescription = stringResource(R.string.back_ground_ellipse)
+            contentDescription = stringResource(R.string.back_ground_ellipse),
+            contentScale = ContentScale.Crop
         )
         Box(
             modifier = modifier
@@ -128,13 +127,11 @@ private fun OnBoardingContent(
             HorizontalPager(
                 modifier = modifier
                     .align(alignment = Alignment.BottomCenter)
-                    .padding(bottom = 60.dp),
+                    .padding(bottom = 59.dp),
                 state = pageState
             ) { index ->
-
                 OnBoardingPage(
                     orientation = (orientation == Configuration.ORIENTATION_PORTRAIT),
-                    modifier = Modifier.align(alignment = Alignment.Center),
                     onBoardingPageUiModel = onBoardingPageUiModels[index],
                     onClick = {
                         scope.launch {

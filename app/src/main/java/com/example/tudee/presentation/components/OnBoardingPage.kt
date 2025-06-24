@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -19,95 +18,96 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.presentation.components.buttons.FabButton
 import com.example.tudee.presentation.screen.onboarding.OnBoardingPageUiModel
 
+
 @Composable
 fun OnBoardingPage(
-    modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     orientation: Boolean = true,
     onBoardingPageUiModel: OnBoardingPageUiModel,
 ) {
     if (orientation) {
         Column(
-            modifier = modifier.padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier.padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            OnBoardingPageContent(onBoardingPageUiModel, onClick)
+            OnBoardingPageContent(Modifier, onBoardingPageUiModel, onClick)
         }
     } else {
         Row(
-            modifier = modifier
-                .padding(horizontal = 16.dp)
-                .padding(top = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            OnBoardingPageContent(onBoardingPageUiModel, onClick)
+            OnBoardingPageContent(Modifier.padding(end = 32.dp), onBoardingPageUiModel, onClick)
         }
     }
 }
 
 @Composable
 private fun OnBoardingPageContent(
+    modifier: Modifier = Modifier,
     onBoardingPageUiModel: OnBoardingPageUiModel,
     onClick: () -> Unit
 ) {
-    Box(modifier = Modifier, contentAlignment = Alignment.Center) {
 
-        Image(
-            contentDescription = "Image for On boarding page",
-            painter = onBoardingPageUiModel.image,
-        )
-    }
-    Box(
-        modifier = Modifier.padding(vertical = 32.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .clip(RoundedCornerShape(32.dp))
-                .border(
-                    width = 1.dp,
-                    color = TudeeTheme.color.textColors.onPrimaryStroke,
-                    shape = RoundedCornerShape(32.dp)
-                )
-                .background(TudeeTheme.color.textColors.onPrimaryCard),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+    Image(
+        modifier = modifier,
+        contentDescription = stringResource(R.string.image_for_on_boarding_page),
+        painter = onBoardingPageUiModel.image,
+    )
+    Box {
+        Box(
+            modifier = Modifier.padding(vertical = 32.dp)
         ) {
-            Text(
-                text = onBoardingPageUiModel.title,
-                style = TudeeTheme.textStyle.title.medium,
-                modifier = Modifier.padding(top = 24.dp, start = 16.dp, end = 16.dp),
-                textAlign = TextAlign.Center,
-                maxLines = 2,
-                minLines = 2,
-                color = TudeeTheme.color.textColors.title,
-            )
-            Text(
-                text = onBoardingPageUiModel.description,
-                style = TudeeTheme.textStyle.body.medium,
-                modifier = Modifier.padding(
-                    bottom = 50.dp,
-                    start = 16.dp,
-                    end = 16.dp,
-                ),
-                maxLines = 3,
-                minLines = 3,
-                textAlign = TextAlign.Center,
-                color = TudeeTheme.color.textColors.body
-            )
+            Column(
+                modifier = modifier
+                    .clip(RoundedCornerShape(32.dp))
+                    .border(
+                        width = 1.dp,
+                        color = TudeeTheme.color.textColors.onPrimaryStroke,
+                        shape = RoundedCornerShape(32.dp)
+                    )
+                    .background(TudeeTheme.color.textColors.onPrimaryCard),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                Text(
+                    text = onBoardingPageUiModel.title,
+                    style = TudeeTheme.textStyle.title.medium,
+                    modifier = Modifier.padding(top = 24.dp, start = 16.dp, end = 16.dp),
+                    textAlign = TextAlign.Center,
+                    maxLines = 2,
+                    minLines = 2,
+                    color = TudeeTheme.color.textColors.title,
+                )
+                Text(
+                    text = onBoardingPageUiModel.description,
+                    style = TudeeTheme.textStyle.body.medium,
+                    modifier = Modifier.padding(
+                        bottom = 48.dp,
+                        start = 16.dp,
+                        end = 16.dp,
+                    ),
+                    maxLines = 3,
+                    minLines = 3,
+                    textAlign = TextAlign.Center,
+                    color = TudeeTheme.color.textColors.body
+                )
+            }
         }
         FabButton(
             modifier = Modifier
-                .align(alignment = Alignment.BottomCenter)
-                .offset(y = 27.dp)
+                .padding(bottom = 5.dp)
+                .align(Alignment.BottomCenter)
                 .clip(shape = RoundedCornerShape(55.dp)),
             onClick = onClick,
         ) {
@@ -120,7 +120,7 @@ private fun OnBoardingPageContent(
 }
 
 @Composable
-@Preview(showSystemUi = true)
+@PreviewLightDark
 private fun OnBoardingPagePreview() {
     TudeeTheme {
         OnBoardingPage(

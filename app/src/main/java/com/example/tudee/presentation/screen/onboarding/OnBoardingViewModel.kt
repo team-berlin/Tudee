@@ -10,7 +10,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class OnBoardingViewModel(
-    private val taskCategoryService: TaskCategoryService, private val appEntry: AppEntry
+    private val taskCategoryService: TaskCategoryService,
+    private val appEntry: AppEntry
 ) : ViewModel() {
 
     private val _isFirstEntry = MutableStateFlow(true)
