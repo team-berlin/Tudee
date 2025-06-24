@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
@@ -22,7 +23,6 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -95,9 +95,11 @@ private fun OnBoardingContent(
     navController: NavController,
     orientation: Int,
 ) {
+
     Box(
         modifier = modifier
             .fillMaxSize()
+            .background(TudeeTheme.color.surface)
             .background(TudeeTheme.color.statusColors.overlay),
         contentAlignment = Alignment.Center
     ) {
@@ -108,7 +110,9 @@ private fun OnBoardingContent(
             ) {
                 Text(
                     stringResource(R.string.skip_button),
-                    modifier = Modifier.padding(16.dp),
+                    modifier = Modifier
+                        .statusBarsPadding()
+                        .padding(16.dp),
                     style = TudeeTextStyle.label.large,
                     color = TudeeTheme.color.primary
                 )
@@ -121,9 +125,10 @@ private fun OnBoardingContent(
         HorizontalPager(
             modifier = modifier
                 .align(alignment = Alignment.BottomCenter)
-                .padding(bottom = 75.dp),
+                .padding(bottom = 60.dp),
             state = pageState
         ) { index ->
+
             OnBoardingPage(
                 orientation = (orientation == Configuration.ORIENTATION_PORTRAIT),
                 modifier = Modifier.align(alignment = Alignment.Center),
@@ -146,15 +151,18 @@ private fun OnBoardingContent(
             pageNumber = pageState.currentPage,
             modifier = Modifier
                 .align(alignment = Alignment.BottomCenter)
-                .padding(bottom = 24.dp)
+                .padding(bottom = 24.dp),
+            onIndicatorClicked = { page ->
+                scope.launch {
+                    pageState.animateScrollToPage(page)
+                }
+            }
         )
     }
 }
 
 @Composable
-@PreviewLightDark()
-@Preview(locale = "ar")
-@Preview(heightDp = 360, widthDp = 800)
+@Preview(showSystemUi = true)
 private fun OnBoardingScreenPreview() {
     TudeeTheme {
         OnBoardingScreen()

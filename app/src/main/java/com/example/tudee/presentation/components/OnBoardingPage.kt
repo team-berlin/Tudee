@@ -1,5 +1,6 @@
 package com.example.tudee.presentation.components
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -7,6 +8,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -18,11 +21,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.min
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.presentation.components.buttons.FabButton
@@ -62,25 +69,21 @@ private fun OnBoardingPageContent(
     onClick: () -> Unit
 ) {
     Box(modifier = Modifier, contentAlignment = Alignment.Center) {
+
         Image(
-            modifier = Modifier.size(350.dp),
-            contentDescription = "Image for On boarding page",
-            painter = painterResource(R.drawable.blur_background_shape),
-            contentScale = ContentScale.Fit,
-        )
-        Image(
-            modifier = Modifier.size(350.dp),
             contentDescription = "Image for On boarding page",
             painter = onBoardingPageUiModel.image,
-            contentScale = ContentScale.Fit,
         )
     }
-    Box {
+    Box (
+        modifier = Modifier.padding(vertical = 32.dp)
+    ){
+        Log.e("OnBoardingPageContent", "OnBoardingPageContent+title+description")
         Column(
             modifier = Modifier
                 .clip(RoundedCornerShape(32.dp))
                 .border(
-                    width = 2.dp,
+                    width = 1.dp,
                     color = TudeeTheme.color.textColors.onPrimaryStroke,
                     shape = RoundedCornerShape(32.dp)
                 )
@@ -93,6 +96,8 @@ private fun OnBoardingPageContent(
                 style = TudeeTheme.textStyle.title.medium,
                 modifier = Modifier.padding(top = 24.dp, start = 16.dp, end = 16.dp),
                 textAlign = TextAlign.Center,
+                maxLines = 2,
+                minLines = 2,
                 color = TudeeTheme.color.textColors.title,
             )
 
@@ -100,11 +105,12 @@ private fun OnBoardingPageContent(
                 text = onBoardingPageUiModel.description,
                 style = TudeeTheme.textStyle.body.medium,
                 modifier = Modifier.padding(
-                    top = 16.dp,
                     bottom = 50.dp,
                     start = 16.dp,
                     end = 16.dp,
                 ),
+                maxLines = 3,
+                minLines = 3,
                 textAlign = TextAlign.Center,
                 color = TudeeTheme.color.textColors.body
             )
@@ -112,7 +118,7 @@ private fun OnBoardingPageContent(
             FabButton(
                 modifier = Modifier
                     .align(alignment = Alignment.BottomCenter)
-                    .offset(y = 23.dp)
+                    .offset(y = 27.dp)
                     .clip(shape = RoundedCornerShape(55.dp)),
                 onClick = onClick,
             ) {
@@ -125,7 +131,7 @@ private fun OnBoardingPageContent(
     }
 
 @Composable
-@PreviewLightDark
+@Preview(showSystemUi = true)
 private fun OnBoardingPagePreview() {
     TudeeTheme {
         OnBoardingPage(
