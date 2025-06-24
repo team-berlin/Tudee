@@ -63,6 +63,11 @@ fun TudeeDateDialog(
                 )
             },
             colors = DatePickerDefaults.colors(
+                navigationContentColor =TudeeTheme.color.textColors.title ,
+                headlineContentColor = TudeeTheme.color.textColors.title,
+                titleContentColor = TudeeTheme.color.textColors.title,
+                weekdayContentColor = TudeeTheme.color.textColors.title,
+                dayContentColor=TudeeTheme.color.textColors.title,
                 containerColor = TudeeTheme.color.statusColors.greenAccent ,
                 selectedDayContainerColor = TudeeTheme.color.primary,
                 selectedDayContentColor = TudeeTheme.color.textColors.onPrimary,

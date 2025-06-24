@@ -61,9 +61,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.tudee.R
@@ -101,7 +103,6 @@ import kotlin.math.roundToInt
 
 @Composable
 fun TasksScreen(navController: NavController, tasksScreenViewModel: TasksScreenViewModel) {
-    //val tasksScreenViewModel: TasksScreenViewModel = koinNavViewModel()
     val taskScreenUiState by tasksScreenViewModel.taskScreenUiState.collectAsState()
 
     val addTaskBottomSheetViewModel: AddTaskBottomSheetViewModel = koinViewModel()
@@ -175,14 +176,14 @@ fun TasksScreenContent(
                 Log.d("MainScreen", "Add button clicked")
                 addTaskBottomSheetViewModel.showButtonSheet()
             }
-        })
-    { paddingValues ->
+        }) { paddingValues ->
 
         Box(
             Modifier
                 .fillMaxSize()
                 .background(TudeeTheme.color.surfaceHigh)
                 .padding(paddingValues)
+
         ) {
 
             if (taskScreenUiState.taskDetailsUiState != null) {
@@ -194,8 +195,7 @@ fun TasksScreenContent(
                     containerColor = TudeeTheme.color.surface
                 ) {
                     TaskDetailsScreen(
-                        taskDetailsState =
-                            taskScreenUiState.taskDetailsUiState!!,
+                        taskDetailsState = taskScreenUiState.taskDetailsUiState!!,
                         addTaskBottomSheetViewModel
                     )
                 }
@@ -260,15 +260,14 @@ fun TasksScreenContent(
 
             DeleteConfirmationBottomSheet(
                 isBottomSheetVisible = taskScreenUiState.isBottomSheetVisible,
-                title = taskScreenUiState.deleteBottomSheetUiState.title,
-                subtitle = taskScreenUiState.deleteBottomSheetUiState.subtitle,
+                title = stringResource(R.string.delete_task),
+                subtitle = stringResource(R.string.delete_task_check),
                 onBottomSheetDismissed = onBottomSheetDismissed,
                 onDeleteButtonClicked = onDeleteButtonClicked,
                 onCancelButtonClicked = onCancelButtonClicked,
                 deleteButtonUiState = taskScreenUiState.deleteBottomSheetUiState.deleteButtonState,
                 cancelButtonUiState = taskScreenUiState.deleteBottomSheetUiState.cancelButtonState
             )
-
 
         }
 
@@ -313,15 +312,17 @@ fun DataHeader(
     onPreviousArrowClicked: () -> Unit,
     onNextArrowClicked: () -> Unit,
 ) {
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
+            .padding(horizontal = 16.dp)
+            .padding(bottom = 8.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         ArrowButton(
-            icon = painterResource(R.drawable.arrow_left),
+            icon = painterResource(R.drawable.left_arrow),
             contentDescription = stringResource(R.string.previous_week_arrow_content_description),
             onClick = onPreviousArrowClicked
         )
@@ -343,7 +344,7 @@ fun DataHeader(
         }
 
         ArrowButton(
-            icon = painterResource(R.drawable.arrow_right),
+            icon = painterResource(R.drawable.right_arrow),
             contentDescription = stringResource(R.string.next_week_arrow_content_description),
             onClick = onNextArrowClicked
         )
@@ -354,6 +355,7 @@ fun DataHeader(
 private fun ArrowButton(
     icon: Painter, contentDescription: String, onClick: () -> Unit
 ) {
+
     Box(
         modifier = Modifier
             .size(32.dp)
@@ -361,6 +363,7 @@ private fun ArrowButton(
             .clickable { onClick() }, contentAlignment = Alignment.Center
     ) {
         Icon(
+
             painter = icon,
             contentDescription = contentDescription,
             tint = TudeeTheme.color.textColors.body
@@ -394,15 +397,15 @@ fun TasksListContent(
             LazyColumn(
                 modifier.padding(
                     start = 16.dp, end = 16.dp
-                ), verticalArrangement = Arrangement.spacedBy(8.dp)
+                )
+
+                , verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
 
                 items(listOfTasks, key = { it.id }) { task ->
                     SwipeableCardWrapper(
                         onDeleteIconClick = { onDeleteIconClick(task.id) },
                     ) {
-
-
                         CategoryTaskComponent(
                             Modifier.clip(RoundedCornerShape(16.dp)),
                             title = task.title,
@@ -464,15 +467,12 @@ fun SnackBarSection(
 
 @Composable
 fun DaysRow(
-    onDayCardClicked: (Int) -> Unit,
-    listOfDateCardUiState: List<DateCardUiState>,
-    version: Int
+    onDayCardClicked: (Int) -> Unit, listOfDateCardUiState: List<DateCardUiState>, version: Int
 ) {
 
     val listState = rememberLazyListState()
 
     val selectedIndex = listOfDateCardUiState.indexOfFirst { it.isSelected }.coerceAtLeast(0)
-
     LaunchedEffect(version) {
         if (selectedIndex > 0) listState.scrollToItem(selectedIndex - 1)
         else listState.scrollToItem(selectedIndex)
@@ -493,7 +493,7 @@ fun DaysRow(
 
             val modifier = if (dateCard.isSelected) {
                 Modifier
-                    .width(width = 56.dp)
+                    .size(width = 56.dp, height = 65.dp)
                     .background(
                         brush = (Brush.linearGradient(
                             colors = TudeeTheme.color.primaryGradient,
@@ -505,7 +505,7 @@ fun DaysRow(
                     )
             } else {
                 Modifier
-                    .width(width = 56.dp)
+                    .size(width = 56.dp, height = 65.dp)
                     .background(
                         TudeeTheme.color.surface, shape = RoundedCornerShape(16.dp)
                     )
@@ -530,21 +530,23 @@ fun SwipeableCardWrapper(
     var hiddenIconWidth by remember { mutableFloatStateOf(0f) }
     var neededOffset = remember { Animatable(initialValue = 0f) }
     val scope = rememberCoroutineScope()
-
+    val layoutDirection = LocalLayoutDirection.current
+    val isRtl = layoutDirection == LayoutDirection.Rtl
 
     Box(
         Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .background(TudeeTheme.color.statusColors.errorVariant),
+            .background(TudeeTheme.color.statusColors.errorVariant)
+
+        ,
         contentAlignment = Alignment.CenterEnd
     ) {
-        IconButton(
-            modifier = Modifier
-                .onSizeChanged {
-                    hiddenIconWidth = it.width.toFloat()
-                }
-                .padding(horizontal = 16.dp), onClick = {
+        IconButton(modifier = Modifier
+            .onSizeChanged {
+                hiddenIconWidth = it.width.toFloat()
+            }
+            .padding(horizontal = 16.dp), onClick = {
             onDeleteIconClick()
         }) {
             Icon(
@@ -558,31 +560,43 @@ fun SwipeableCardWrapper(
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
-                .offset { IntOffset(x = -neededOffset.value.roundToInt(), y = 0) }
+                .offset {
+                    val offsetX = if (isRtl) -neededOffset.value else - neededOffset.value
+                    IntOffset(x = offsetX.roundToInt(), y = 0)
+                }
                 .clip(RoundedCornerShape(16.dp))
-                .pointerInput(hiddenIconWidth) {
-                    detectHorizontalDragGestures(onHorizontalDrag = { _, dragAmount ->
-                        scope.launch {
-                            val newOffset = (neededOffset.value - dragAmount).coerceIn(
-                                0f, hiddenIconWidth
-                            )
-                            neededOffset.snapTo(newOffset)
-                        }
-                    }, onDragEnd = {
-                        scope.launch {
-                            if (neededOffset.value >= hiddenIconWidth / 2) {
-                                neededOffset.animateTo(hiddenIconWidth)
-                            } else {
-                                neededOffset.animateTo(0f)
+                .pointerInput(hiddenIconWidth, isRtl) {
+                    detectHorizontalDragGestures(
+                        onHorizontalDrag = { _, dragAmount ->
+                            scope.launch {
+                                val adjustedDrag = if (isRtl) -dragAmount else -dragAmount
+                                val newOffset = if (isRtl) {
+                                    (neededOffset.value - adjustedDrag)
+                                        .coerceIn(0f, hiddenIconWidth)
+                                }else{
+                                    (neededOffset.value + adjustedDrag)
+                                        .coerceIn(0f, hiddenIconWidth)
+                                }
+                                    neededOffset.snapTo(newOffset)
+
+                            }
+                        },
+                        onDragEnd = {
+                            scope.launch {
+                                if (neededOffset.value >= hiddenIconWidth / 2) {
+                                    neededOffset.animateTo(hiddenIconWidth)
+                                } else {
+                                    neededOffset.animateTo(0f)
+                                }
                             }
                         }
-                    })
-                }) {
+                    )
+                }
+        ) {
             content()
         }
     }
 }
-
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -656,12 +670,12 @@ fun DeleteConfirmationBottomSheet(
 
                     }, state = deleteButtonUiState
                 ) {
-                    Text("Delete")
+                    Text(stringResource(R.string.delete))
                 }
                 SecondaryButton(modifier = Modifier.fillMaxWidth(), onClick = {
                     onCancelButtonClicked()
                 }) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.cancel))
                 }
             }
         }

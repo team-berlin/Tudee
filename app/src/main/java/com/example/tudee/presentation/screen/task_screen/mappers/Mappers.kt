@@ -22,7 +22,7 @@ enum class TaskStatusUiState(
         ,contentColorProvider = { TudeeTheme.color.statusColors.purpleAccent }
     ),
 
-    TODO(label=R.string.todo
+    TODO(label=R.string.to_do
         ,containerColorProvider = { TudeeTheme.color.statusColors.yellowVariant }
         ,contentColorProvider = { TudeeTheme.color.statusColors.yellowAccent }
     ),
