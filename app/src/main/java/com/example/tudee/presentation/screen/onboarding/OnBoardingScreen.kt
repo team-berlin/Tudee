@@ -101,63 +101,67 @@ private fun OnBoardingContent(
             .fillMaxSize()
             .background(TudeeTheme.color.surface)
             .background(TudeeTheme.color.statusColors.overlay),
-        contentAlignment = Alignment.Center
     ) {
-        if (pageState.currentPage != Pages.ThirdPage.page)
-            TextButton(
-                modifier = Modifier.align(alignment = Alignment.TopStart),
-                onClick = { navController.navigate(Destination.HomeScreen.route) },
-            ) {
-                Text(
-                    stringResource(R.string.skip_button),
-                    modifier = Modifier
-                        .statusBarsPadding()
-                        .padding(16.dp),
-                    style = TudeeTextStyle.label.large,
-                    color = TudeeTheme.color.primary
-                )
-            }
         Image(
             modifier = Modifier.align(alignment = Alignment.TopEnd),
             painter = painterResource(R.drawable.background_ellipse),
             contentDescription = stringResource(R.string.back_ground_ellipse)
         )
-        HorizontalPager(
+        Box(
             modifier = modifier
-                .align(alignment = Alignment.BottomCenter)
-                .padding(bottom = 60.dp),
-            state = pageState
-        ) { index ->
+                .fillMaxSize()
+                .statusBarsPadding(),
+            contentAlignment = Alignment.Center
+        ) {
+            if (pageState.currentPage != Pages.ThirdPage.page)
+                TextButton(
+                    modifier = Modifier.align(alignment = Alignment.TopStart),
+                    onClick = { navController.navigate(Destination.HomeScreen.route) },
+                ) {
+                    Text(
+                        stringResource(R.string.skip_button),
+                        modifier = Modifier.padding(start = 16.dp),
+                        style = TudeeTextStyle.label.large,
+                        color = TudeeTheme.color.primary
+                    )
+                }
+            HorizontalPager(
+                modifier = modifier
+                    .align(alignment = Alignment.BottomCenter)
+                    .padding(bottom = 60.dp),
+                state = pageState
+            ) { index ->
 
-            OnBoardingPage(
-                orientation = (orientation == Configuration.ORIENTATION_PORTRAIT),
-                modifier = Modifier.align(alignment = Alignment.Center),
-                onBoardingPageUiModel = onBoardingPageUiModels[index],
-                onClick = {
-                    scope.launch {
-                        if (pageState.currentPage != onBoardingPageUiModels.lastIndex) {
-                            pageState.animateScrollToPage(pageState.currentPage + Pages.SecondPage.page)
-                        } else {
-                            navController.navigate(Destination.HomeScreen.route)
-                            viewModel.loadInitialData()
-                            viewModel.saveFirstEntry()
+                OnBoardingPage(
+                    orientation = (orientation == Configuration.ORIENTATION_PORTRAIT),
+                    modifier = Modifier.align(alignment = Alignment.Center),
+                    onBoardingPageUiModel = onBoardingPageUiModels[index],
+                    onClick = {
+                        scope.launch {
+                            if (pageState.currentPage != onBoardingPageUiModels.lastIndex) {
+                                pageState.animateScrollToPage(pageState.currentPage + Pages.SecondPage.page)
+                            } else {
+                                navController.navigate(Destination.HomeScreen.route)
+                                viewModel.loadInitialData()
+                                viewModel.saveFirstEntry()
+                            }
                         }
+                    }
+                )
+            }
+            BottomPageIndicator(
+                onBoardingPageUiModels = onBoardingPageUiModels,
+                pageNumber = pageState.currentPage,
+                modifier = Modifier
+                    .align(alignment = Alignment.BottomCenter)
+                    .padding(bottom = 24.dp),
+                onIndicatorClicked = { page ->
+                    scope.launch {
+                        pageState.animateScrollToPage(page)
                     }
                 }
             )
         }
-        BottomPageIndicator(
-            onBoardingPageUiModels = onBoardingPageUiModels,
-            pageNumber = pageState.currentPage,
-            modifier = Modifier
-                .align(alignment = Alignment.BottomCenter)
-                .padding(bottom = 24.dp),
-            onIndicatorClicked = { page ->
-                scope.launch {
-                    pageState.animateScrollToPage(page)
-                }
-            }
-        )
     }
 }
 

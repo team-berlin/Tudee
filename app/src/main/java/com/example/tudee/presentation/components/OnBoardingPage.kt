@@ -1,6 +1,5 @@
 package com.example.tudee.presentation.components
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -8,11 +7,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -20,16 +16,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewLightDark
-import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.min
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.presentation.components.buttons.FabButton
@@ -75,10 +66,9 @@ private fun OnBoardingPageContent(
             painter = onBoardingPageUiModel.image,
         )
     }
-    Box (
+    Box(
         modifier = Modifier.padding(vertical = 32.dp)
-    ){
-        Log.e("OnBoardingPageContent", "OnBoardingPageContent+title+description")
+    ) {
         Column(
             modifier = Modifier
                 .clip(RoundedCornerShape(32.dp))
@@ -100,7 +90,6 @@ private fun OnBoardingPageContent(
                 minLines = 2,
                 color = TudeeTheme.color.textColors.title,
             )
-
             Text(
                 text = onBoardingPageUiModel.description,
                 style = TudeeTheme.textStyle.body.medium,
@@ -115,20 +104,20 @@ private fun OnBoardingPageContent(
                 color = TudeeTheme.color.textColors.body
             )
         }
-            FabButton(
-                modifier = Modifier
-                    .align(alignment = Alignment.BottomCenter)
-                    .offset(y = 27.dp)
-                    .clip(shape = RoundedCornerShape(55.dp)),
-                onClick = onClick,
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_double_arrow),
-                    contentDescription = stringResource(R.string.double_arrow_icon),
-                )
-            }
+        FabButton(
+            modifier = Modifier
+                .align(alignment = Alignment.BottomCenter)
+                .offset(y = 27.dp)
+                .clip(shape = RoundedCornerShape(55.dp)),
+            onClick = onClick,
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_double_arrow),
+                contentDescription = stringResource(R.string.double_arrow_icon),
+            )
         }
     }
+}
 
 @Composable
 @Preview(showSystemUi = true)
@@ -136,7 +125,7 @@ private fun OnBoardingPagePreview() {
     TudeeTheme {
         OnBoardingPage(
             onBoardingPageUiModel = OnBoardingPageUiModel(
-                title= stringResource(R.string.on_boarding_title1),
+                title = stringResource(R.string.on_boarding_title1),
                 description = stringResource(R.string.on_boarding_description1),
                 image = painterResource(R.drawable.tudee_onboarding_1),
             )

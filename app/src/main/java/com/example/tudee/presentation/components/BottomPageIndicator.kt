@@ -1,6 +1,6 @@
 package com.example.tudee.presentation.components
 
-import android.util.Log
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -28,9 +28,7 @@ fun BottomPageIndicator(
     pageNumber: Int,
     onBoardingPageUiModels: List<OnBoardingPageUiModel>,
     onIndicatorClicked: (Int) -> Unit
-
 ) {
-
     Row(
         modifier = modifier.padding(horizontal = 20.dp),
         horizontalArrangement = Arrangement.spacedBy(10.dp)
@@ -42,8 +40,10 @@ fun BottomPageIndicator(
                     .size(5.dp)
                     .clip(RoundedCornerShape(15.dp))
                     .background(
-                        color = if (page == pageNumber) TudeeTheme.color.primary
-                        else TudeeTheme.color.primaryVariant
+                        color = animateColorAsState(
+                            if (page == pageNumber) TudeeTheme.color.primary
+                            else TudeeTheme.color.primaryVariant
+                        ).value
                     )
                     .clickable(
                         indication = rememberRipple(color = TudeeTheme.color.primary),
@@ -51,7 +51,6 @@ fun BottomPageIndicator(
                     ) {
                         onIndicatorClicked(page)
                     }
-
             )
         }
     }
