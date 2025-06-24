@@ -217,7 +217,7 @@ private fun SuccessState(
                     },
                     priorityIcon = painterResource(categoryTask.priority.drawableRes),
                     onClick = {
-
+                        //TODO()
                     }
                 )
             }
