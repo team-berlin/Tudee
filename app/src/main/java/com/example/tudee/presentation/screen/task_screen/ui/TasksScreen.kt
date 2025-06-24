@@ -671,7 +671,7 @@ fun DeleteConfirmationBottomSheet(
 private fun TaskScreenTopAppBar() {
     TopAppBar(
         modifier = Modifier.background(TudeeTheme.color.surfaceHigh),
-        title = "Tasks",
+        title = stringResource(R.string.tasks),
         showBackButton = false
     )
 }
