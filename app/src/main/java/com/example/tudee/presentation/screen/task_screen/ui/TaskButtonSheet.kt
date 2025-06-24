@@ -8,15 +8,20 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
@@ -62,7 +67,6 @@ fun TaskContent(
     onUpdateTaskDueDate: (LocalDate) -> Unit,
     onUpdateTaskPriority: (TaskPriority) -> Unit,
     onSelectTaskCategory: (Long) -> Unit,
-    addButtonState: Boolean,
     hideButtonSheet: () -> Unit,
     isEditMode: Boolean,
     onSaveClicked: (Task) -> Unit,
@@ -105,7 +109,6 @@ fun TaskContent(
                 )
                 AddOrSaveButtons(
                     modifier = Modifier.align(Alignment.BottomCenter),
-                    addButtonState = addButtonState,
                     taskState = taskState,
                     isEditMode = isEditMode,
                     onCancelButtonClicked = {
@@ -162,7 +165,7 @@ fun BottomSheetContent(
             .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        if(isEditMode==true){
+        if(isEditMode){
             item{
                 Text(
                     text = stringResource(R.string.editNewTask) ,
@@ -279,12 +282,13 @@ fun BottomSheetContent(
         item {
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(minSize = 104.dp),
-                modifier = Modifier
-                    .height(400.dp)
+                modifier =Modifier
+                     .heightIn(max = 3000.dp)
                     .fillMaxWidth()
                     .padding(bottom = 160.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalArrangement = Arrangement.spacedBy(24.dp)
+                verticalArrangement = Arrangement.spacedBy(24.dp),
+                userScrollEnabled = false
             ) {
                 items(taskState.categories) { category ->
                     CategoryComponent(
@@ -303,7 +307,7 @@ fun BottomSheetContent(
 @Composable
 private fun Title_operation(title:String) {
     Text(
-        text = title,
+        text = stringResource(R.string.editNewTask) ,
         style = TudeeTheme.textStyle.title.large,
         color = TudeeTheme.color.textColors.title
     )
@@ -312,7 +316,6 @@ private fun Title_operation(title:String) {
 fun AddOrSaveButtons(
     modifier: Modifier = Modifier,
     taskState: TaskBottomSheetState,
-    addButtonState: Boolean,
     isEditMode: Boolean,
     onSaveClicked: (Task) -> Unit,
     onAddClicked: (TaskCreationRequest) -> Unit,
@@ -357,7 +360,7 @@ fun AddOrSaveButtons(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
-            state = if (addButtonState) ButtonState.IDLE else ButtonState.DISABLED
+            state = if (isEditMode) ButtonState.IDLE else ButtonState.DISABLED
         ) {
             Text(
                 text = stringResource(if (taskState.isEditMode) R.string.save else R.string.add),
