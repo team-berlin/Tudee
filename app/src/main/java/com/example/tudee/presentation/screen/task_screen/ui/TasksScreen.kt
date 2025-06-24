@@ -453,7 +453,7 @@ fun SnackBarSection(
         ) + fadeOut()
     ) {
         Box(
-            Modifier.padding(horizontal = 16.dp)
+            Modifier.padding(horizontal = 16.dp,vertical = 16.dp)
         ) {
             SnackBarComponent(
                 message = stringResource(R.string.task_deleted_success),
