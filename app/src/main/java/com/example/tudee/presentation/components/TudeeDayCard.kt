@@ -33,7 +33,7 @@ fun TudeeDayCard(
 ) {
     Column(
         modifier = modifier
-            .padding(vertical = 12.dp, horizontal = 14.dp)
+            .padding(vertical = 12.dp, horizontal = 12.dp)
             .clickable {
                 onClick()
             },

@@ -29,6 +29,7 @@
     <string name="default_task_description">راجع بنية الخلية ووظائفها للغد...</string>
     <string name="default_priority">متوسطة</string>
     <string name="you_ve_completed_3_out_of_10_tasks_keep_going">لقد أنجزت 3 من أصل 10 مهام، واصل التقدم!</string>
+    <string name="tasks">المهام</string>
 
     <!-- Content description -->
     <string name="switch_sun_icon_content_description">شمس</string>
