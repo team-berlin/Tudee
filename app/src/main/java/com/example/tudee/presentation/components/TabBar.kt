@@ -173,7 +173,7 @@ private fun TabBarHorizontalDivider() {
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview(showBackground = true, widthDp = 360)
+@Preview(showBackground = true)
 @Composable
 fun TabBarComponentPreview() {
     val defaultTabBarHeaders = listOf<TabBarItem>(
@@ -204,7 +204,7 @@ fun TabBarComponentPreview() {
     }
 }
 
-@Preview(showBackground = true, widthDp = 150)
+@Preview(showBackground = true)
 @Composable
 private fun DefaultTabContentPreview(
     tabBarItem: TabBarItem = TabBarItem(0, "2", true)
