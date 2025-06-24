@@ -69,7 +69,6 @@ fun AddTaskContent(
             modifier = modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             item {
                 Text(
@@ -114,7 +113,7 @@ fun AddTaskContent(
                     placeholder = stringResource(R.string.set_due_date),
                     leadingContent = { isFocused ->
                         DefaultLeadingContent(
-                            painter = painterResource(R.drawable.ic_calendar),
+                            painter = painterResource(R.drawable.ic_add_calendar),
                             isFocused = isFocused
                         )
                     }
