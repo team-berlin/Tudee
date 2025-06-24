@@ -29,14 +29,13 @@ import com.example.tudee.designsystem.theme.TudeeTheme
 
 @Preview(showBackground = true)
 @Composable
-fun NotTaskForTodayDialogue(modifier: Modifier=Modifier) {
+fun NotTaskForTodayDialogue(modifier: Modifier = Modifier) {
     Box(
-        Modifier
+        modifier
             .background(TudeeTheme.color.surface)
             .width(360.dp)
             .height(153.dp)
-            .padding(end = 20.dp)
-        ,
+            .padding(end = 20.dp),
     ) {
         Column(
             Modifier
@@ -72,15 +71,15 @@ fun NotTaskForTodayDialogue(modifier: Modifier=Modifier) {
         Box(
             Modifier.align(Alignment.BottomEnd)
         ) {
-                Image(
-                    modifier = Modifier
-                        .padding(end = 5.dp)
-                        .size(144.dp)
-                        .align(Alignment.BottomEnd),
-                    painter = painterResource(R.drawable.delete_bot_omage_container),
-                    contentScale = ContentScale.Crop,
-                    contentDescription = ""
-                )
+            Image(
+                modifier = Modifier
+                    .padding(end = 5.dp)
+                    .size(144.dp)
+                    .align(Alignment.BottomEnd),
+                painter = painterResource(R.drawable.delete_bot_omage_container),
+                contentScale = ContentScale.Crop,
+                contentDescription = ""
+            )
 
             Box(
                 Modifier.align(Alignment.BottomEnd)
@@ -110,11 +109,11 @@ fun NotTaskForTodayDialogue(modifier: Modifier=Modifier) {
             ) {
                 Image(
                     modifier = Modifier
-                        .padding(start = 6.dp, top =4.dp )
+                        .padding(start = 6.dp, top = 4.dp)
                         .size(width = 23.dp, height = 34.dp)
 
                         .align(Alignment.CenterStart),
-                    painter = painterResource(R.drawable.hint_indicator),
+                    painter = painterResource(R.drawable.threedots),
                     contentScale = ContentScale.Crop,
                     contentDescription = ""
                 )
