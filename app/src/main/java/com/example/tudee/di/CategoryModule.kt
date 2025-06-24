@@ -8,7 +8,8 @@ val categoryModule = module {
     viewModel {
         CategoriesViewModel(
             taskCategoryService = get(),
-            taskService = get()
+            taskService = get(),
+            taskDao = get()
         )
     }
 }

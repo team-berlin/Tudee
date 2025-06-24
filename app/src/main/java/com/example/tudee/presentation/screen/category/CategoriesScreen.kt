@@ -55,10 +55,6 @@ fun CategoriesScreen(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route ?: ""
 
-    LaunchedEffect(Unit) {
-        viewModel.loadCategories()
-    }
-
     CategoriesScreenContent(
         state = state,
         onCategoryClick = { categoryId ->
@@ -95,7 +91,6 @@ fun CategoriesScreenContent(
         showFab = true,
         showBottomBar = true,
         bottomBarContent = { TaskScreenBottomAppBar(navController = navController) },
-//        containerColor = TudeeTheme.color.surface
     ) { padding ->
         when {
             state.isLoading -> {
@@ -132,7 +127,7 @@ fun CategoriesScreenContent(
                         items = state.categories
                     ) { category ->
                         CategoryItemWithBadge(
-                            categoryPainter = painterResource(R.drawable.category),
+                            categoryPainter = category.iconResId.asPainter(),
                             categoryName = category.name,
                             badgeCount = category.tasksCount,
                             categoryImageContentDescription = category.name,
@@ -175,7 +170,8 @@ private fun CategoriesFab(
 }
 
 private fun navigateToCategoryDetails(navController: NavHostController, categoryId: Long) {
-    navController.navigate("${Destination.CategoryDetailsScreen.route}/$categoryId")
+    //navController.navigate("${Destination.CategoryDetailsScreen.route}/$categoryId")
+    navController.navigate(Destination.CategoryTasksScreen.createRoute(categoryId))
 }
 
 private fun showAddCategoryBottomSheet() {

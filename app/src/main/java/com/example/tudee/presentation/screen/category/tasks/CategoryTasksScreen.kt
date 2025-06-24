@@ -48,7 +48,8 @@ import org.koin.compose.getKoin
 fun CategoryTasksScreen(
     modifier: Modifier = Modifier,
     navController: NavController = rememberNavController(),
-    viewModel: CategoryTasksViewModel = getKoin().get()
+    viewModel: CategoryTasksViewModel = getKoin().get(),
+    categoryId: Long
 ) {
     val uiState by viewModel.categoryTasksUiState.collectAsState()
     val showSnackBar = remember { mutableStateOf(false) }
