@@ -3,6 +3,7 @@ package com.example.tudee.presentation.screen.home.components
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
@@ -20,12 +21,12 @@ import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.domain.entity.TaskPriority
 import com.example.tudee.domain.entity.TaskStatus
 import com.example.tudee.presentation.components.CategoryTaskComponent
+import com.example.tudee.presentation.screen.home.toTaskPriorityUiState
+import com.example.tudee.presentation.screen.home.toTaskStatusUiState
 import com.example.tudee.presentation.screen.home.viewmodel.CategoryUiState
 import com.example.tudee.presentation.screen.home.viewmodel.HomeActions
 import com.example.tudee.presentation.screen.home.viewmodel.TaskPriorityUiState
 import com.example.tudee.presentation.screen.home.viewmodel.TaskUiState
-import com.example.tudee.presentation.screen.home.toTaskPriorityUiState
-import com.example.tudee.presentation.screen.home.toTaskStatusUiState
 import kotlinx.datetime.LocalDate
 
 @Composable
@@ -36,6 +37,7 @@ fun TaskList(
 ) {
     val rowCount = if (tasks.size > 2) 2 else 1
     LazyHorizontalGrid(
+        contentPadding = PaddingValues(horizontal = 16.dp),
         modifier = modifier
             .fillMaxWidth()
             .height(if (rowCount == 2) 230.dp else 111.dp),
@@ -71,7 +73,7 @@ fun TaskList(
                 priorityBackgroundColor = priorityColor,
                 taskIcon = {
                     Image(
-                        painter = painterResource(R.drawable.tudee_),
+                        painter = painterResource(R.drawable.ic_category_book_open),
                         contentDescription = "taskIcon",
                     )
                 },

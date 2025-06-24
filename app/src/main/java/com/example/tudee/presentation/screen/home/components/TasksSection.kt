@@ -24,7 +24,7 @@ fun TasksSection(
     Log.d("TasksSection", "Tasks: $tasks")
     Column(modifier = modifier) {
         TitleSection(
-            modifier = modifier.padding(top = 24.dp, bottom = 8.dp),
+            modifier = Modifier.padding(top = 24.dp, bottom = 8.dp),
             statusTitle = statusTitle,
             numberOfElement = numberOfElement,
             onClick = { actions(HomeActions.OnArrowClicked(tasks.firstOrNull()?.taskStatusUiState)) },
@@ -41,7 +41,7 @@ fun TasksSection(
 @Composable
 private fun TasksScreenPreview() {
     TudeeTheme {
-        Column(modifier = Modifier.padding(start = 16.dp)) {
+        Column() {
             TasksSection(
                 actions = {},
                 statusTitle = "Todo",

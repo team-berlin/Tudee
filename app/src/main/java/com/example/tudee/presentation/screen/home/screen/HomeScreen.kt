@@ -44,6 +44,7 @@ import com.example.tudee.presentation.screen.home.viewmodel.HomeActions
 import com.example.tudee.presentation.screen.home.viewmodel.HomeUiState
 import com.example.tudee.presentation.screen.home.viewmodel.HomeViewModel
 import com.example.tudee.presentation.screen.home.viewmodel.TaskStatusUiState
+import com.example.tudee.presentation.screen.task_screen.ui.NotTaskForTodayDialogue
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -132,55 +133,62 @@ fun HomeContent(
         ) {
             BackgroundBlueCard()
             Column(
-                modifier = modifier
+                modifier = Modifier
                     .verticalScroll(rememberScrollState())
                     .fillMaxSize()
-//                    .padding(top = 72.dp)
-                    .padding(
-                        horizontal = 16.dp
-                    )
-                    .clip(
-                        RoundedCornerShape(topEnd = 16.dp, topStart = 16.dp)
-                    )
-                    .background(color = TudeeTheme.color.surface)
-
             ) {
-                HomeOverviewCard(
-                    todayDate = state.taskTodayDateUiState.todayDateNumber,
-                    month = state.taskTodayDateUiState.month,
-                    year = state.taskTodayDateUiState.year,
-                    tasksDoneCount = state.tasksUiCount.tasksDoneCount,
-                    tasksTodoCount = state.tasksUiCount.tasksTodoCount,
-                    tasksInProgressCount = state.tasksUiCount.tasksInProgressCount,
-                    sliderUiState = state.sliderUiState
-                )
-                    Column(modifier = Modifier.padding(start = 16.dp)) {
-                        if (state.allTasks.isEmpty()) {
-                            NoTask(modifier = Modifier.padding(top= 48.dp))
-                        } else {
-                            if(state.todayTasksTodo.isNotEmpty())
+                Column(
+                    modifier = modifier
+                        .fillMaxSize()
+                        .padding(
+                            horizontal = 16.dp
+                        )
+                        .clip(
+                            RoundedCornerShape(topEnd = 16.dp, topStart = 16.dp)
+                        )
+                        .background(color = TudeeTheme.color.surface)
+
+                ) {
+                    HomeOverviewCard(
+                        todayDate = state.taskTodayDateUiState.todayDateNumber,
+                        month = state.taskTodayDateUiState.month,
+                        year = state.taskTodayDateUiState.year,
+                        tasksDoneCount = state.tasksUiCount.tasksDoneCount,
+                        tasksTodoCount = state.tasksUiCount.tasksTodoCount,
+                        tasksInProgressCount = state.tasksUiCount.tasksInProgressCount,
+                        sliderUiState = state.sliderUiState
+                    )
+                }
+                Column(  modifier = modifier
+                    .fillMaxSize()
+                ) {
+                    if (state.allTasks.isEmpty()) {
+                        NotTaskForTodayDialogue(modifier = Modifier.padding(top = 48.dp))
+                    } else {
+                        if (state.todayTasksTodo.isNotEmpty())
                             TasksSection(
                                 actions = actions,
                                 statusTitle = stringResource(R.string.todo),
                                 numberOfElement = state.todayTasksTodo.size.toString(),
                                 tasks = state.todayTasksTodo
                             )
-                            if(state.todayTasksInProgress.isNotEmpty())
+                        if (state.todayTasksInProgress.isNotEmpty())
                             TasksSection(
                                 actions = actions,
                                 statusTitle = stringResource(R.string.in_progress),
                                 numberOfElement = state.todayTasksInProgress.size.toString(),
                                 tasks = state.todayTasksInProgress
                             )
-                            if(state.todayTasksDone.isNotEmpty())
+                        if (state.todayTasksDone.isNotEmpty())
                             TasksSection(
                                 actions = actions,
                                 statusTitle = stringResource(R.string.done),
                                 numberOfElement = state.todayTasksDone.size.toString(),
                                 tasks = state.todayTasksDone
                             )
-                        }
                     }
+                }
+            }
             }
         }
         if(state.isPreviewSheetVisible){
@@ -206,7 +214,7 @@ fun HomeContent(
             )
         }
     }
-}
+
 
 @Composable
 fun BackgroundBlueCard(modifier: Modifier = Modifier) {
