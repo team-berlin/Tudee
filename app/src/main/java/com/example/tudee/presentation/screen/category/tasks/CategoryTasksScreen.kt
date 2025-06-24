@@ -200,16 +200,12 @@ private fun SuccessState(
             contentPadding = PaddingValues(vertical = 12.dp)
         ) {
             items(categoryTasks) { categoryTask ->
-                val taskPriorityBackgroundColor = when (categoryTask.priority.tasPriorityType) {
-                    TaskPriorityType.HIGH -> TudeeTheme.color.statusColors.pinkAccent
-                    TaskPriorityType.MEDIUM -> TudeeTheme.color.statusColors.yellowAccent
-                    TaskPriorityType.LOW -> TudeeTheme.color.statusColors.greenAccent
-                }
+
                 CategoryTaskComponent(
                     title = categoryTask.title,
                     description = categoryTask.description,
-                    priority = stringResource(categoryTask.priority.priorityTextId),
-                    priorityBackgroundColor = taskPriorityBackgroundColor,
+                    priority = stringResource(categoryTask.priority.labelRes),
+                    priorityBackgroundColor = categoryTask.priority.getContainerColor(),
                     dateText = categoryTask.assignedDate,
                     taskIcon = {
                         Icon(
@@ -219,14 +215,13 @@ private fun SuccessState(
                             tint = TudeeTheme.color.statusColors.purpleAccent
                         )
                     },
-                    priorityIcon = painterResource(id = R.drawable.ic_priority_medium),
+                    priorityIcon = painterResource(categoryTask.priority.drawableRes),
                     onClick = {
 
                     }
                 )
             }
         }
-
         EditCategorySheet(
             isBottomSheetVisible = isEditCategorySheetVisible,
             onDeleteButtonClicked = onDeleteCategory,

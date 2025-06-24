@@ -7,6 +7,7 @@ import com.example.tudee.domain.TaskCategoryService
 import com.example.tudee.domain.TaskService
 import com.example.tudee.domain.entity.Task
 import com.example.tudee.domain.entity.TaskCategory
+import com.example.tudee.presentation.screen.category.CategoriesConstants.CATEGORY_ID_ARGUMENT_KEY
 import com.example.tudee.presentation.screen.category.model.CategoryData
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +23,7 @@ class CategoryTasksViewModel(
     private val taskCategoryService: TaskCategoryService
 ) : ViewModel() {
 
-    private val categoryId: Long = checkNotNull(savedStateHandle["categoryId"])
+    private val categoryId: Long = checkNotNull(savedStateHandle[CATEGORY_ID_ARGUMENT_KEY])
     private val _categoryTasksUiState = MutableStateFlow(CategoryTasksUiState(loading = true))
     val categoryTasksUiState: StateFlow<CategoryTasksUiState> = _categoryTasksUiState
 
@@ -157,5 +158,4 @@ class CategoryTasksViewModel(
         )
         getTasksByStatus(_categoryTasksUiState.value, index)
     }
-
 }

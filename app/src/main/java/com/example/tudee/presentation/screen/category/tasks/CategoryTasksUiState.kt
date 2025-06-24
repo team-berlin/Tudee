@@ -2,10 +2,13 @@ package com.example.tudee.presentation.screen.category.tasks
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import com.example.tudee.R
+import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.presentation.components.TabBarItem
 
-data class CategoryTasksUiState (
+data class CategoryTasksUiState(
     val loading: Boolean,
     val categoryTasksUiModel: CategoryTasksUiModel? = null
 )
@@ -29,16 +32,29 @@ data class TaskUIModel(
     val assignedDate: String
 )
 
-data class TaskPriorityUiModel(
-    val tasPriorityType: TaskPriorityType,
-    @StringRes val priorityTextId: Int,
-    @DrawableRes val priorityIconDrawable: Int,
-)
+enum class TaskPriorityUiModel(
+    @StringRes val labelRes: Int,
+    @DrawableRes val drawableRes: Int,
+    private val containerColorProvider: @Composable () -> Color
+) {
+    HIGH(
+        labelRes = R.string.high_priority,
+        drawableRes = R.drawable.ic_priority_high,
+        containerColorProvider = { TudeeTheme.color.statusColors.pinkAccent }
+    ),
+    MEDIUM(
+        labelRes = R.string.medium_priority,
+        drawableRes = R.drawable.ic_priority_medium,
+        containerColorProvider = { TudeeTheme.color.statusColors.yellowAccent }
+    ),
+    LOW(
+        labelRes = R.string.low_priority,
+        drawableRes = R.drawable.ic_priority_low,
+        containerColorProvider = { TudeeTheme.color.statusColors.greenAccent }
+    );
 
-enum class TaskPriorityType {
-    HIGH,
-    MEDIUM,
-    LOW;
+    @Composable
+    fun getContainerColor(): Color = containerColorProvider()
 }
 
 enum class TaskStatusUiState(@StringRes var status: Int) {
