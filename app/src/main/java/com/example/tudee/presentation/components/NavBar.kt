@@ -67,18 +67,13 @@ fun NavBar(
     ) {
         navDestinations.forEach { item ->
             val isSelected = currentSelectedRoute.value == item.route
-            val backgroundColorAnimated by animateColorAsState(
-                targetValue = if (isSelected) selectedItemBackgroundColor else backgroundColor,
-                animationSpec = spring(
-                    dampingRatio = Spring.DampingRatioMediumBouncy,
-                    stiffness = Spring.StiffnessLow
-                )
-            )
+            val backgroundColorStatic = if (isSelected) selectedItemBackgroundColor else backgroundColor
+
             Box(
                 modifier = Modifier
                     .size(42.dp)
                     .background(
-                        color = backgroundColorAnimated,
+                        color = backgroundColorStatic,
                         shape = if (isSelected) RoundedCornerShape(16.dp) else RoundedCornerShape(
                             100.dp
                         )
