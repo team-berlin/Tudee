@@ -50,25 +50,28 @@ import org.koin.androidx.compose.koinViewModel
 fun CategoriesScreen(
     navController: NavHostController,
     viewModel: CategoriesViewModel = koinViewModel(),
+
 ) {
     val state by viewModel.uiState.collectAsState()
+    val isDarkMode = state.isDarkMode
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route ?: ""
 
     LaunchedEffect(Unit) {
         viewModel.loadCategories()
     }
+    TudeeTheme(isDarkTheme = isDarkMode ) {
+        CategoriesScreenContent(
+            state = state,
+            onCategoryClick = { categoryId ->
+                navigateToCategoryDetails(navController, categoryId)
+            },
+            onAddCategoryClick = { showAddCategoryBottomSheet() },
+            currentRoute = currentRoute,
+            navController = navController
+        )
 
-    CategoriesScreenContent(
-        state = state,
-        onCategoryClick = { categoryId ->
-            navigateToCategoryDetails(navController, categoryId)
-        },
-        onAddCategoryClick = { showAddCategoryBottomSheet() },
-        currentRoute = currentRoute,
-        navController = navController
-    )
-
+    }
 }
 
 @Composable

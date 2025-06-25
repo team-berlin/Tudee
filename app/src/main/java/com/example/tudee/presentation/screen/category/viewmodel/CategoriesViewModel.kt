@@ -2,6 +2,7 @@ package com.example.tudee.presentation.screen.category.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.tudee.data.preferences.ThemePreferenceManager
 import com.example.tudee.domain.TaskCategoryService
 import com.example.tudee.domain.TaskService
 import com.example.tudee.domain.request.CategoryCreationRequest
@@ -17,9 +18,11 @@ import kotlinx.coroutines.launch
 
 class CategoriesViewModel(
     private val taskCategoryService: TaskCategoryService,
-    private val taskService: TaskService
+    private val taskService: TaskService,
+    private val themePrefs: ThemePreferenceManager
+
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(CategoriesUiState())
+    private val _uiState = MutableStateFlow(CategoriesUiState( isDarkMode = themePrefs.isDarkMode()))
     val uiState = _uiState.asStateFlow()
 
     fun loadCategories() {

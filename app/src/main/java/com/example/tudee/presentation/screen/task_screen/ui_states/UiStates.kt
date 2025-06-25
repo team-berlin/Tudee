@@ -23,6 +23,7 @@ data class TasksScreenUiState(
     val noCurrentTasks: Boolean = listOfTasksUiState.isEmpty(),
     val taskDetailsUiState: TaskDetailsUiState? = null,
     val status: TaskStatus = TaskStatus.IN_PROGRESS,
+    val isDarkMode: Boolean = false
 )
 
 data class DateUiState(

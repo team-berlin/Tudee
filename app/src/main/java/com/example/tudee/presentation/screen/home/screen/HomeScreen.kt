@@ -2,6 +2,7 @@ package com.example.tudee.presentation.screen.home.screen
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,6 +19,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
@@ -161,10 +163,15 @@ fun HomeContent(
                 Column(
                     modifier = modifier
                         .fillMaxSize()
-                        .padding(top = 24.dp)
+                        .padding(top = 24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
                 ) {
                     if (state.allTasks.isEmpty()) {
-                        NotTaskForTodayDialogue(modifier = Modifier.padding(top = 24.dp))
+                        NotTaskForTodayDialogue(
+                            modifier = Modifier.padding(top = 24.dp),
+
+                             )
                     } else {
                         if (state.todayTasksTodo.isNotEmpty())
                             TasksSection(
