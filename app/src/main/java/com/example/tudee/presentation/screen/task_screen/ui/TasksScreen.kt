@@ -1,6 +1,12 @@
 package com.example.tudee.presentation.screen.task_screen.ui
 
-
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,20 +17,22 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
+import com.example.tudee.presentation.components.SnackBarComponent
 import com.example.tudee.presentation.components.TabBarComponent
 import com.example.tudee.presentation.components.TudeeDateDialog
 import com.example.tudee.presentation.components.TudeeScaffold
 import com.example.tudee.presentation.screen.task_screen.component.DateSection
 import com.example.tudee.presentation.screen.task_screen.component.DeleteConfirmationBottomSheet
-import com.example.tudee.presentation.screen.task_screen.component.SnackBarSection
 import com.example.tudee.presentation.screen.task_screen.component.TaskContent
 import com.example.tudee.presentation.screen.task_screen.component.TaskScreenBottomAppBar
 import com.example.tudee.presentation.screen.task_screen.component.TaskScreenFloatingActionButton
@@ -36,6 +44,7 @@ import com.example.tudee.presentation.screen.task_screen.ui_states.TaskUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.TasksScreenUiState
 import com.example.tudee.presentation.screen.task_screen.viewmodel.TasksScreenViewModel
 import com.example.tudee.presentation.viewmodel.TaskBottomSheetViewModel
+import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -211,4 +220,38 @@ fun TasksScreenContent(
     SnackBarSection(
         isSnackBarVisible = taskScreenUiState.isSnackBarVisible, hideSnackBar = hideSnackBar
     )
+}
+@Composable
+fun SnackBarSection(
+    isSnackBarVisible: Boolean, hideSnackBar: () -> Unit
+) {
+    LaunchedEffect(isSnackBarVisible) {
+        delay(2000)
+        hideSnackBar()
+    }
+
+    AnimatedVisibility(
+        visible = isSnackBarVisible, enter = slideInVertically(
+            initialOffsetY = { fullHeight -> -fullHeight }, animationSpec = spring(
+                stiffness = Spring.StiffnessLow, dampingRatio = Spring.DampingRatioMediumBouncy
+            )
+        ) + fadeIn(),
+
+        exit = slideOutVertically(
+            targetOffsetY = { fullHeight -> fullHeight }, animationSpec = spring(
+                stiffness = Spring.StiffnessMedium, dampingRatio = Spring.DampingRatioNoBouncy
+            )
+        ) + fadeOut()
+    ) {
+        Box(
+            Modifier.padding(horizontal = 16.dp,vertical = 16.dp)
+        ) {
+            SnackBarComponent(
+                message = stringResource(R.string.task_deleted_success),
+                iconPainter = painterResource(R.drawable.check_mark_ic),
+                iconTint = TudeeTheme.color.statusColors.greenAccent,
+                iconBackgroundColor = TudeeTheme.color.statusColors.greenVariant
+            )
+        }
+    }
 }
