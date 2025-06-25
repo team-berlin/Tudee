@@ -1,5 +1,6 @@
 package com.example.tudee.presentation.screen.category.component
 
+import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -38,6 +39,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -47,6 +49,7 @@ import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.presentation.components.DefaultLeadingContent
 import com.example.tudee.presentation.components.TudeeTextField
+import com.example.tudee.presentation.components.buttons.ButtonState
 import com.example.tudee.presentation.components.buttons.PrimaryButton
 import com.example.tudee.presentation.components.buttons.SecondaryButton
 import com.example.tudee.presentation.components.buttons.TextButton
@@ -108,11 +111,23 @@ private fun CategorySheetContent(
         mutableStateOf(state.initialData.uiImage)
     }
 
+    val context = LocalContext.current
+
     val photoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia()
     ) { uri ->
         uri?.let {
-            selectedUiImage = UiImage.External(it.toString())
+
+            try {
+                context.contentResolver.takePersistableUriPermission(
+                    uri,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION
+                )
+                selectedUiImage = UiImage.External(it.toString())
+            } catch (e: Exception) {
+
+            }
+
         }
     }
 
@@ -345,7 +360,7 @@ private fun CategorySheetActions(
         PrimaryButton(
             modifier = Modifier.fillMaxWidth(),
             onClick = onConfirm,
-            enabled = isFormValid
+            state = if (isFormValid) ButtonState.IDLE else ButtonState.DISABLED
         ) {
             Text(
                 text = when (mode) {
