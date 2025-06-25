@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -18,7 +17,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,14 +27,16 @@ import com.example.tudee.designsystem.theme.TudeeTheme
 
 @Preview(showBackground = true)
 @Composable
-fun NotTaskForTodayDialogue() {
+fun NotTaskForTodayDialogue(
+    title: String = stringResource(R.string.no_tasks_for_today),
+    description: String? = stringResource(R.string.add_first_task_hint)
+) {
     Box(
         Modifier
             .background(TudeeTheme.color.surface)
             .width(360.dp)
             .height(153.dp)
-            .padding(end = 20.dp)
-        ,
+            .padding(end = 20.dp),
     ) {
         Column(
             Modifier
@@ -58,29 +58,31 @@ fun NotTaskForTodayDialogue() {
 
         ) {
             Text(
-                text = stringResource(id = R.string.no_tasks),
+                text = title,
                 style = TudeeTheme.textStyle.title.small,
                 color = TudeeTheme.color.textColors.body,
 
                 )
-            Text(
-                text = stringResource(R.string.add_first_task_hint),
-                style = TudeeTheme.textStyle.body.small,
-                color = TudeeTheme.color.textColors.hint,
-            )
+            if (description != null) {
+                Text(
+                    text = description,
+                    style = TudeeTheme.textStyle.body.small,
+                    color = TudeeTheme.color.textColors.hint,
+                )
+            }
         }
         Box(
             Modifier.align(Alignment.BottomEnd)
         ) {
-                Image(
-                    modifier = Modifier
-                        .padding(end = 5.dp)
-                        .size(144.dp)
-                        .align(Alignment.BottomEnd),
-                    painter = painterResource(R.drawable.delete_bot_omage_container),
-                    contentScale = ContentScale.Crop,
-                    contentDescription = ""
-                )
+            Image(
+                modifier = Modifier
+                    .padding(end = 5.dp)
+                    .size(144.dp)
+                    .align(Alignment.BottomEnd),
+                painter = painterResource(R.drawable.delete_bot_omage_container),
+                contentScale = ContentScale.Crop,
+                contentDescription = ""
+            )
 
             Box(
                 Modifier.align(Alignment.BottomEnd)
@@ -110,7 +112,7 @@ fun NotTaskForTodayDialogue() {
             ) {
                 Image(
                     modifier = Modifier
-                        .padding(start = 6.dp, top =4.dp )
+                        .padding(start = 6.dp, top = 4.dp)
                         .size(width = 23.dp, height = 34.dp)
 
                         .align(Alignment.CenterStart),

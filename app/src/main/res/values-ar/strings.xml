@@ -87,4 +87,6 @@
     <string name="upload_image">رفع صورة</string>
     <string name="edit_uploaded_image">تعديل الصورة</string>
     <string name="snack_bar_category_added">تم إضافة الصنف بنجاح.</string>
+    <string name="no_tasks_in_category">لا يوجد مهام في صنف %1$s</string>
+    <string name="category_not_found">الصنف غير موجود!</string>
 </resources>

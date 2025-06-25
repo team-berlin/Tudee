@@ -13,8 +13,10 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class CategoryTasksViewModel(
@@ -30,10 +32,16 @@ class CategoryTasksViewModel(
     private val _snackBarEvent = MutableSharedFlow<SnackBarEvent>()
     val snackBarEvent = _snackBarEvent.asSharedFlow()
 
+    private val _allTasks = MutableStateFlow<MutableList<TaskUIModel>>(mutableListOf())
+    val allTasks = _allTasks.asStateFlow()
+
     init {
         viewModelScope.launch {
             try {
                 getTasksByCategoryId(categoryId)
+                val tasks =
+                    taskService.getTasksByCategoryId(categoryId).first().map { it.toTaskUIModel() }
+                _allTasks.value.addAll(tasks)
             } catch (_: Exception) {
                 _snackBarEvent.emit(SnackBarEvent.ShowError)
             }
@@ -52,16 +60,18 @@ class CategoryTasksViewModel(
         try {
             taskService.getTasksByCategoryId(categoryId)
                 .map { tasks -> groupTasksByCategory(tasks) }
-                .collect { categoryTasks ->
-                    _categoryTasksUiState.value = if (categoryTasks.isNotEmpty()) {
+                .collect { categoryTasksUiModel ->
+                    _categoryTasksUiState.value = if (categoryTasksUiModel.isNotEmpty()) {
                         _categoryTasksUiState.value.copy(
                             loading = false,
-                            categoryTasksUiModel = categoryTasks.first()
+                            categoryTasksUiModel = categoryTasksUiModel.first()
                         )
                     } else {
                         _categoryTasksUiState.value.copy(
                             loading = false,
-                            categoryTasksUiModel = null
+                            categoryTasksUiModel = getCategoryById(categoryId).toTaskCategoryUiModel(
+                                emptyList()
+                            )
                         )
                     }
                 }
@@ -102,15 +112,10 @@ class CategoryTasksViewModel(
         return tasks.groupBy { it.categoryId }
             .mapNotNull { (categoryId, tasksInCategory) ->
                 val category = getCategoryById(categoryId)
-                val categoryTasksUiModel = CategoryTasksUiModel(
-                    id = category.id,
-                    title = category.title,
-                    image = category.image,
-                    isPredefined = category.isPredefined,
-                    tasks = tasksInCategory.map { it.toTaskUIModel() }
-                )
-                categoryTasksUiModel
-
+                _categoryTasksUiState.update { currentState ->
+                    currentState.copy(categoryTasksUiModel = category.toTaskCategoryUiModel(tasks))
+                }
+                category.toTaskCategoryUiModel(tasksInCategory)
             }
     }
 
@@ -121,31 +126,33 @@ class CategoryTasksViewModel(
     fun getTasksByStatus(categoryTasksUiState: CategoryTasksUiState, tabIndex: Int = 0) {
         viewModelScope.launch {
             val status =
-                categoryTasksUiState.categoryTasksUiModel?.listOfTabBarItem?.get(tabIndex)?.title?.let { title ->
-                    TaskStatusUiState.entries.firstOrNull { it.status == title }
-                } ?: TaskStatusUiState.TODO
+                categoryTasksUiState
+                    .categoryTasksUiModel?.listOfTabBarItem?.get(tabIndex)?.title?.let { title ->
+                        TaskStatusUiState.entries.firstOrNull { it.status == title }
+                    } ?: TaskStatusUiState.TODO
 
-            taskService.getTasksByStatus(status.toDomain()).collect { tasks ->
-                val uiTasks = tasks.map { it.toTaskUIModel() }
-                _categoryTasksUiState.value = _categoryTasksUiState.value.copy(
-                    categoryTasksUiModel = _categoryTasksUiState.value
-                        .categoryTasksUiModel?.listOfTabBarItem?.mapIndexed { index, tabItem ->
-                            if (index == tabIndex) {
-                                tabItem.copy(
-                                    isSelected = true,
-                                    taskCount = tasks.size.toString()
-                                )
-                            } else {
-                                tabItem.copy(isSelected = false)
-                            }
-                        }?.let {
-                            _categoryTasksUiState.value.categoryTasksUiModel?.copy(
-                                tasks = uiTasks,
-                                selectedTabIndex = tabIndex,
-                                listOfTabBarItem = it
-                            )
-                        }
-                )
+            taskService.getTasksByStatus(status.toDomain()).collect { allTasks ->
+                val categoryTasks = allTasks.filter { it.categoryId == categoryId }
+                val uiTasks = categoryTasks.map { it.toTaskUIModel() }
+                _categoryTasksUiState.update { currentState ->
+                    currentState.copy(
+                        categoryTasksUiModel = currentState.categoryTasksUiModel?.copy(
+                            tasks = uiTasks,
+                            selectedTabIndex = tabIndex,
+                            listOfTabBarItem = currentState.categoryTasksUiModel
+                                .listOfTabBarItem.mapIndexed { index, tabItem ->
+                                    if (index == tabIndex) {
+                                        tabItem.copy(
+                                            isSelected = true,
+                                            taskCount = categoryTasks.size.toString()
+                                        )
+                                    } else {
+                                        tabItem.copy(isSelected = false)
+                                    }
+                                }
+                        )
+                    )
+                }
             }
         }
     }
