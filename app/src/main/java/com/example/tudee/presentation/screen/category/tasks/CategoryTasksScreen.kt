@@ -37,9 +37,9 @@ import com.example.tudee.presentation.components.TabBarComponent
 import com.example.tudee.presentation.components.TopAppBar
 import com.example.tudee.presentation.components.TudeeScaffold
 import com.example.tudee.presentation.screen.category.EditCategorySheet
+import com.example.tudee.presentation.screen.category.component.NotTaskForTodayCard
 import com.example.tudee.presentation.screen.category.model.CategoryData
 import com.example.tudee.presentation.screen.category.model.toUiImage
-import com.example.tudee.presentation.screen.task_screen.ui.NotTaskForTodayDialogue
 import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 
@@ -186,13 +186,13 @@ private fun SuccessState(
         }
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             if (allTasks.isEmpty()) {
-                NotTaskForTodayDialogue(
+                NotTaskForTodayCard(
                     title = stringResource(R.string.no_tasks_in_category, categoryName),
                     description = null
                 )
 
             } else if (categoryTasks.isEmpty()) {
-                NotTaskForTodayDialogue(
+                NotTaskForTodayCard(
                     title = stringResource(R.string.no_tasks),
                     description = null
                 )
