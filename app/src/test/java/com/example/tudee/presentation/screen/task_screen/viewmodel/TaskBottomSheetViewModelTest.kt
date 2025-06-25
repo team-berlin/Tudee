@@ -1,4 +1,4 @@
-package com.example.tudee.presentation.viewmodel
+package com.example.tudee.presentation.screen.task_screen.viewmodel
 
 import com.example.tudee.domain.TaskCategoryService
 import com.example.tudee.domain.TaskService
@@ -7,11 +7,10 @@ import com.example.tudee.domain.entity.TaskCategory
 import com.example.tudee.domain.entity.TaskPriority
 import com.example.tudee.domain.entity.TaskStatus
 import com.example.tudee.domain.request.TaskCreationRequest
-import com.example.tudee.presentation.screen.task_screen.ui_states.TaskBottomSheetState
+import com.example.tudee.presentation.viewmodel.TaskBottomSheetViewModel
 import com.google.common.truth.Truth.assertThat
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
-import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
