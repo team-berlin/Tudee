@@ -1,9 +1,10 @@
 package com.example.tudee.presentation.screen.task_screen.ui_states
 
-import androidx.annotation.StringRes
+import com.example.tudee.domain.entity.TaskStatus
 import com.example.tudee.presentation.components.TabBarItem
 import com.example.tudee.presentation.components.buttons.ButtonState
-import com.example.tudee.presentation.screen.task_screen.viewmodel.defaultTabBarItem
+import com.example.tudee.presentation.screen.task_screen.mappers.TaskPriorityUiState
+import com.example.tudee.presentation.screen.task_screen.mappers.TaskStatusUiState
 import java.time.YearMonth
 
 data class TasksScreenUiState(
@@ -21,13 +22,13 @@ data class TasksScreenUiState(
     val idOfTaskToBeDeleted: Long = 0,
     val noCurrentTasks: Boolean = listOfTasksUiState.isEmpty(),
     val taskDetailsUiState: TaskDetailsUiState? = null,
-    val status: String = "",
+    val status: TaskStatus = TaskStatus.IN_PROGRESS,
 )
 
 data class DateUiState(
     val isDatePickerVisible: Boolean = false,
     val selectedYear: String = "",
-    val selectedMonth: YearMonth = YearMonth.now(),
+    val selectedYearMonth: YearMonth = YearMonth.now(), // should be string
     val daysCardsData: List<DateCardUiState> = emptyList()
 )
 
@@ -35,11 +36,8 @@ data class TaskUiState(
     val id: Long,
     val title: String,
     val description: String,
-
-    @StringRes
-    val priority: Int,
-    @StringRes
-    val status: Int,
+    val priority: TaskPriorityUiState,
+    val status: TaskStatusUiState,
     val categoryTitle: String,
     val categoryIcon: String
 )
@@ -56,3 +54,16 @@ data class DeleteBottomSheetUiState(
     val deleteButtonState: ButtonState = ButtonState.IDLE,
     val cancelButtonState: ButtonState = ButtonState.IDLE,
 )
+
+val defaultTabBarItem = listOf(
+    TabBarItem(
+        title = TaskStatusUiState.IN_PROGRESS.label, taskCount = "0", isSelected = true
+    ),
+    TabBarItem(
+        title = TaskStatusUiState.TODO.label, taskCount = "0", isSelected = false
+    ),
+    TabBarItem(
+        title = TaskStatusUiState.DONE.label, taskCount = "0", isSelected = false
+    ),
+
+    )

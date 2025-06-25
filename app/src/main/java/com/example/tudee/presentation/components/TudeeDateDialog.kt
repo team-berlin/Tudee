@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -19,7 +20,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
+import com.example.tudee.presentation.components.buttons.TextButton
 import com.example.tudee.utils.convertMillisToDate
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.todayIn
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -28,7 +33,11 @@ fun TudeeDateDialog(
     onDismiss: () -> Unit,
     onClear: () -> Unit
 ) {
-    var dateState = rememberDatePickerState()
+    val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
+    var dateState =  rememberDatePickerState(
+        initialSelectedDateMillis = today.toEpochDays() * 86_400_000L
+
+    )
     val formattedDate = remember(dateState.selectedDateMillis) {
         dateState.selectedDateMillis?.let {
             convertMillisToDate(it, "EEE, MMM d")
@@ -36,16 +45,36 @@ fun TudeeDateDialog(
     }
     DatePickerDialog(
         onDismissRequest = onDismiss,
-        confirmButton = {})
+        confirmButton = {},
+        colors = DatePickerDefaults.colors(
+            containerColor = TudeeTheme.color.surface
+            , titleContentColor = TudeeTheme.color.textColors.title
+        ),
+
+        )
     {
         DatePicker(
             state = dateState,
             headline = {
                 Text(
                     modifier = Modifier.padding(horizontal = 24.dp),
-                    text = formattedDate ?: stringResource(id = R.string.select_date)
+                    text = formattedDate ?: stringResource(id = R.string.select_date),
+                    color = TudeeTheme.color.textColors.title
                 )
             },
+            colors = DatePickerDefaults.colors(
+                navigationContentColor =TudeeTheme.color.textColors.title ,
+                headlineContentColor = TudeeTheme.color.textColors.title,
+                titleContentColor = TudeeTheme.color.textColors.title,
+                weekdayContentColor = TudeeTheme.color.textColors.title,
+                dayContentColor=TudeeTheme.color.textColors.title,
+                containerColor = TudeeTheme.color.statusColors.greenAccent ,
+                selectedDayContainerColor = TudeeTheme.color.primary,
+                selectedDayContentColor = TudeeTheme.color.textColors.onPrimary,
+                todayContentColor = TudeeTheme.color.primary,
+                todayDateBorderColor = TudeeTheme.color.primary,
+
+            )
         )
         Row(
             modifier = Modifier
@@ -72,6 +101,7 @@ fun TudeeDateDialog(
                     color = TudeeTheme.color.primary,
                     style = TudeeTheme.textStyle.label.large
                 )
+
                 Text(
                     modifier = Modifier.clickable {
                         onConfirm(dateState.selectedDateMillis)

@@ -1,15 +1,25 @@
 package com.example.tudee.presentation.components
 
+import android.annotation.SuppressLint
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,10 +33,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.example.tudee.designsystem.theme.TudeeTheme
 
@@ -82,17 +96,19 @@ fun TabBarComponent(
     }
 }
 
+@SuppressLint("UnusedContentLambdaTargetStateParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TabIndicatorScope.DefaultTabIndicator(selectedTabIndex: Int, modifier: Modifier) =
-    AnimatedVisibility(
-        visible = true,
-        enter = fadeIn(tween(1000)),
-        exit = fadeOut(tween(1000))
-    ) {
 
         TabRowDefaults.PrimaryIndicator(
-            modifier = modifier.tabIndicatorOffset(
+            modifier = modifier.run {
+                    if (LocalLayoutDirection.current == LayoutDirection.Rtl)
+                        scale(-1f, 1f)
+                    else
+                        this
+                }
+                .tabIndicatorOffset(
                 selectedTabIndex,
                 matchContentSize = true
             ),
@@ -101,7 +117,7 @@ private fun TabIndicatorScope.DefaultTabIndicator(selectedTabIndex: Int, modifie
             shape = (RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)),
             width = Dp.Unspecified
         )
-    }
+
 @Composable
 private fun DefaultTabContent(
     modifier: Modifier = Modifier,
@@ -109,19 +125,25 @@ private fun DefaultTabContent(
     tabBarItem: TabBarItem,
 
     ) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
+    Row(modifier = modifier
+            .onGloballyPositioned { coordinates ->
+                coordinates.size.width
+            }
+            .padding(vertical = 8.dp)
+            .height(28.dp)
+            .widthIn(min = 65.5.dp, max = 103.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ){
         Text(
-            text = stringResource(tabBarItem.title.toInt()),
-            modifier = Modifier.padding(end = 4.dp),
+            text = stringResource(tabBarItem.title),
+            modifier = modifier.padding(end = 4.dp),
             style = if (tabBarItem.isSelected) TudeeTheme.textStyle.label.medium else TudeeTheme.textStyle.label.small,
             color = if (tabBarItem.isSelected) TudeeTheme.color.textColors.title else TudeeTheme.color.textColors.hint
         )
         if (isSelected) {
             Box(
-                Modifier
+                modifier
                     .size(28.dp)
                     .clip(CircleShape)
                     .background(TudeeTheme.color.surfaceLow),
