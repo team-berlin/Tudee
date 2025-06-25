@@ -160,10 +160,10 @@ fun HomeContent(
                     )
                 }
                 Column(  modifier = modifier
-                    .fillMaxSize()
+                    .fillMaxSize().padding(top = 24.dp)
                 ) {
                     if (state.allTasks.isEmpty()) {
-                        NotTaskForTodayDialogue(modifier = Modifier.padding(top = 48.dp))
+                        NotTaskForTodayDialogue(modifier = Modifier.padding(top = 24.dp))
                     } else {
                         if (state.todayTasksTodo.isNotEmpty())
                             TasksSection(

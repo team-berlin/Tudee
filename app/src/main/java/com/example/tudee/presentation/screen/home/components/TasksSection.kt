@@ -24,13 +24,13 @@ fun TasksSection(
     Log.d("TasksSection", "Tasks: $tasks")
     Column(modifier = modifier) {
         TitleSection(
-            modifier = Modifier.padding( bottom = 8.dp, start = 16.dp, end = 16.dp),
+            modifier = Modifier.padding(bottom = 8.dp, start = 16.dp, end = 16.dp),
             statusTitle = statusTitle,
             numberOfElement = numberOfElement,
             onClick = { actions(HomeActions.OnArrowClicked(tasks.firstOrNull()?.taskStatusUiState)) },
         )
         TaskList(
-            modifier = Modifier.padding(bottom = 24.dp,),
+            modifier = Modifier.padding(bottom = 24.dp),
             tasks = tasks,
             actions = actions
         )
