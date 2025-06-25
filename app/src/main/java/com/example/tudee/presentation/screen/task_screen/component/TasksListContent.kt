@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
@@ -41,11 +40,11 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
-import com.example.tudee.data.mapper.getCategoryIcon
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.presentation.components.CategoryTaskComponent
 import com.example.tudee.presentation.screen.task_screen.ui.NotTaskForTodayDialogue
 import com.example.tudee.presentation.screen.task_screen.ui_states.TaskUiState
+import com.example.tudee.presentation.utils.toCategoryIcon
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
@@ -88,7 +87,7 @@ fun TasksListContent(
                             priorityBackgroundColor = task.priority.containerColor,
                             taskIcon = {
                                 Icon(
-                                    painter = painterResource(getCategoryIcon(task.categoryIcon)),
+                                    painter = painterResource(task.categoryIcon.toCategoryIcon()),
                                     contentDescription = "Task Icon",
                                     modifier = Modifier.size(32.dp),
                                     tint = Color.Unspecified

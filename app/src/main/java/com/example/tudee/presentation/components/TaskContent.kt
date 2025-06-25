@@ -35,7 +35,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
-import com.example.tudee.data.mapper.getCategoryIcon
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.presentation.components.buttons.ButtonState
 import com.example.tudee.presentation.components.buttons.PrimaryButton
@@ -45,6 +44,7 @@ import com.example.tudee.presentation.screen.home.viewmodel.HomeActions
 import com.example.tudee.presentation.screen.home.viewmodel.HomeUiState
 import com.example.tudee.presentation.screen.home.viewmodel.TaskPriorityUiState
 import com.example.tudee.presentation.screen.home.viewmodel.TaskUiState
+import com.example.tudee.presentation.utils.toCategoryIcon
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -208,7 +208,7 @@ fun TaskContent(
 
                         CategoryItemWithBadge(
                             categoryPainter = painterResource(
-                                getCategoryIcon( categories.image)
+                                categories.image.toCategoryIcon()
                             ),
                             showCheckedIcon = state.selectedTask.taskCategory?.id == categories.id,
                             badgeBackgroundColor = TudeeTheme.color.statusColors.greenAccent,

@@ -18,7 +18,7 @@ data class CategoryTasksUiModel(
     val title: String,
     val image: String,
     val isPredefined: Boolean,
-    val tasks: List<TaskUIModel>,
+    val tasks: List<TaskUIModel> = emptyList(),
     val listOfTabBarItem: List<TabBarItem> = defaultTabBarItem,
     val selectedTabIndex: Int = 0,
 )

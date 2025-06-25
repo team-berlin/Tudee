@@ -15,7 +15,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -34,13 +33,13 @@ import androidx.navigation.compose.rememberNavController
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.presentation.components.CategoryTaskComponent
-import com.example.tudee.presentation.components.SnackBarComponent
 import com.example.tudee.presentation.components.TabBarComponent
 import com.example.tudee.presentation.components.TopAppBar
 import com.example.tudee.presentation.components.TudeeScaffold
 import com.example.tudee.presentation.screen.category.EditCategorySheet
 import com.example.tudee.presentation.screen.category.model.CategoryData
 import com.example.tudee.presentation.screen.category.model.toUiImage
+import com.example.tudee.presentation.screen.task_screen.ui.NotTaskForTodayDialogue
 import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 
@@ -54,7 +53,7 @@ fun CategoryTasksScreen(
     val showSnackBar = remember { mutableStateOf(false) }
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     var isEditCategorySheetVisible by remember { mutableStateOf(false) }
-
+    val allTasks by viewModel.allTasks.collectAsState()
     LaunchedEffect(Unit) {
         viewModel.snackBarEvent.collect { event ->
             when (event) {
@@ -63,6 +62,8 @@ fun CategoryTasksScreen(
                     delay(3000L)
                     showSnackBar.value = false
                 }
+
+                SnackBarEvent.ShowSuccess -> {}
             }
         }
     }
@@ -98,6 +99,7 @@ fun CategoryTasksScreen(
                 modifier = modifier.padding(paddingValues),
                 categoryTaskUIState = uiState,
                 isEditCategorySheetVisible = isEditCategorySheetVisible,
+                allTasks = allTasks,
                 onDeleteCategory = viewModel::deleteCategory,
                 onSaveButtonClicked = { categoryData ->
                     viewModel.editCategory(categoryData)
@@ -111,28 +113,17 @@ fun CategoryTasksScreen(
             )
         } else if (uiState.loading) {
             LoadingState(modifier = modifier)
-        } else {
-            Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("No tasks available")
-            }
-            if (showSnackBar.value) {
-                SnackBarComponent(
-                    message = stringResource(R.string.snack_bar_error_message),
-                    iconPainter = painterResource(id = R.drawable.ic_error),
-                    iconDescription = stringResource(R.string.snack_bar_error_message),
-                    iconBackgroundColor = TudeeTheme.color.statusColors.errorVariant,
-                    iconTint = TudeeTheme.color.statusColors.greenAccent,
-                )
-            }
         }
     }
 }
+
 
 @Composable
 fun CategoryTasksContent(
     modifier: Modifier = Modifier,
     categoryTaskUIState: CategoryTasksUiState,
     isEditCategorySheetVisible: Boolean,
+    allTasks: List<TaskUIModel>,
     onDeleteCategory: () -> Unit,
     onSaveButtonClicked: (CategoryData) -> Unit,
     onTabSelected: (Int) -> Unit,
@@ -149,6 +140,7 @@ fun CategoryTasksContent(
             categoryImage = categoryTaskUIState.categoryTasksUiModel.image,
             onDeleteCategory = onDeleteCategory,
             onSaveButtonClicked = onSaveButtonClicked,
+            allTasks = allTasks,
             onTabSelected = { onTabSelected(it) },
             isEditCategorySheetVisible = isEditCategorySheetVisible,
             onBottomSheetDismissed = { onBottomSheetDismissed() },
@@ -173,13 +165,13 @@ private fun SuccessState(
     categoryImage: String,
     categoryTasks: List<TaskUIModel>,
     isEditCategorySheetVisible: Boolean,
+    allTasks: List<TaskUIModel>,
     onDeleteCategory: () -> Unit,
     onSaveButtonClicked: (CategoryData) -> Unit,
     onTabSelected: (Int) -> Unit,
     onBottomSheetDismissed: () -> Unit,
     onCancelButtonClicked: () -> Unit
 ) {
-
     Column(
         modifier = modifier
     ) {
@@ -192,44 +184,58 @@ private fun SuccessState(
                 }
             )
         }
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(vertical = 12.dp)
-        ) {
-            items(categoryTasks) { categoryTask ->
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            if (allTasks.isEmpty()) {
+                NotTaskForTodayDialogue(
+                    title = stringResource(R.string.no_tasks_in_category, categoryName),
+                    description = null
+                )
 
-                CategoryTaskComponent(
-                    title = categoryTask.title,
-                    description = categoryTask.description,
-                    priority = stringResource(categoryTask.priority.labelRes),
-                    priorityBackgroundColor = categoryTask.priority.getContainerColor(),
-                    dateText = categoryTask.assignedDate,
-                    taskIcon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_category_book_open), // this will be change
-                            contentDescription = "Task Icon",
-                            modifier = Modifier.size(32.dp),
-                            tint = TudeeTheme.color.statusColors.purpleAccent
-                        )
-                    },
-                    priorityIcon = painterResource(categoryTask.priority.drawableRes),
-                    onClick = {
-                        //TODO()
-                    }
+            } else if (categoryTasks.isEmpty()) {
+                NotTaskForTodayDialogue(
+                    title = stringResource(R.string.no_tasks),
+                    description = null
                 )
             }
         }
-        EditCategorySheet(
-            isBottomSheetVisible = isEditCategorySheetVisible,
-            onDeleteButtonClicked = onDeleteCategory,
-            onBottomSheetDismissed = { onBottomSheetDismissed() },
-            onCancelButtonClicked = { onCancelButtonClicked() },
-            onSaveButtonClicked = { onSaveButtonClicked(it) },
-            initialCategoryImage = categoryImage.toUiImage(),
-            initialCategoryName = categoryName
-        )
     }
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = PaddingValues(vertical = 12.dp)
+    ) {
+        items(categoryTasks) { categoryTask ->
+
+            CategoryTaskComponent(
+                title = categoryTask.title,
+                description = categoryTask.description,
+                priority = stringResource(categoryTask.priority.labelRes),
+                priorityBackgroundColor = categoryTask.priority.getContainerColor(),
+                dateText = categoryTask.assignedDate,
+                taskIcon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_category_book_open), // this will be change
+                        contentDescription = "Task Icon",
+                        modifier = Modifier.size(32.dp),
+                        tint = TudeeTheme.color.statusColors.purpleAccent
+                    )
+                },
+                priorityIcon = painterResource(categoryTask.priority.drawableRes),
+                onClick = {
+                    //TODO()
+                }
+            )
+        }
+    }
+    EditCategorySheet(
+        isBottomSheetVisible = isEditCategorySheetVisible,
+        onDeleteButtonClicked = onDeleteCategory,
+        onBottomSheetDismissed = { onBottomSheetDismissed() },
+        onCancelButtonClicked = { onCancelButtonClicked() },
+        onSaveButtonClicked = { onSaveButtonClicked(it) },
+        initialCategoryImage = categoryImage.toUiImage(),
+        initialCategoryName = categoryName
+    )
 }

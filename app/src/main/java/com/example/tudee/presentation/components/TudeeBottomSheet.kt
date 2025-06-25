@@ -36,7 +36,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
-import com.example.tudee.data.mapper.getCategoryIcon
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.presentation.components.buttons.ButtonState
 import com.example.tudee.presentation.components.buttons.SecondaryButton
@@ -44,6 +43,7 @@ import com.example.tudee.presentation.screen.home.viewmodel.CategoryUiState
 import com.example.tudee.presentation.screen.home.viewmodel.TaskPriorityUiState
 import com.example.tudee.presentation.screen.home.viewmodel.TaskStatusUiState
 import com.example.tudee.presentation.screen.home.viewmodel.TaskUiState
+import com.example.tudee.presentation.utils.toCategoryIcon
 import kotlinx.datetime.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -144,7 +144,7 @@ private fun TudeeTaskDetails(task: TaskUiState, modifier: Modifier = Modifier) {
             .padding(top = 12.dp)
             .background(color = TudeeTheme.color.surfaceHigh, shape = CircleShape)
     ) {
-        task.taskCategory.image?.let { painterResource(getCategoryIcon(it) ) }?.let {
+        task.taskCategory.image?.let { painterResource(it.toCategoryIcon()) }?.let {
             Image(
                 modifier = Modifier.padding(15.dp), painter = it,
                 contentDescription = null

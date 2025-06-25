@@ -25,7 +25,7 @@ fun TaskPriority.toTaskPriorityUi(): TaskPriorityUiModel {
     }
 }
 
-fun TaskCategory.toTaskCategoryUiModel(tasks: List<Task>): CategoryTasksUiModel {
+fun TaskCategory.toTaskCategoryUiModel(tasks: List<Task> = emptyList()): CategoryTasksUiModel {
     return CategoryTasksUiModel(
         id = this.id,
         title = this.title,

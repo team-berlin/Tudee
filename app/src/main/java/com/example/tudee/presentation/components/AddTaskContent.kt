@@ -20,7 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -28,7 +27,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
-import com.example.tudee.data.mapper.getCategoryIcon
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.presentation.components.buttons.ButtonState
 import com.example.tudee.presentation.components.buttons.PrimaryButton
@@ -38,6 +36,7 @@ import com.example.tudee.presentation.screen.home.viewmodel.HomeActions
 import com.example.tudee.presentation.screen.home.viewmodel.HomeUiState
 import com.example.tudee.presentation.screen.home.viewmodel.TaskPriorityUiState
 import com.example.tudee.presentation.screen.home.viewmodel.TaskUiState
+import com.example.tudee.presentation.utils.toCategoryIcon
 
 @Composable
 fun AddTaskContent(
@@ -171,7 +170,7 @@ fun AddTaskContent(
                     items(categories) { categories ->
                         CategoryItemWithBadge(
                             categoryPainter = painterResource(
-                               getCategoryIcon( categories.image)
+                                categories.image.toCategoryIcon()
                             ),
                             showCheckedIcon = state.taskUiState.taskCategory?.id == categories.id,
                             badgeBackgroundColor = TudeeTheme.color.statusColors.greenAccent,
@@ -203,7 +202,7 @@ fun AddTaskContent(
         ) {
             PrimaryButton(
                 modifier = Modifier.fillMaxWidth(),
-          state = if (addButtonClick) ButtonState.IDLE else ButtonState.DISABLED,
+                state = if (addButtonClick) ButtonState.IDLE else ButtonState.DISABLED,
                 onClick = { onAction(HomeActions.OnCreateTaskButtonClicked(state.taskUiState)) },
             ) {
                 Text(text = stringResource(R.string.add))

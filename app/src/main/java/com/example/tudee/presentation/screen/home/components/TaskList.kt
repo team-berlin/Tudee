@@ -17,7 +17,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
-import com.example.tudee.data.mapper.getCategoryIcon
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.domain.entity.TaskPriority
 import com.example.tudee.domain.entity.TaskStatus
@@ -28,6 +27,7 @@ import com.example.tudee.presentation.screen.home.viewmodel.CategoryUiState
 import com.example.tudee.presentation.screen.home.viewmodel.HomeActions
 import com.example.tudee.presentation.screen.home.viewmodel.TaskPriorityUiState
 import com.example.tudee.presentation.screen.home.viewmodel.TaskUiState
+import com.example.tudee.presentation.utils.toCategoryIcon
 import kotlinx.datetime.LocalDate
 
 @Composable
@@ -74,7 +74,7 @@ fun TaskList(
                 priorityBackgroundColor = priorityColor,
                 taskIcon = {
                     Image(
-                        painter = painterResource(getCategoryIcon(task.taskCategory.image)),
+                        painter = painterResource(task.taskCategory.image.toCategoryIcon()),
                         contentDescription = "taskIcon",
                     )
                 },
