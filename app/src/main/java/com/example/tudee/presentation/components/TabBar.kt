@@ -101,13 +101,6 @@ fun TabBarComponent(
 @Composable
 private fun TabIndicatorScope.DefaultTabIndicator(selectedTabIndex: Int, modifier: Modifier) =
 
-
-    AnimatedContent(
-        targetState = selectedTabIndex,
-        transitionSpec = {
-            slideInVertically(tween(500)) togetherWith slideOutVertically(tween(500))
-        }
-    ) {
         TabRowDefaults.PrimaryIndicator(
             modifier = modifier.run {
                     if (LocalLayoutDirection.current == LayoutDirection.Rtl)
@@ -124,7 +117,7 @@ private fun TabIndicatorScope.DefaultTabIndicator(selectedTabIndex: Int, modifie
             shape = (RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)),
             width = Dp.Unspecified
         )
-    }
+
 @Composable
 private fun DefaultTabContent(
     modifier: Modifier = Modifier,
