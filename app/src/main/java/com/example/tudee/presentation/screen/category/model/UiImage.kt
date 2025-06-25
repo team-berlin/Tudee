@@ -39,3 +39,7 @@ fun String.toUiImage(): UiImage {
         UiImage.External(this)
     }
 }
+
+fun UiImage?.isNotNull(): Boolean {
+    return this != null
+}
