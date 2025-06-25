@@ -25,7 +25,7 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun SnackBarSection(
-    isSnackBarVisible: Boolean, showSnackBar :Boolean = false
+    isSnackBarVisible: Boolean, hideSnackBar: () -> Unit = {},showSnackBar :Boolean = false
 ) {
     LaunchedEffect(isSnackBarVisible) {
         delay(2000)
@@ -46,7 +46,7 @@ fun SnackBarSection(
         ) + fadeOut()
     ) {
         Box(
-            Modifier.padding(horizontal = 16.dp,vertical = 16.dp)
+            Modifier.padding(horizontal = 16.dp, vertical = 16.dp)
         ) {
             SnackBarComponent(
                 message = stringResource(R.string.snack_bar_success_message),

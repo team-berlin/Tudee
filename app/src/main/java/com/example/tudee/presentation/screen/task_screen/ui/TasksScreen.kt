@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
@@ -24,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
@@ -226,7 +228,7 @@ fun SnackBarSection(
     isSnackBarVisible: Boolean, hideSnackBar: () -> Unit
 ) {
     LaunchedEffect(isSnackBarVisible) {
-        delay(2000)
+        delay(5000)
         hideSnackBar()
     }
 
@@ -244,7 +246,11 @@ fun SnackBarSection(
         ) + fadeOut()
     ) {
         Box(
-            Modifier.padding(horizontal = 16.dp,vertical = 16.dp)
+            Modifier
+                .fillMaxWidth()
+                .offset(y = 56.dp)
+                .padding(horizontal = 16.dp, vertical = 16.dp)
+                .zIndex(1f)
         ) {
             SnackBarComponent(
                 message = stringResource(R.string.task_deleted_success),
