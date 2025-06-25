@@ -68,7 +68,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.tudee.R
-import com.example.tudee.data.mapper.getCategoryIcon
+import com.example.tudee.presentation.utils.toCategoryIcon
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.naviagtion.Destination
 import com.example.tudee.presentation.components.BottomNavItem
@@ -85,16 +85,16 @@ import com.example.tudee.presentation.components.buttons.FabButton
 import com.example.tudee.presentation.components.buttons.NegativeButton
 import com.example.tudee.presentation.components.buttons.SecondaryButton
 import com.example.tudee.presentation.screen.TaskDetailsScreen
+import com.example.tudee.presentation.screen.task_screen.addTask.AddBottomSheet
+import com.example.tudee.presentation.screen.task_screen.interactors.TaskScreenInteractor
 import com.example.tudee.presentation.screen.task_screen.mappers.TaskPriorityUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.DateCardUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.DateUiState
+import com.example.tudee.presentation.screen.task_screen.ui_states.TaskBottomSheetState
 import com.example.tudee.presentation.screen.task_screen.ui_states.TaskUiState
 import com.example.tudee.presentation.screen.task_screen.ui_states.TasksScreenUiState
-import com.example.tudee.presentation.screen.task_screen.viewmodel.TasksScreenViewModel
-import com.example.tudee.presentation.screen.task_screen.addTask.AddBottomSheet
-import com.example.tudee.presentation.screen.task_screen.interactors.TaskScreenInteractor
 import com.example.tudee.presentation.screen.task_screen.viewmodel.AddTaskBottomSheetViewModel
-import com.example.tudee.presentation.screen.task_screen.ui_states.TaskBottomSheetState
+import com.example.tudee.presentation.screen.task_screen.viewmodel.TasksScreenViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -434,7 +434,7 @@ fun TasksListContent(
                             priorityBackgroundColor = priorityBackgroundColor,
                             taskIcon = {
                                 Icon(
-                                    painter = painterResource(getCategoryIcon(task.categoryIcon)),
+                                    painter = painterResource(task.categoryIcon.toCategoryIcon()),
                                     contentDescription = "Task Icon",
                                     modifier = Modifier.size(32.dp),
                                     tint = Color.Unspecified
