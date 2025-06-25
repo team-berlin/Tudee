@@ -63,6 +63,8 @@ fun CategoryTasksScreen(
                     delay(3000L)
                     showSnackBar.value = false
                 }
+
+                SnackBarEvent.ShowSuccess -> {}
             }
         }
     }

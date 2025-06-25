@@ -7,9 +7,12 @@ import com.example.tudee.domain.TaskService
 import com.example.tudee.domain.request.CategoryCreationRequest
 import com.example.tudee.presentation.screen.category.mapper.toUiModel
 import com.example.tudee.presentation.screen.category.model.CategoriesUiState
+import com.example.tudee.presentation.screen.category.tasks.SnackBarEvent
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
@@ -24,6 +27,9 @@ class CategoriesViewModel(
 
     private val _isEditCategorySheetVisible = MutableStateFlow(false)
     val isEditCategorySheetVisible = _isEditCategorySheetVisible.asStateFlow()
+
+    private val _snackBarEvent = MutableSharedFlow<SnackBarEvent>()
+    val snackBarEvent = _snackBarEvent.asSharedFlow()
 
     init {
         loadCategories()
@@ -73,6 +79,7 @@ class CategoriesViewModel(
                 )
                 hideEditCategorySheet()
                 loadCategories()
+                _snackBarEvent.emit(SnackBarEvent.ShowSuccess)
             } catch (e: Exception) {
                 _uiState.update { it.copy(error = e.message ?: "Unknown error") }
             }
