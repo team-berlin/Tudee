@@ -36,14 +36,13 @@ import com.example.tudee.presentation.components.TudeeScaffold
 import com.example.tudee.presentation.components.TudeeTaskDetailsBottomSheet
 import com.example.tudee.presentation.components.buttons.ButtonState
 import com.example.tudee.presentation.components.buttons.FabButton
-import com.example.tudee.presentation.screen.home.components.TasksSection
-import com.example.tudee.presentation.screen.task_screen.ui.TaskScreenBottomAppBar
-import com.example.tudee.presentation.screens.home.components.NoTask
 import com.example.tudee.presentation.screen.home.components.HomeOverviewCard
+import com.example.tudee.presentation.screen.home.components.TasksSection
 import com.example.tudee.presentation.screen.home.viewmodel.HomeActions
 import com.example.tudee.presentation.screen.home.viewmodel.HomeUiState
 import com.example.tudee.presentation.screen.home.viewmodel.HomeViewModel
 import com.example.tudee.presentation.screen.home.viewmodel.TaskStatusUiState
+import com.example.tudee.presentation.screen.task_screen.component.TaskScreenBottomAppBar
 import com.example.tudee.presentation.screen.task_screen.ui.NotTaskForTodayDialogue
 import org.koin.androidx.compose.koinViewModel
 
@@ -159,8 +158,10 @@ fun HomeContent(
                         sliderUiState = state.sliderUiState
                     )
                 }
-                Column(  modifier = modifier
-                    .fillMaxSize().padding(top = 24.dp)
+                Column(
+                    modifier = modifier
+                        .fillMaxSize()
+                        .padding(top = 24.dp)
                 ) {
                     if (state.allTasks.isEmpty()) {
                         NotTaskForTodayDialogue(modifier = Modifier.padding(top = 24.dp))
@@ -189,31 +190,33 @@ fun HomeContent(
                     }
                 }
             }
-            }
-        }
-        if(state.isPreviewSheetVisible){
-            TudeeTaskDetailsBottomSheet(
-                isVisible = true,
-                task = state.selectedTask,
-                onDismissRequest = { actions(HomeActions.OnBottomSheetDismissed) },
-                onEditButtonClicked = {actions(HomeActions.OnOpenBottomSheet)},
-                isChangeStatusButtonEnable = state.selectedTask.taskStatusUiState != TaskStatusUiState.DONE,
-                onMoveActionClicked = {
-                    actions(HomeActions.OnTaskStatusChanged(
-                        if(state.selectedTask.taskStatusUiState == TaskStatusUiState.TODO) TaskStatusUiState.IN_PROGRESS else TaskStatusUiState.DONE
-                    ))
-                },
-                changeStatusButtonState = ButtonState.IDLE
-            )
-        }
-        if (state.isBottomSheetVisible) {
-            BottomSheetContent(
-                state = state,
-                onDismiss = { actions(HomeActions.OnBottomSheetDismissed) },
-                actions = actions
-            )
         }
     }
+    if (state.isPreviewSheetVisible) {
+        TudeeTaskDetailsBottomSheet(
+            isVisible = true,
+            task = state.selectedTask,
+            onDismissRequest = { actions(HomeActions.OnBottomSheetDismissed) },
+            onEditButtonClicked = { actions(HomeActions.OnOpenBottomSheet) },
+            isChangeStatusButtonEnable = state.selectedTask.taskStatusUiState != TaskStatusUiState.DONE,
+            onMoveActionClicked = {
+                actions(
+                    HomeActions.OnTaskStatusChanged(
+                        if (state.selectedTask.taskStatusUiState == TaskStatusUiState.TODO) TaskStatusUiState.IN_PROGRESS else TaskStatusUiState.DONE
+                    )
+                )
+            },
+            changeStatusButtonState = ButtonState.IDLE
+        )
+    }
+    if (state.isBottomSheetVisible) {
+        BottomSheetContent(
+            state = state,
+            onDismiss = { actions(HomeActions.OnBottomSheetDismissed) },
+            actions = actions
+        )
+    }
+}
 
 
 @Composable
