@@ -242,7 +242,7 @@ fun BottomSheetContent(
     ) {
         TaskContent(
             state = state,
-            categories = state.allTasks.mapNotNull { it.taskCategory }.distinctBy { it.id },
+            categories = state.categories,
             onAction = actions,
             mode = if (state.selectedTask.taskId.isNotEmpty()) TaskContentMode.EDIT else TaskContentMode.ADD
         )

@@ -1,5 +1,6 @@
 package com.example.tudee.presentation.components
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -32,11 +33,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import kotlinx.datetime.Instant
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import com.example.tudee.R
+import com.example.tudee.data.mapper.getCategoryIcon
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.presentation.components.buttons.ButtonState
 import com.example.tudee.presentation.components.buttons.PrimaryButton
@@ -46,6 +44,10 @@ import com.example.tudee.presentation.screen.home.viewmodel.HomeActions
 import com.example.tudee.presentation.screen.home.viewmodel.HomeUiState
 import com.example.tudee.presentation.screen.home.viewmodel.TaskPriorityUiState
 import com.example.tudee.presentation.screen.home.viewmodel.TaskUiState
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 enum class TaskContentMode {
     ADD,
@@ -60,6 +62,11 @@ fun TaskContent(
     onAction: (HomeActions) -> Unit,
     mode: TaskContentMode = TaskContentMode.ADD
 ) {
+
+    Log.d("TaskContent", "Selected task category ID: ${state.taskUiState.taskCategory?.id}")
+    categories.forEachIndexed { index, category ->
+        Log.d("TaskContent", "Category $index: title='${category.title}', id=${category.id}")
+    }
     val priorities = listOf(
         TaskPriorityUiState.HIGH to Triple(
             stringResource(R.string.high),
@@ -83,7 +90,6 @@ fun TaskContent(
             modifier = modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             item {
                 Text(
@@ -125,20 +131,20 @@ fun TaskContent(
             item {
                 var showDatePicker by remember { mutableStateOf(false) }
 
-                    TudeeTextField(
-                        enabled = false,
-                        modifier = Modifier.padding(top = 16.dp),
-                        value = state.selectedTask.taskAssignedDate.toString(),
-                        onValueChange = { },
-                        placeholder = stringResource(R.string.set_due_date),
-                        leadingContent = { isFocused ->
-                            DefaultLeadingContent(
-                                modifier = Modifier.clickable { showDatePicker = true },
-                                painter = painterResource(R.drawable.ic_calendar),
-                                isFocused = isFocused
-                            )
-                        }
-                    )
+                TudeeTextField(
+                    enabled = false,
+                    modifier = Modifier.padding(top = 16.dp),
+                    value = state.selectedTask.taskAssignedDate.toString(),
+                    onValueChange = { },
+                    placeholder = stringResource(R.string.set_due_date),
+                    leadingContent = { isFocused ->
+                        DefaultLeadingContent(
+                            modifier = Modifier.clickable { showDatePicker = true },
+                            painter = painterResource(R.drawable.ic_add_calendar),
+                            isFocused = isFocused
+                        )
+                    }
+                )
 
 
                 if (showDatePicker) {
@@ -197,12 +203,12 @@ fun TaskContent(
                         .padding(bottom = 148.dp),
                 ) {
                     items(categories) { categories ->
+
                         CategoryItemWithBadge(
                             categoryPainter = painterResource(
-                                id = categories.image
-                                    ?: R.drawable.category
+                                getCategoryIcon( categories.image)
                             ),
-                            showCheckedIcon = state.selectedTask?.taskCategory?.id == categories.id,
+                            showCheckedIcon = state.selectedTask.taskCategory?.id == categories.id,
                             badgeBackgroundColor = TudeeTheme.color.statusColors.greenAccent,
                             categoryName = categories.title,
                             categoryImageContentDescription = "Category ${categories.title}",
@@ -216,6 +222,7 @@ fun TaskContent(
                                     )
                                 }
                         )
+
                     }
                 }
             }
@@ -233,7 +240,7 @@ fun TaskContent(
             PrimaryButton(
                 modifier = Modifier.fillMaxWidth(),
                 state = if (state.selectedTask?.taskDescription?.isNotBlank() == true && state.selectedTask?.taskTitle?.isNotBlank() == true) ButtonState.IDLE else ButtonState.DISABLED,
-                onClick = { 
+                onClick = {
                     if (mode == TaskContentMode.EDIT) {
                         onAction(HomeActions.OnEditTaskButtonClicked)
                     } else {
@@ -241,9 +248,11 @@ fun TaskContent(
                     }
                 },
             ) {
-                Text(text = stringResource(
-                    if (mode == TaskContentMode.EDIT) R.string.edit else R.string.add
-                ))
+                Text(
+                    text = stringResource(
+                        if (mode == TaskContentMode.EDIT) R.string.save else R.string.add
+                    )
+                )
             }
             SecondaryButton(
                 modifier = Modifier
@@ -294,114 +303,49 @@ fun DatePickerDialogComponent(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = false)
+
+@Preview(showBackground = true)
 @Composable
-private fun TaskContentPreview() {
+fun TaskContentPreview() {
     TudeeTheme {
-        val sampleCategories = listOf(
-            CategoryUiState(
-                id = "1",
-                title = "Education",
-                image = R.drawable.ic_education
-            ),
-            CategoryUiState(
-                id = "2",
-                title = "Work",
-                image = R.drawable.ic_education
-            ),
-            CategoryUiState(
-                id = "3",
-                title = "Personal",
-                image = R.drawable.ic_education
-            ),
-            CategoryUiState(
-                id = "4",
-                title = "Education",
-                image = R.drawable.ic_education
-            ),
-            CategoryUiState(
-                id = "5",
-                title = "Work",
-                image = R.drawable.ic_education
-            ),
-            CategoryUiState(
-                id = "6",
-                title = "Personal",
-                image = R.drawable.ic_education
-            ),
-
-            CategoryUiState(
-                id = "4",
-                title = "Education",
-                image = R.drawable.ic_education
-            ),
-            CategoryUiState(
-                id = "5",
-                title = "Work",
-                image = R.drawable.ic_education
-            ),
-            CategoryUiState(
-                id = "6",
-                title = "Personal",
-                image = R.drawable.ic_education
-            )
-        )
-
-
-        var homeUiState by remember {
-            mutableStateOf(
-                HomeUiState(
-                    taskUiState = TaskUiState(),
-                )
-            )
-        }
-
         TaskContent(
-            state = homeUiState,
-            categories = sampleCategories,
-            onAction = { action ->
-                when (action) {
-                    is HomeActions.OnEditTaskTitleChanged -> {
-                        homeUiState = homeUiState.copy(
-                            taskUiState = homeUiState.taskUiState.copy(taskTitle = action.title),
-                            selectedTask = homeUiState.selectedTask.copy(taskTitle = action.title)
-                        )
-                    }
-
-                    is HomeActions.OnEditTaskDescriptionChanged -> {
-                        homeUiState = homeUiState.copy(
-                            taskUiState = homeUiState.taskUiState.copy(taskDescription = action.description),
-                            selectedTask = homeUiState.selectedTask.copy(taskDescription = action.description)
-                        )
-                    }
-
-                    is HomeActions.OnEditTaskPriorityChanged -> {
-                        homeUiState = homeUiState.copy(
-                            taskUiState = homeUiState.taskUiState.copy(taskPriority = action.priority),
-                            selectedTask = homeUiState.selectedTask.copy(taskPriority = action.priority)
-                        )
-                    }
-
-                    is HomeActions.OnEditTaskCategoryChanged -> {
-                        homeUiState = homeUiState.copy(
-                            taskUiState = homeUiState.taskUiState.copy(taskCategory = action.category),
-                            selectedTask = homeUiState.selectedTask.copy(taskCategory = action.category)
-                        )
-                    }
-
-                    is HomeActions.OnCreateTaskButtonClicked -> {
-                    }
-
-                    is HomeActions.OnCancelButtonClicked -> {
-                        homeUiState = homeUiState.copy(
-                            taskUiState = TaskUiState(),
-                        )
-                    }
-
-                    else -> {
-                    }
-                }
-            }
+            state = HomeUiState(
+                selectedTask = TaskUiState(
+                    taskId = "1",
+                    taskTitle = "Study Kotlin",
+                    taskDescription = "Read about coroutines and flows",
+                    taskPriority = TaskPriorityUiState.MEDIUM,
+                    taskCategory = CategoryUiState(
+                        id = 2,
+                        title = "Education",
+                        image = "education",
+                        isPredefined = true
+                    ),
+                    taskAssignedDate = LocalDate(2025, 6, 25)
+                )
+            ),
+            categories = listOf(
+                CategoryUiState(
+                    id = 1,
+                    title = "Health",
+                    image = "health",
+                    isPredefined = true
+                ),
+                CategoryUiState(
+                    id = 2,
+                    title = "Education",
+                    image = "education",
+                    isPredefined = true
+                ),
+                CategoryUiState(
+                    id = 3,
+                    title = "Work",
+                    image = "work",
+                    isPredefined = true
+                )
+            ),
+            onAction = {},
+            mode = TaskContentMode.ADD
         )
     }
 }

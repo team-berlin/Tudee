@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tudee.R
+import com.example.tudee.data.mapper.toCategoryUiState
+import com.example.tudee.domain.TaskCategoryService
 import com.example.tudee.domain.TaskService
 import com.example.tudee.domain.entity.Task
 import com.example.tudee.domain.entity.TaskStatus
@@ -15,6 +17,7 @@ import com.example.tudee.presentation.screen.home.toTaskUiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
@@ -23,22 +26,37 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
 
-class HomeViewModel(val taskService: TaskService) : ViewModel() {
+class HomeViewModel(
+    val taskService: TaskService,
+    private val categoryService: TaskCategoryService
+) : ViewModel() {
     private val _homeUiState = MutableStateFlow(HomeUiState())
     val homeUiState = _homeUiState.asStateFlow()
 
     fun init() {
-        getTodayDate()
-        getMonth()
-        getYear()
-        getInProgressTasks()
-        getDoneTasks()
-        getTodoTasks()
-        updateTasksFromService()
+        viewModelScope.launch {
+            getCategories()
+            getTodayDate()
+            getMonth()
+            getYear()
+            getInProgressTasks()
+            getDoneTasks()
+            getTodoTasks()
+            updateTasksFromService()
+        }
     }
+
+
+    private suspend fun getCategories() {
+        val categoryUiStates =
+            categoryService.getCategories().first().map { it.toCategoryUiState() }
+        _homeUiState.update { it.copy(categories = categoryUiStates) }
+    }
+
 
     fun handleActions(actions: HomeActions) {
         when (actions) {
+
             HomeActions.HideSnackBar -> hideSnackBar()
             is HomeActions.OnArrowClicked -> onArrowClicked(actions.taskStatusUiState)
             HomeActions.OnBottomSheetDismissed -> onBottomSheetDismissed()
@@ -56,7 +74,9 @@ class HomeViewModel(val taskService: TaskService) : ViewModel() {
             is HomeActions.OnThemeChanged -> onThemeChanged(actions.isDarkMode)
             HomeActions.OnOpenBottomSheet -> onOpenBottomSheet()
         }
+
     }
+
 
     private fun getTodayDate() {
         _homeUiState.update { oldValue ->
@@ -94,10 +114,11 @@ class HomeViewModel(val taskService: TaskService) : ViewModel() {
     private fun updateTasksFromService() {
         viewModelScope.launch(Dispatchers.IO) {
             taskService.getTasks().collect { tasks ->
+                val categories = _homeUiState.value.categories
                 Log.d("HomeViewModel", "Tasks: $tasks")
                 _homeUiState.update { oldValue ->
                     oldValue.copy(
-                        allTasks = tasks.map { it.toTaskUiState() },
+                        allTasks =tasks.map { it.toTaskUiState(categories) },
                         tasksUiCount = oldValue.tasksUiCount.copy(
                             tasksDoneCount = filterTasksByStatus(
                                 TaskStatus.DONE,
@@ -172,19 +193,19 @@ class HomeViewModel(val taskService: TaskService) : ViewModel() {
             _homeUiState.update { oldValue ->
                 oldValue.copy(
                     tasksUiCount = oldValue.tasksUiCount.copy(
-                    tasksTodoCount = tasks.filter {
-                        it.status == TaskStatus.TODO && it.assignedDate == Clock.System.now()
-                            .toLocalDateTime(TimeZone.currentSystemDefault()).date
-                    }.size.toString(),
-                    tasksDoneCount = tasks.filter {
-                        it.status == TaskStatus.DONE && it.assignedDate == Clock.System.now()
-                            .toLocalDateTime(TimeZone.currentSystemDefault()).date
-                    }.size.toString(),
-                    tasksInProgressCount = tasks.filter {
-                        it.status == TaskStatus.IN_PROGRESS && it.assignedDate == Clock.System.now()
-                            .toLocalDateTime(TimeZone.currentSystemDefault()).date
-                    }.size.toString(),
-                )
+                        tasksTodoCount = tasks.filter {
+                            it.status == TaskStatus.TODO && it.assignedDate == Clock.System.now()
+                                .toLocalDateTime(TimeZone.currentSystemDefault()).date
+                        }.size.toString(),
+                        tasksDoneCount = tasks.filter {
+                            it.status == TaskStatus.DONE && it.assignedDate == Clock.System.now()
+                                .toLocalDateTime(TimeZone.currentSystemDefault()).date
+                        }.size.toString(),
+                        tasksInProgressCount = tasks.filter {
+                            it.status == TaskStatus.IN_PROGRESS && it.assignedDate == Clock.System.now()
+                                .toLocalDateTime(TimeZone.currentSystemDefault()).date
+                        }.size.toString(),
+                    )
                 )
             }
         }
@@ -197,7 +218,7 @@ class HomeViewModel(val taskService: TaskService) : ViewModel() {
                 Log.d("HomeViewModel", "Tasks: $tasks")
                 _homeUiState.update { oldValue ->
                     oldValue.copy(
-                        todayTasksInProgress = tasks.map { it.toTaskUiState() }
+                        todayTasksInProgress = tasks.map { it.toTaskUiState( _homeUiState.value.categories) }
                     )
                 }
             }
@@ -210,7 +231,7 @@ class HomeViewModel(val taskService: TaskService) : ViewModel() {
             taskService.getTasksByStatus(TaskStatus.DONE).collect { tasks ->
                 _homeUiState.update { oldValue ->
                     oldValue.copy(
-                        todayTasksDone = tasks.map { it.toTaskUiState() }
+                        todayTasksDone = tasks.map { it.toTaskUiState( _homeUiState.value.categories) }
                     )
                 }
             }
@@ -223,7 +244,7 @@ class HomeViewModel(val taskService: TaskService) : ViewModel() {
                 Log.d("HomeViewModel", "TasksTodo: $tasks")
                 _homeUiState.update { oldValue ->
                     oldValue.copy(
-                        todayTasksTodo = tasks.map { it.toTaskUiState() }
+                        todayTasksTodo = tasks.map { it.toTaskUiState( _homeUiState.value.categories) }
                     )
                 }
             }
@@ -299,7 +320,7 @@ class HomeViewModel(val taskService: TaskService) : ViewModel() {
                     title = taskUiState.taskTitle,
                     description = taskUiState.taskDescription,
                     priority = taskUiState.taskPriority.toTaskPriority(),
-                    categoryId = taskUiState.taskCategory.id.toLong(),
+                    categoryId = taskUiState.taskCategory.id,
                     status = taskUiState.taskStatusUiState.toTaskStatus(),
                     assignedDate = taskUiState.taskAssignedDate
                 )
@@ -328,6 +349,7 @@ class HomeViewModel(val taskService: TaskService) : ViewModel() {
             )
         }
     }
+
     private fun onOpenBottomSheet() {
         _homeUiState.update { oldValue ->
             oldValue.copy(
@@ -399,6 +421,7 @@ class HomeViewModel(val taskService: TaskService) : ViewModel() {
                 )
             )
         }
+        Log.d("HomeViewModel", "Updated taskCategory to: ${category.title}, ID: ${category.id}")
     }
 
     private fun onEditTaskPriorityChanged(priority: TaskPriorityUiState) {
@@ -412,7 +435,7 @@ class HomeViewModel(val taskService: TaskService) : ViewModel() {
     }
 
     private fun onTaskStatusChanged(status: TaskStatusUiState) {
-        viewModelScope.launch (Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.IO) {
             taskService.editTaskStatus(
                 taskId = _homeUiState.value.selectedTask.taskId.toLong(),
                 status = status.toTaskStatus()
@@ -458,4 +481,7 @@ class HomeViewModel(val taskService: TaskService) : ViewModel() {
             )
         }
     }
+
+
+
 }
