@@ -44,11 +44,11 @@ import com.example.tudee.R
 import com.example.tudee.data.mapper.getCategoryIcon
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.presentation.components.CategoryTaskComponent
+import com.example.tudee.presentation.screen.task_screen.ui.NotTaskForTodayDialogue
 import com.example.tudee.presentation.screen.task_screen.ui_states.TaskUiState
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TasksListContent(
     modifier: Modifier = Modifier,
@@ -73,9 +73,7 @@ fun TasksListContent(
             LazyColumn(
                 modifier.padding(
                     start = 16.dp, end = 16.dp
-                )
-
-                , verticalArrangement = Arrangement.spacedBy(8.dp)
+                ), verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
 
                 items(listOfTasks, key = { it.id }) { task ->
@@ -105,6 +103,7 @@ fun TasksListContent(
         }
     }
 }
+
 @Composable
 fun SwipeableCardWrapper(
     onDeleteIconClick: () -> Unit, content: @Composable () -> Unit
@@ -119,16 +118,15 @@ fun SwipeableCardWrapper(
         Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .background(TudeeTheme.color.statusColors.errorVariant)
-
-        ,
+            .background(TudeeTheme.color.statusColors.errorVariant),
         contentAlignment = Alignment.CenterEnd
     ) {
-        IconButton(modifier = Modifier
-            .onSizeChanged {
-                hiddenIconWidth = it.width.toFloat()
-            }
-            .padding(horizontal = 16.dp), onClick = {
+        IconButton(
+            modifier = Modifier
+                .onSizeChanged {
+                    hiddenIconWidth = it.width.toFloat()
+                }
+                .padding(horizontal = 16.dp), onClick = {
             onDeleteIconClick()
         }) {
             Icon(
@@ -143,7 +141,7 @@ fun SwipeableCardWrapper(
             modifier = Modifier
                 .fillMaxWidth()
                 .offset {
-                    val offsetX = if (isRtl) -neededOffset.value else - neededOffset.value
+                    val offsetX = if (isRtl) -neededOffset.value else -neededOffset.value
                     IntOffset(x = offsetX.roundToInt(), y = 0)
                 }
                 .clip(RoundedCornerShape(16.dp))
@@ -155,7 +153,7 @@ fun SwipeableCardWrapper(
                                 val newOffset = if (isRtl) {
                                     (neededOffset.value - adjustedDrag)
                                         .coerceIn(0f, hiddenIconWidth)
-                                }else{
+                                } else {
                                     (neededOffset.value + adjustedDrag)
                                         .coerceIn(0f, hiddenIconWidth)
                                 }

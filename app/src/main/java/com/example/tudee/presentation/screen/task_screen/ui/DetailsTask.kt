@@ -59,7 +59,7 @@ fun TaskDetailsScreen(
             priority = taskDetailsState.priority
         )
         if (taskDetailsState.status.toDomain() != TaskStatus.DONE) {
-            TaskActionButtons(taskBottomSheetViewModel,taskDetailsState,hideAddTaskBottomSheet)
+            TaskActionButtons(taskBottomSheetViewModel, taskDetailsState, hideAddTaskBottomSheet)
         }
     }
 }
@@ -92,8 +92,16 @@ private fun TaskCategoryIcon(categoryIconRes: String) {
 
 @Composable
 private fun TaskTitleAndDescription(title: String, description: String) {
-    Text(text = title, style = TudeeTheme.textStyle.label.large)
-    Text(text = description, style = TudeeTheme.textStyle.label.small)
+    Text(
+        text = title,
+        style = TudeeTheme.textStyle.label.large,
+        color = TudeeTheme.color.textColors.title
+    )
+    Text(
+        text = description,
+        style = TudeeTheme.textStyle.label.small,
+        color = TudeeTheme.color.textColors.body
+    )
 }
 
 @Composable
@@ -119,7 +127,8 @@ private fun TaskStatusAndPriorityChips(status: TaskStatusUiState, priority: Task
 private fun TaskActionButtons(
     taskBottomSheetViewModel: TaskBottomSheetViewModel,
     taskDetailsState: TaskDetailsUiState,
-    hideAddTaskBottomSheet: () -> Unit) {
+    hideAddTaskBottomSheet: () -> Unit
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -130,7 +139,8 @@ private fun TaskActionButtons(
                 taskBottomSheetViewModel.run {
                     hideAddTaskBottomSheet()
                     showButtonSheet()
-                } },
+                }
+            },
             icon = painterResource(R.drawable.pencil_edit),
             contentDescription = stringResource(R.string.edit_icon)
         )
@@ -138,7 +148,7 @@ private fun TaskActionButtons(
             onClick = {
                 taskBottomSheetViewModel.updateTaskStatusToDone(taskDetailsState.id)
                 hideAddTaskBottomSheet()
-                      },
+            },
             modifier = Modifier.weight(1f),
             content = {
                 Text(
