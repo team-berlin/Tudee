@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tudee.R
 import com.example.tudee.data.mapper.toCategoryUiState
+import com.example.tudee.data.preferences.ThemePreferenceManager
 import com.example.tudee.domain.TaskCategoryService
 import com.example.tudee.domain.TaskService
 import com.example.tudee.domain.entity.Task
@@ -28,13 +29,17 @@ import kotlinx.datetime.toLocalDateTime
 
 class HomeViewModel(
     val taskService: TaskService,
-    private val categoryService: TaskCategoryService
+    private val categoryService: TaskCategoryService,
+    private val themePreferenceManager: ThemePreferenceManager
 ) : ViewModel() {
     private val _homeUiState = MutableStateFlow(HomeUiState())
     val homeUiState = _homeUiState.asStateFlow()
 
     fun init() {
         viewModelScope.launch {
+            val isDark = themePreferenceManager.isDarkMode()
+            _homeUiState.update { it.copy(isDarkMode = isDark) }
+
             getCategories()
             getTodayDate()
             getMonth()
@@ -464,10 +469,9 @@ class HomeViewModel(
     }
 
     private fun onThemeChanged(isDarkMode: Boolean) {
+        themePreferenceManager.setDarkMode(isDarkMode)
         _homeUiState.update { oldValue ->
-            oldValue.copy(
-                isDarkMode = isDarkMode
-            )
+            oldValue.copy(isDarkMode = isDarkMode)
         }
     }
 

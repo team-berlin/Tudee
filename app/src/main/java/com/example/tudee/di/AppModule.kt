@@ -6,6 +6,7 @@ import com.example.tudee.data.dao.AppEntryDao
 import com.example.tudee.data.dao.TaskCategoryDao
 import com.example.tudee.data.dao.TaskDao
 import com.example.tudee.data.database.AppDatabase
+import com.example.tudee.data.preferences.ThemePreferenceManager
 import com.example.tudee.data.service.TaskCategoryServiceImpl
 import com.example.tudee.data.service.TaskServiceImpl
 import com.example.tudee.domain.AppEntry
@@ -33,7 +34,7 @@ val appModule = module {
         get<AppDatabase>().taskCategoryDao()
     }
     viewModel<HomeViewModel>{
-        HomeViewModel(get(),get())
+        HomeViewModel(get(),get(),get())
     }
     single<TaskService> { TaskServiceImpl(get()) }  // replace with your real implementation
     single<TaskCategoryService> { TaskCategoryServiceImpl(get()) }
@@ -53,5 +54,8 @@ val appModule = module {
 
     single<AppEntryDao> { get<AppDatabase>().appEntryDao() }
     single<AppEntry> { AppEntryImpl(get()) }
+
+    single { ThemePreferenceManager(androidContext()) }
+
 
 }

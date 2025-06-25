@@ -249,7 +249,7 @@ fun BottomSheetContent(
     }
 }
 
-@Preview(showSystemUi = true, showBackground = true, locale = "ar")
+@Preview(showSystemUi = true, showBackground = true)
 @Composable
 private fun HomeScreenPreview() {
     TudeeTheme {
