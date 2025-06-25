@@ -1,4 +1,4 @@
-package com.example.tudee.presentation.screen
+package com.example.tudee.presentation.screen.task_screen.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -28,7 +28,6 @@ import androidx.compose.ui.unit.dp
 import com.example.tudee.R
 import com.example.tudee.data.mapper.getCategoryIcon
 import com.example.tudee.designsystem.theme.TudeeTheme
-import com.example.tudee.domain.entity.TaskPriority
 import com.example.tudee.domain.entity.TaskStatus
 import com.example.tudee.presentation.components.TudeeChip
 import com.example.tudee.presentation.components.buttons.SecondaryButton

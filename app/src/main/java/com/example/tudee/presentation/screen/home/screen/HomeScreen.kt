@@ -38,13 +38,13 @@ import com.example.tudee.presentation.components.TudeeTaskDetailsBottomSheet
 import com.example.tudee.presentation.components.buttons.ButtonState
 import com.example.tudee.presentation.components.buttons.FabButton
 import com.example.tudee.presentation.screen.home.components.TasksSection
-import com.example.tudee.presentation.screen.task_screen.ui.TaskScreenBottomAppBar
 import com.example.tudee.presentation.screens.home.components.NoTask
 import com.example.tudee.presentation.screen.home.components.HomeOverviewCard
 import com.example.tudee.presentation.screen.home.viewmodel.HomeActions
 import com.example.tudee.presentation.screen.home.viewmodel.HomeUiState
 import com.example.tudee.presentation.screen.home.viewmodel.HomeViewModel
 import com.example.tudee.presentation.screen.home.viewmodel.TaskStatusUiState
+import com.example.tudee.presentation.screen.task_screen.component.TaskScreenBottomAppBar
 import org.koin.androidx.compose.koinViewModel
 
 @Composable

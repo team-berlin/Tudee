@@ -43,7 +43,7 @@ import com.example.tudee.presentation.screen.category.model.CategoriesUiState
 import com.example.tudee.presentation.screen.category.model.TaskCategoryUiModel
 import com.example.tudee.presentation.screen.category.model.UiImage
 import com.example.tudee.presentation.screen.category.viewmodel.CategoriesViewModel
-import com.example.tudee.presentation.screen.task_screen.ui.TaskScreenBottomAppBar
+import com.example.tudee.presentation.screen.task_screen.component.TaskScreenBottomAppBar
 import org.koin.androidx.compose.koinViewModel
 
 @Composable

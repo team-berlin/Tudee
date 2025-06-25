@@ -1,4 +1,4 @@
-package com.example.tudee.presentation.screen.task_screen.ui
+package com.example.tudee.presentation.screen.task_screen.component
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Spring
@@ -25,11 +25,12 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun SnackBarSection(
-    isSnackBarVisible: Boolean, hideSnackBar: Boolean
+    isSnackBarVisible: Boolean, hideSnackBar: () -> Unit = {},showSnackBar :Boolean = false
 ) {
     LaunchedEffect(isSnackBarVisible) {
         delay(2000)
         hideSnackBar
+        showSnackBar
     }
 
     AnimatedVisibility(
