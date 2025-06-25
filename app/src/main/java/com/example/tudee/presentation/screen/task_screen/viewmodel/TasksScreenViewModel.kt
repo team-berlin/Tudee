@@ -146,7 +146,7 @@ class TasksScreenViewModel(
                     title = taskUiState.title,
                     description = taskUiState.description,
                     categoryIconRes = taskUiState.categoryIcon,
-                    priority = TaskPriority.LOW,
+                    priority = taskUiState.priority,
                     status = taskUiState.status
                 )
             )

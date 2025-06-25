@@ -32,6 +32,7 @@ import com.example.tudee.domain.entity.TaskPriority
 import com.example.tudee.domain.entity.TaskStatus
 import com.example.tudee.presentation.components.TudeeChip
 import com.example.tudee.presentation.components.buttons.SecondaryButton
+import com.example.tudee.presentation.screen.task_screen.mappers.TaskPriorityUiState
 import com.example.tudee.presentation.screen.task_screen.mappers.TaskStatusUiState
 import com.example.tudee.presentation.screen.task_screen.mappers.toDomain
 import com.example.tudee.presentation.screen.task_screen.ui_states.TaskDetailsUiState
@@ -97,7 +98,7 @@ private fun TaskTitleAndDescription(title: String, description: String) {
 }
 
 @Composable
-private fun TaskStatusAndPriorityChips(status: TaskStatusUiState, priority: TaskPriority) {
+private fun TaskStatusAndPriorityChips(status: TaskStatusUiState, priority: TaskPriorityUiState) {
     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
         TudeeChip(
             label = stringResource(status.label),
@@ -108,8 +109,8 @@ private fun TaskStatusAndPriorityChips(status: TaskStatusUiState, priority: Task
         )
         TudeeChip(
             label = priority.name.lowercase().replaceFirstChar { it.uppercase() },
-            icon = painterResource(getPriorityIcon(priority)),
-            backgroundColor = getPriorityColor(priority),
+            icon = painterResource(priority.icon),
+            backgroundColor = priority.containerColor,
             labelColor = TudeeTheme.color.textColors.onPrimary
         )
     }
@@ -179,38 +180,4 @@ fun IconFab(
     }
 }
 
-private fun getPriorityIcon(priority: TaskPriority): Int {
-    return when (priority) {
-        TaskPriority.HIGH -> R.drawable.ic_priority_high
-        TaskPriority.MEDIUM -> R.drawable.ic_priority_medium
-        TaskPriority.LOW -> R.drawable.ic_priority_low
-    }
-}
-
-@Composable
-private fun getPriorityColor(priority: TaskPriority): Color {
-    return when (priority) {
-        TaskPriority.HIGH -> TudeeTheme.color.statusColors.pinkAccent
-        TaskPriority.MEDIUM -> TudeeTheme.color.statusColors.yellowAccent
-        TaskPriority.LOW -> TudeeTheme.color.statusColors.greenAccent
-    }
-}
-
-@Composable
-private fun getStatusColor(status: TaskStatus): Color {
-    return when (status) {
-        TaskStatus.TODO -> TudeeTheme.color.statusColors.yellowAccent
-        TaskStatus.IN_PROGRESS -> TudeeTheme.color.statusColors.purpleAccent
-        TaskStatus.DONE -> TudeeTheme.color.statusColors.greenAccent
-    }
-}
-
-@Composable
-private fun getStatusLabelColor(status: TaskStatus): Color {
-    return when (status) {
-        TaskStatus.TODO -> TudeeTheme.color.statusColors.yellowVariant
-        TaskStatus.IN_PROGRESS -> TudeeTheme.color.statusColors.purpleVariant
-        TaskStatus.DONE -> TudeeTheme.color.statusColors.greenVariant
-    }
-}
 
