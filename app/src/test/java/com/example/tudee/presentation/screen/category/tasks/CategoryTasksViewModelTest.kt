@@ -1,5 +1,6 @@
 package com.example.tudee.presentation.screen.category.tasks
 
+import androidx.lifecycle.SavedStateHandle
 import com.example.tudee.data.dao.TaskCategoryDao
 import com.example.tudee.domain.TaskCategoryService
 import com.example.tudee.domain.TaskService
@@ -43,6 +44,7 @@ class CategoryTasksViewModelTest {
     private lateinit var taskCategoryService: TaskCategoryService
     private lateinit var viewModel: CategoryTasksViewModel
     private lateinit var categoryDao: TaskCategoryDao
+    private lateinit var savedStateHandle: SavedStateHandle
     private val testDispatcher = StandardTestDispatcher()
 
     @Before
@@ -51,7 +53,8 @@ class CategoryTasksViewModelTest {
         taskService = mockk(relaxed = true)
         taskCategoryService = mockk(relaxed = true)
         categoryDao = mockk(relaxed = true)
-        viewModel = CategoryTasksViewModel(taskService, taskCategoryService)
+        savedStateHandle = SavedStateHandle().apply { set("categoryId", 1) }
+        viewModel = CategoryTasksViewModel(savedStateHandle, taskService, taskCategoryService)
     }
 
     @After
@@ -85,9 +88,8 @@ class CategoryTasksViewModelTest {
                         .toLocalDateTime(timeZone = TimeZone.of("Africa/Cairo")).date
                 )
             )
-            coEvery { taskCategoryService.getCategories() } returns flowOf(listOf(category))
+            coEvery { taskCategoryService.getCategoryById(categoryId) } returns flowOf((category))
             coEvery { taskService.getTasksByCategoryId(categoryId) } returns flowOf(testTasks)
-
             // When
             viewModel.getTasksByCategoryId(categoryId)
             advanceUntilIdle()
@@ -142,7 +144,7 @@ class CategoryTasksViewModelTest {
             )
         )
 
-        coEvery { taskCategoryService.getCategories() } returns flowOf(listOf(category))
+        coEvery { taskCategoryService.getCategoryById(categoryId) } returns flowOf(category)
         coEvery { taskService.getTasksByCategoryId(categoryId) } returns flowOf(testTasks)
 
         viewModel.getTasksByCategoryId(categoryId)
@@ -184,7 +186,7 @@ class CategoryTasksViewModelTest {
         )
 
         coEvery { taskService.getTasksByCategoryId(categoryId) } returns flowOf(listOf(testTask))
-        coEvery { taskCategoryService.getCategories() } returns flowOf(listOf(testCategory))
+        coEvery { taskCategoryService.getCategoryById(categoryId) } returns flowOf(testCategory)
 
         viewModel.getTasksByCategoryId(categoryId)
         advanceUntilIdle()
@@ -242,7 +244,7 @@ class CategoryTasksViewModelTest {
         val testTasks = listOf(todoTask, doneTask)
 
         coEvery { taskService.getTasksByCategoryId(categoryId) } returns flowOf(testTasks)
-        coEvery { taskCategoryService.getCategories() } returns flowOf(listOf(testCategory))
+        coEvery { taskCategoryService.getCategoryById(categoryId) } returns flowOf(testCategory)
         coEvery { taskService.getTasksByStatus(TaskStatusUiState.TODO.toDomain()) } returns flowOf(
             listOf(todoTask)
         )
