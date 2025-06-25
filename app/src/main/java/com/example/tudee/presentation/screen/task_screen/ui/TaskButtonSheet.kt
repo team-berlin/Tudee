@@ -29,8 +29,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
-import com.example.tudee.data.mapper.getCategoryIcon
-import com.example.tudee.presentation.screen.task_screen.ui_states.TaskBottomSheetState
+import com.example.tudee.presentation.utils.toCategoryIcon
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.domain.entity.Task
 import com.example.tudee.domain.entity.TaskPriority
@@ -45,6 +44,7 @@ import com.example.tudee.presentation.components.buttons.ButtonColors
 import com.example.tudee.presentation.components.buttons.ButtonState
 import com.example.tudee.presentation.components.buttons.DefaultButton
 import com.example.tudee.presentation.components.buttons.PrimaryButton
+import com.example.tudee.presentation.screen.task_screen.ui_states.TaskBottomSheetState
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 
@@ -259,7 +259,7 @@ fun BottomSheetContent(
                 items(taskState.categories) { category ->
                     CategoryComponent(
                         modifier = Modifier.clickable { onSelectTaskCategory(category.id) },
-                        categoryPainter = painterResource(getCategoryIcon(category.image)),
+                        categoryPainter = painterResource(category.image.toCategoryIcon()),
                         categoryImageContentDescription = category.title,
                         categoryName = category.title,
                         showCheckedIcon = category.id == taskState.selectedCategoryId
