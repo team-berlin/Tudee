@@ -2,16 +2,11 @@ package com.example.tudee.presentation.screen.category.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.tudee.data.dao.TaskDao
 import com.example.tudee.domain.TaskCategoryService
 import com.example.tudee.domain.TaskService
-import com.example.tudee.domain.entity.Task
-import com.example.tudee.domain.entity.TaskPriority
-import com.example.tudee.domain.entity.TaskStatus
 import com.example.tudee.domain.request.CategoryCreationRequest
 import com.example.tudee.presentation.screen.category.mapper.toUiModel
 import com.example.tudee.presentation.screen.category.model.CategoriesUiState
-import com.example.tudee.presentation.screen.home.toEntity
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,21 +14,23 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 
 class CategoriesViewModel(
     private val taskCategoryService: TaskCategoryService,
-    private val taskService: TaskService,
-    private val taskDao: TaskDao
+    private val taskService: TaskService
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(CategoriesUiState())
     val uiState = _uiState.asStateFlow()
 
+    private val _isEditCategorySheetVisible = MutableStateFlow(false)
+    val isEditCategorySheetVisible = _isEditCategorySheetVisible.asStateFlow()
+
     init {
         loadCategories()
     }
+
+    fun showEditCategorySheet() = _isEditCategorySheetVisible.update { true }
+    fun hideEditCategorySheet() = _isEditCategorySheetVisible.update { false }
 
     fun loadCategories() {
         viewModelScope.launch {
@@ -74,6 +71,7 @@ class CategoriesViewModel(
                         image = iconUrl
                     )
                 )
+                hideEditCategorySheet()
                 loadCategories()
             } catch (e: Exception) {
                 _uiState.update { it.copy(error = e.message ?: "Unknown error") }

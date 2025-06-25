@@ -15,10 +15,10 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -28,7 +28,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
@@ -39,7 +38,10 @@ import com.example.tudee.presentation.components.TudeeScaffold
 import com.example.tudee.presentation.components.buttons.ButtonDefaults
 import com.example.tudee.presentation.components.buttons.ButtonState
 import com.example.tudee.presentation.components.buttons.FabButton
+import com.example.tudee.presentation.screen.category.component.CategorySheet
 import com.example.tudee.presentation.screen.category.model.CategoriesUiState
+import com.example.tudee.presentation.screen.category.model.CategoryData
+import com.example.tudee.presentation.screen.category.model.CategorySheetState
 import com.example.tudee.presentation.screen.category.model.TaskCategoryUiModel
 import com.example.tudee.presentation.screen.category.model.UiImage
 import com.example.tudee.presentation.screen.category.viewmodel.CategoriesViewModel
@@ -52,28 +54,38 @@ fun CategoriesScreen(
     viewModel: CategoriesViewModel = koinViewModel(),
 ) {
     val state by viewModel.uiState.collectAsState()
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route ?: ""
+    val isEditCategorySheetVisible by viewModel.isEditCategorySheetVisible.collectAsState()
 
     CategoriesScreenContent(
         state = state,
         onCategoryClick = { categoryId ->
             navigateToCategoryDetails(navController, categoryId)
         },
-        onAddCategoryClick = { showAddCategoryBottomSheet() },
-        currentRoute = currentRoute,
-        navController = navController
+        onAddCategoryClick = viewModel::showEditCategorySheet,
+        navController = navController,
+        isEditCategorySheetVisible = isEditCategorySheetVisible,
+        onDismissEditCategorySheet = viewModel::hideEditCategorySheet,
+        onConfirmEditCategorySheet = { categoryData ->
+            categoryData.uiImage?.let {
+                viewModel.addCategory(categoryData.name, it.asString())
+            }
+        },
+        onCancelCategorySheet = viewModel::hideEditCategorySheet
     )
-
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoriesScreenContent(
     state: CategoriesUiState,
     onCategoryClick: (Long) -> Unit,
     onAddCategoryClick: () -> Unit,
-    currentRoute: String,
-    navController: NavHostController
+    navController: NavHostController,
+    isEditCategorySheetVisible: Boolean,
+    onDismissEditCategorySheet: () -> Unit,
+    onConfirmEditCategorySheet: (CategoryData) -> Unit,
+    onCancelCategorySheet: () -> Unit
+
 ) {
     TudeeScaffold(
         floatingActionButton = {
@@ -140,6 +152,15 @@ fun CategoriesScreenContent(
                         )
                     }
                 }
+
+                CategorySheet(
+                    state = CategorySheetState.add(
+                        isVisible = isEditCategorySheetVisible
+                    ),
+                    onDismiss = onDismissEditCategorySheet,
+                    onConfirm = onConfirmEditCategorySheet,
+                    onCancel = onCancelCategorySheet
+                )
             }
         }
     }
@@ -170,14 +191,8 @@ private fun CategoriesFab(
 }
 
 private fun navigateToCategoryDetails(navController: NavHostController, categoryId: Long) {
-    //navController.navigate("${Destination.CategoryDetailsScreen.route}/$categoryId")
     navController.navigate(Destination.CategoryTasksScreen.createRoute(categoryId))
 }
-
-private fun showAddCategoryBottomSheet() {
-    // TODO: Replace with your actual bottom sheet handling logic
-}
-
 
 @Preview(showBackground = true)
 @Composable
@@ -229,8 +244,11 @@ fun CategoriesScreenPreview() {
             state = fakeUiState,
             onCategoryClick = {},
             onAddCategoryClick = {},
-            currentRoute = Destination.CategoriesScreen.route,
-            navController = navController
+            navController = navController,
+            isEditCategorySheetVisible = TODO(),
+            onDismissEditCategorySheet = TODO(),
+            onConfirmEditCategorySheet = TODO(),
+            onCancelCategorySheet = TODO(),
         )
     }
 }
