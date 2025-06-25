@@ -1,6 +1,7 @@
 package com.example.tudee.data.mapper
 
 import com.example.tudee.R
+import com.example.tudee.presentation.utils.toCategoryIcon
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -13,7 +14,7 @@ class PredefinedCategoryMapperTest {
         val expectedDrawableId = R.drawable.education
 
         // When
-        val result = getCategoryIcon(iconName)
+        val result = iconName.toCategoryIcon()
 
         // Then
         assertEquals(expectedDrawableId, result)
@@ -26,7 +27,7 @@ class PredefinedCategoryMapperTest {
         val expectedDrawableId = R.drawable.shopping
 
         // When
-        val result = getCategoryIcon(iconName)
+        val result = iconName.toCategoryIcon()
 
         // Then
         assertEquals(expectedDrawableId, result)
@@ -39,7 +40,7 @@ class PredefinedCategoryMapperTest {
         val expectedDrawableId = R.drawable.medical
 
         // When
-        val result = getCategoryIcon(iconName)
+        val result = iconName.toCategoryIcon()
 
         // Then
         assertEquals(expectedDrawableId, result)
@@ -52,7 +53,7 @@ class PredefinedCategoryMapperTest {
         val expectedDrawableId = R.drawable.gym
 
         // When
-        val result = getCategoryIcon(iconName)
+        val result = iconName.toCategoryIcon()
 
         // Then
         assertEquals(expectedDrawableId, result)
@@ -65,7 +66,7 @@ class PredefinedCategoryMapperTest {
         val expectedDrawableId = R.drawable.entertainment
 
         // When
-        val result = getCategoryIcon(iconName)
+        val result = iconName.toCategoryIcon()
 
         // Then
         assertEquals(expectedDrawableId, result)
@@ -78,7 +79,7 @@ class PredefinedCategoryMapperTest {
         val expectedDrawableId = R.drawable.event
 
         // When
-        val result = getCategoryIcon(iconName)
+        val result = iconName.toCategoryIcon()
 
         // Then
         assertEquals(expectedDrawableId, result)
@@ -91,7 +92,7 @@ class PredefinedCategoryMapperTest {
         val expectedDrawableId = R.drawable.work
 
         // When
-        val result = getCategoryIcon(iconName)
+        val result = iconName.toCategoryIcon()
 
         // Then
         assertEquals(expectedDrawableId, result)
@@ -104,7 +105,7 @@ class PredefinedCategoryMapperTest {
         val expectedDrawableId = R.drawable.budgeting
 
         // When
-        val result = getCategoryIcon(iconName)
+        val result = iconName.toCategoryIcon()
 
         // Then
         assertEquals(expectedDrawableId, result)
@@ -117,7 +118,7 @@ class PredefinedCategoryMapperTest {
         val expectedDrawableId = R.drawable.self_care
 
         // When
-        val result = getCategoryIcon(iconName)
+        val result = iconName.toCategoryIcon()
 
         // Then
         assertEquals(expectedDrawableId, result)
@@ -130,7 +131,7 @@ class PredefinedCategoryMapperTest {
         val expectedDrawableId = R.drawable.adoration
 
         // When
-        val result = getCategoryIcon(iconName)
+        val result = iconName.toCategoryIcon()
 
         // Then
         assertEquals(expectedDrawableId, result)
@@ -143,7 +144,7 @@ class PredefinedCategoryMapperTest {
         val expectedDrawableId = R.drawable.fixing_bugs
 
         // When
-        val result = getCategoryIcon(iconName)
+        val result = iconName.toCategoryIcon()
 
         // Then
         assertEquals(expectedDrawableId, result)
@@ -156,7 +157,7 @@ class PredefinedCategoryMapperTest {
         val expectedDrawableId = R.drawable.cleaning
 
         // When
-        val result = getCategoryIcon(iconName)
+        val result = iconName.toCategoryIcon()
 
         // Then
         assertEquals(expectedDrawableId, result)
@@ -169,7 +170,7 @@ class PredefinedCategoryMapperTest {
         val expectedDrawableId = R.drawable.travelling
 
         // When
-        val result = getCategoryIcon(iconName)
+        val result = iconName.toCategoryIcon()
 
         // Then
         assertEquals(expectedDrawableId, result)
@@ -182,7 +183,7 @@ class PredefinedCategoryMapperTest {
         val expectedDrawableId = R.drawable.agriculture
 
         // When
-        val result = getCategoryIcon(iconName)
+        val result = iconName.toCategoryIcon()
 
         // Then
         assertEquals(expectedDrawableId, result)
@@ -195,20 +196,20 @@ class PredefinedCategoryMapperTest {
         val expectedDrawableId = R.drawable.coding
 
         // When
-        val result = getCategoryIcon(iconName)
+        val result = iconName.toCategoryIcon()
 
         // Then
         assertEquals(expectedDrawableId, result)
     }
 
     @Test
-    fun `should return coocking drawable ID when icon name is cooking`() {
+    fun `should return cooking drawable ID when icon name is cooking`() {
         // Given
         val iconName = "cooking"
         val expectedDrawableId = R.drawable.coocking
 
         // When
-        val result = getCategoryIcon(iconName)
+        val result = iconName.toCategoryIcon()
 
         // Then
         assertEquals(expectedDrawableId, result)
@@ -221,7 +222,7 @@ class PredefinedCategoryMapperTest {
         val expectedDrawableId = R.drawable.family_friend
 
         // When
-        val result = getCategoryIcon(iconName)
+        val result = iconName.toCategoryIcon()
 
         // Then
         assertEquals(expectedDrawableId, result)
@@ -233,7 +234,7 @@ class PredefinedCategoryMapperTest {
         val iconName = "unknown_icon"
 
         // When
-        val result = getCategoryIcon(iconName)
+        val result = iconName.toCategoryIcon()
 
         // Then
         assertEquals(-1, result)
@@ -245,7 +246,7 @@ class PredefinedCategoryMapperTest {
         val iconName = ""
 
         // When
-        val result = getCategoryIcon(iconName)
+        val result = iconName.toCategoryIcon()
 
         // Then
         assertEquals(-1, result)
@@ -257,7 +258,7 @@ class PredefinedCategoryMapperTest {
         val iconName = "Education"
 
         // When
-        val result = getCategoryIcon(iconName)
+        val result = iconName.toCategoryIcon()
 
         // Then
         assertEquals(-1, result)

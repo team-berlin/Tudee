@@ -27,13 +27,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
-import com.example.tudee.data.mapper.getCategoryIcon
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.domain.entity.TaskPriority
 import com.example.tudee.domain.entity.TaskStatus
 import com.example.tudee.presentation.components.TudeeChip
 import com.example.tudee.presentation.components.buttons.SecondaryButton
 import com.example.tudee.presentation.screen.task_screen.ui_states.TaskDetailsUiState
+import com.example.tudee.presentation.utils.toCategoryIcon
 
 @Composable
 fun TaskDetailsScreen(
@@ -56,7 +56,7 @@ fun TaskDetailsScreen(
             priority = taskDetailsState.priority
         )
         if (taskDetailsState.status != TaskStatus.DONE) {
-            TaskActionButtons( onEditButtonClick = onEditButtonClicked)
+            TaskActionButtons(onEditButtonClick = onEditButtonClicked)
         }
     }
 }
@@ -79,7 +79,7 @@ private fun TaskCategoryIcon(categoryIconRes: String) {
         contentAlignment = Alignment.Center
     ) {
         Icon(
-            painter = painterResource(getCategoryIcon(categoryIconRes)),
+            painter = painterResource(categoryIconRes.toCategoryIcon()),
             contentDescription = "category icon",
             modifier = Modifier.size(32.dp),
             tint = Color.Unspecified
