@@ -125,7 +125,7 @@ class TasksScreenViewModelTest {
             title = taskUiState.title,
             description = taskUiState.description,
             categoryIconRes = taskUiState.categoryIcon,
-            priority = TaskPriority.LOW,
+            priority =taskUiState.priority,
             status = TaskStatusUiState.IN_PROGRESS
         )
         tasksScreenViewModel.onTaskCardClicked(taskUiState)
