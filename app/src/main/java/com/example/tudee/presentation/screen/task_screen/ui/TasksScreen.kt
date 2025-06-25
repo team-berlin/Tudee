@@ -228,7 +228,7 @@ fun SnackBarSection(
     isSnackBarVisible: Boolean, hideSnackBar: () -> Unit
 ) {
     LaunchedEffect(isSnackBarVisible) {
-        delay(5000)
+        delay(3000)
         hideSnackBar()
     }
 
