@@ -99,4 +99,10 @@
     <string name="edit_image">تعديل الصورة</string>
     <string name="add_image">اضافة صورة</string>
     <string name="image_for_on_boarding_page">صوره صفحة البدايه</string>
+    <string name="failed_to_delete_category">حدث حطأ, لم يتم حذف الصنف.</string>
+    <string name="delete_category_successfully">تم حذف العنصر بنجاح.</string>
+    <string name="failed_to_edit_category">حدث حطأ, لم يتم تعديل الصنف.</string>
+    <string name="edited_category_successfully">تم تعديل الصنف بنجاح.</string>
+    <string name="delete_category">حذف صنف</string>
+    <string name="delete_category_confirmation">هل تريد المواصلة ؟</string>
 </resources>
