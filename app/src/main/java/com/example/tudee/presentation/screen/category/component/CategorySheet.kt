@@ -1,6 +1,7 @@
 package com.example.tudee.presentation.screen.category.component
 
 import android.content.Intent
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -117,7 +118,6 @@ private fun CategorySheetContent(
         contract = ActivityResultContracts.PickVisualMedia()
     ) { uri ->
         uri?.let {
-
             try {
                 context.contentResolver.takePersistableUriPermission(
                     uri,
@@ -125,9 +125,8 @@ private fun CategorySheetContent(
                 )
                 selectedUiImage = UiImage.External(it.toString())
             } catch (e: Exception) {
-
+                Log.e("PERMISSION", e.toString())
             }
-
         }
     }
 
