@@ -60,6 +60,10 @@ class TaskServiceImpl(
         return taskDao.getTasksByStatus(status).toDomain()
     }
 
+    override fun getTasksByStatusAndDate(status: TaskStatus, date: String): Flow<List<Task>> {
+        return taskDao.getTasksByStatusAndDate(status, date).toDomain()
+    }
+
     override fun getTasksByAssignedDate(date: LocalDate): Flow<List<Task>> {
         return taskDao.getTasksByAssignedDate(date.toString()).toDomain()
     }

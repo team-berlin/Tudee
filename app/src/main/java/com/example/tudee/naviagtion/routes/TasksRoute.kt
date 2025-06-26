@@ -7,21 +7,24 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.tudee.naviagtion.Destination
 import com.example.tudee.presentation.screen.task_screen.ui.TasksScreen
+import com.example.tudee.presentation.screen.task_screen.viewmodel.TasksScreenViewModel
+import org.koin.androidx.compose.navigation.koinNavViewModel
+
 
 fun NavGraphBuilder.tasksRoute(navController: NavController) {
-
     composable(
         route = Destination.TasksScreen.route,
-        arguments = listOf(navArgument("status") { type = NavType.IntType })
+        arguments = listOf(
+            navArgument("status") {
+                type = NavType.IntType
+                defaultValue = 1
+            }
+        ),
     ) { backStackEntry ->
-        val status = backStackEntry.arguments?.getInt("status") ?: 0
-        TasksScreen(navController = navController, status = status)
-    }
-
-
-    composable(
-        route = Destination.TasksScreen.route
-    ) {
-        TasksScreen(navController = navController, status = 0)
+        val viewModel: TasksScreenViewModel = koinNavViewModel()
+        TasksScreen(
+            navController = navController,
+            tasksScreenViewModel = viewModel
+        )
     }
 }

@@ -12,6 +12,7 @@ val TudeeDarkColors = TudeeColors(
     surface = Color(0xFF0D0C14),
     surfaceHigh = Color(0xFF0F0E19),
     disable = Color(0xFF1D1E1F),
+    overlay = Color(0x1A000000),
     textColors = TextColors(
         title = Color(0xDEFFFFFF),
         body = Color(0x99FFFFFF),

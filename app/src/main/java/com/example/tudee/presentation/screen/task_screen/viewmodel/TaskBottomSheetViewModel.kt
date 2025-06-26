@@ -1,4 +1,4 @@
-package com.example.tudee.presentation.screen.task_screen.viewmodel
+package com.example.tudee.presentation.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -7,6 +7,7 @@ import com.example.tudee.domain.TaskCategoryService
 import com.example.tudee.domain.TaskService
 import com.example.tudee.domain.entity.Task
 import com.example.tudee.domain.entity.TaskPriority
+import com.example.tudee.domain.entity.TaskStatus
 import com.example.tudee.domain.request.TaskCreationRequest
 import com.example.tudee.presentation.screen.task_screen.ui_states.TaskBottomSheetState
 import kotlinx.coroutines.delay
@@ -24,18 +25,18 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
-class AddTaskBottomSheetViewModel(
+class TaskBottomSheetViewModel(
     private val taskService: TaskService,
     private val categoryService: TaskCategoryService
 ) : ViewModel() {
 
-    private val _addTaskBottomSheetUiState: MutableStateFlow<TaskBottomSheetState> =
+    private val _taskBottomSheetUiState: MutableStateFlow<TaskBottomSheetState> =
         MutableStateFlow(TaskBottomSheetState())
-    val uiState: StateFlow<TaskBottomSheetState> = _addTaskBottomSheetUiState.asStateFlow()
+    val uiState: StateFlow<TaskBottomSheetState> = _taskBottomSheetUiState.asStateFlow()
 
     init {
         viewModelScope.launch {
-            _addTaskBottomSheetUiState.update {
+            _taskBottomSheetUiState.update {
                 it.copy(
                     categories = categoryService.getCategories().first()
                 )
@@ -43,15 +44,7 @@ class AddTaskBottomSheetViewModel(
         }
     }
 
-//    private val _isEditModeOn: MutableStateFlow<Boolean> = MutableStateFlow(false)
-//    val isEditModeOn = _isEditModeOn.asStateFlow()
-
-    fun toggleEditMode(on: Boolean) {
-        _addTaskBottomSheetUiState.update { it.copy(isEditMode = on) }
-    }
-
-
-    val isTaskValid: StateFlow<Boolean> = _addTaskBottomSheetUiState
+    val isTaskValid: StateFlow<Boolean> = _taskBottomSheetUiState
         .map { state ->
             state.taskTitle.isNotBlank() &&
                     state.taskDescription.isNotBlank() &&
@@ -64,31 +57,31 @@ class AddTaskBottomSheetViewModel(
         )
 
     fun onUpdateTaskTitle(newTitle: String) {
-        _addTaskBottomSheetUiState.update { it.copy(taskTitle = newTitle) }
+        _taskBottomSheetUiState.update { it.copy(taskTitle = newTitle) }
     }
 
     fun onUpdateTaskDescription(newDescription: String) {
-        _addTaskBottomSheetUiState.update { it.copy(taskDescription = newDescription) }
+        _taskBottomSheetUiState.update { it.copy(taskDescription = newDescription) }
     }
 
     fun onUpdateTaskDueDate(newDueDate: LocalDate) {
-        _addTaskBottomSheetUiState.update { it.copy(taskDueDate = newDueDate.toString()) }
+        _taskBottomSheetUiState.update { it.copy(taskDueDate = newDueDate.toString()) }
     }
 
     fun onSelectTaskPriority(newPriority: TaskPriority) {
-        _addTaskBottomSheetUiState.update { it.copy(selectedTaskPriority = newPriority) }
+        _taskBottomSheetUiState.update { it.copy(selectedTaskPriority = newPriority) }
     }
 
     fun onSelectTaskCategory(selectedCategoryId: Long) {
-        _addTaskBottomSheetUiState.update { it.copy(selectedCategoryId = selectedCategoryId) }
+        _taskBottomSheetUiState.update { it.copy(selectedCategoryId = selectedCategoryId) }
     }
 
     fun showButtonSheet() {
-        _addTaskBottomSheetUiState.update { it.copy(isButtonSheetVisible = true) }
+        _taskBottomSheetUiState.update { it.copy(isButtonSheetVisible = true) }
     }
 
     fun hideButtonSheet() {
-        _addTaskBottomSheetUiState.update {
+        _taskBottomSheetUiState.update {
             it.copy(
                 isButtonSheetVisible = false,
                 isEditMode = false,
@@ -106,7 +99,7 @@ class AddTaskBottomSheetViewModel(
         viewModelScope.launch {
             try {
                 with(taskService.getTaskById(taskId)) {
-                    _addTaskBottomSheetUiState.update {
+                    _taskBottomSheetUiState.update {
                         it.copy(
                             isEditMode = true,
                             taskId = taskId,
@@ -120,7 +113,7 @@ class AddTaskBottomSheetViewModel(
                     }
                 }
             } catch (e: Exception) {
-                Log.e("TaskViewModel", "Error fetching task: ${e.message}")
+                Log.e("TaskViewModel", "Error  ${e.message}")
             }
         }
     }
@@ -129,11 +122,11 @@ class AddTaskBottomSheetViewModel(
         viewModelScope.launch {
             try {
                 taskService.createTask(taskCreationRequest)
-                _addTaskBottomSheetUiState.update { it.copy(snackBarMessage = true) }
+                _taskBottomSheetUiState.update { it.copy(snackBarMessage = true) }
                 delay(2000)
                 hideButtonSheet()
             } catch (e: Exception) {
-                _addTaskBottomSheetUiState.update { it.copy(snackBarMessage = false) }
+                _taskBottomSheetUiState.update { it.copy(snackBarMessage = false) }
                 delay(2000)
                 hideButtonSheet()
             }
@@ -144,21 +137,21 @@ class AddTaskBottomSheetViewModel(
         viewModelScope.launch {
             try {
                 taskService.editTask(editedTask)
-                _addTaskBottomSheetUiState.update { it.copy(snackBarMessage = true) }
+                _taskBottomSheetUiState.update { it.copy(snackBarMessage = true) }
                 delay(2000)
                 hideButtonSheet()
             } catch (e: Exception) {
-                _addTaskBottomSheetUiState.update { it.copy(snackBarMessage = false) }
+                _taskBottomSheetUiState.update { it.copy(snackBarMessage = false) }
                 delay(2000)
                 hideButtonSheet()
             }
         }
     }
     fun onDateFieldClicked(){
-        _addTaskBottomSheetUiState.update { it.copy(isDatePickerVisible = true) }
+        _taskBottomSheetUiState.update { it.copy(isDatePickerVisible = true) }
     }
     fun onDismissDatePicker() {
-        _addTaskBottomSheetUiState.update { it.copy(isDatePickerVisible = false)
+        _taskBottomSheetUiState.update { it.copy(isDatePickerVisible = false)
 
         }
     }
@@ -174,7 +167,7 @@ class AddTaskBottomSheetViewModel(
                 monthNumber = localDateTime.date.monthNumber,
                 dayOfMonth = localDateTime.date.dayOfMonth
             )
-            _addTaskBottomSheetUiState.update {
+            _taskBottomSheetUiState.update {
                 it.copy(
                     taskDueDate = selectedDate.toString())
             }
@@ -184,5 +177,19 @@ class AddTaskBottomSheetViewModel(
 
     fun onCancelClicked() {
         hideButtonSheet()
+    }
+    fun updateTaskStatusToDone(taskId: Long) {
+        viewModelScope.launch {
+            try {
+                val task = taskService.getTaskById(taskId)
+                val updatedTask = task.copy(status = TaskStatus.DONE)
+                taskService.editTask(updatedTask)
+                _taskBottomSheetUiState.update { it.copy(snackBarMessage = true) }
+                delay(2000)
+                hideButtonSheet()
+            } catch (e: Exception) {
+                _taskBottomSheetUiState.update { it.copy(snackBarMessage = false) }
+            }
+        }
     }
 }

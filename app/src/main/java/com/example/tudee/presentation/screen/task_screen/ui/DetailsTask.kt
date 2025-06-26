@@ -1,4 +1,4 @@
-package com.example.tudee.presentation.screen
+package com.example.tudee.presentation.screen.task_screen.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -24,21 +24,24 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
-import com.example.tudee.presentation.utils.toCategoryIcon
 import com.example.tudee.designsystem.theme.TudeeTheme
-import com.example.tudee.domain.entity.TaskPriority
 import com.example.tudee.domain.entity.TaskStatus
 import com.example.tudee.presentation.components.TudeeChip
 import com.example.tudee.presentation.components.buttons.SecondaryButton
+import com.example.tudee.presentation.screen.task_screen.mappers.TaskPriorityUiState
+import com.example.tudee.presentation.screen.task_screen.mappers.TaskStatusUiState
+import com.example.tudee.presentation.screen.task_screen.mappers.toDomain
 import com.example.tudee.presentation.screen.task_screen.ui_states.TaskDetailsUiState
+import com.example.tudee.presentation.utils.toCategoryIcon
+import com.example.tudee.presentation.viewmodel.TaskBottomSheetViewModel
 
 @Composable
 fun TaskDetailsScreen(
     taskDetailsState: TaskDetailsUiState,
-    onEditButtonClicked: () -> Unit,
+    taskBottomSheetViewModel: TaskBottomSheetViewModel,
+    hideAddTaskBottomSheet: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -55,8 +58,8 @@ fun TaskDetailsScreen(
             status = taskDetailsState.status,
             priority = taskDetailsState.priority
         )
-        if (taskDetailsState.status != TaskStatus.DONE) {
-            TaskActionButtons(onEditButtonClick = onEditButtonClicked)
+        if (taskDetailsState.status.toDomain() != TaskStatus.DONE) {
+            TaskActionButtons(taskBottomSheetViewModel, taskDetailsState, hideAddTaskBottomSheet)
         }
     }
 }
@@ -89,44 +92,63 @@ private fun TaskCategoryIcon(categoryIconRes: String) {
 
 @Composable
 private fun TaskTitleAndDescription(title: String, description: String) {
-    Text(text = title, style = TudeeTheme.textStyle.label.large)
-    Text(text = description, style = TudeeTheme.textStyle.label.small)
+    Text(
+        text = title,
+        style = TudeeTheme.textStyle.label.large,
+        color = TudeeTheme.color.textColors.title
+    )
+    Text(
+        text = description,
+        style = TudeeTheme.textStyle.label.small,
+        color = TudeeTheme.color.textColors.body
+    )
 }
 
 @Composable
-private fun TaskStatusAndPriorityChips(status: TaskStatus, priority: TaskPriority) {
+private fun TaskStatusAndPriorityChips(status: TaskStatusUiState, priority: TaskPriorityUiState) {
     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
         TudeeChip(
-            label = status.name.lowercase().replaceFirstChar { it.uppercase() },
+            label = stringResource(status.label),
             icon = painterResource(id = R.drawable.ic_task_status),
-            backgroundColor = getStatusLabelColor(status),
-            labelColor = getStatusColor(status),
+            backgroundColor = status.containerColor,
+            labelColor = status.contentColor,
             iconSize = 5.dp
         )
         TudeeChip(
             label = priority.name.lowercase().replaceFirstChar { it.uppercase() },
-            icon = painterResource(getPriorityIcon(priority)),
-            backgroundColor = getPriorityColor(priority),
+            icon = painterResource(priority.icon),
+            backgroundColor = priority.containerColor,
             labelColor = TudeeTheme.color.textColors.onPrimary
         )
     }
 }
 
 @Composable
-private fun TaskActionButtons(onEditButtonClick: () -> Unit = {}) {
+private fun TaskActionButtons(
+    taskBottomSheetViewModel: TaskBottomSheetViewModel,
+    taskDetailsState: TaskDetailsUiState,
+    hideAddTaskBottomSheet: () -> Unit
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         IconFab(
             onClick = {
-                onEditButtonClick()
+                taskBottomSheetViewModel.getTaskInfoById(taskDetailsState.id)
+                taskBottomSheetViewModel.run {
+                    hideAddTaskBottomSheet()
+                    showButtonSheet()
+                }
             },
             icon = painterResource(R.drawable.pencil_edit),
             contentDescription = stringResource(R.string.edit_icon)
         )
         SecondaryButton(
-            onClick = {},
+            onClick = {
+                taskBottomSheetViewModel.updateTaskStatusToDone(taskDetailsState.id)
+                hideAddTaskBottomSheet()
+            },
             modifier = Modifier.weight(1f),
             content = {
                 Text(
@@ -167,53 +189,4 @@ fun IconFab(
     }
 }
 
-private fun getPriorityIcon(priority: TaskPriority): Int {
-    return when (priority) {
-        TaskPriority.HIGH -> R.drawable.ic_priority_high
-        TaskPriority.MEDIUM -> R.drawable.ic_priority_medium
-        TaskPriority.LOW -> R.drawable.ic_priority_low
-    }
-}
 
-@Composable
-private fun getPriorityColor(priority: TaskPriority): Color {
-    return when (priority) {
-        TaskPriority.HIGH -> TudeeTheme.color.statusColors.pinkAccent
-        TaskPriority.MEDIUM -> TudeeTheme.color.statusColors.yellowAccent
-        TaskPriority.LOW -> TudeeTheme.color.statusColors.greenAccent
-    }
-}
-
-@Composable
-private fun getStatusColor(status: TaskStatus): Color {
-    return when (status) {
-        TaskStatus.TODO -> TudeeTheme.color.statusColors.yellowAccent
-        TaskStatus.IN_PROGRESS -> TudeeTheme.color.statusColors.purpleAccent
-        TaskStatus.DONE -> TudeeTheme.color.statusColors.greenAccent
-    }
-}
-
-@Composable
-private fun getStatusLabelColor(status: TaskStatus): Color {
-    return when (status) {
-        TaskStatus.TODO -> TudeeTheme.color.statusColors.yellowVariant
-        TaskStatus.IN_PROGRESS -> TudeeTheme.color.statusColors.purpleVariant
-        TaskStatus.DONE -> TudeeTheme.color.statusColors.greenVariant
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun TaskDetailsScreenPreview() {
-    TudeeTheme {
-        val sampleTask = TaskDetailsUiState(
-            id = 1L,
-            title = "Study Jetpack Compose",
-            description = "Finish the layout chapter and preview tips",
-            categoryIconRes = "education",
-            priority = TaskPriority.HIGH,
-            status = TaskStatus.IN_PROGRESS,
-        )
-        TaskDetailsScreen(sampleTask, {})
-    }
-}

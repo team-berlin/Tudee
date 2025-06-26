@@ -10,7 +10,11 @@
     <string name="medium">متوسط</string>
     <string name="high">مرتفع</string>
 
+    <string name="delete_task">حذف المهمة</string>
+    <string name="delete_task_check">هل تريد المواصلة ؟</string>
+    <string name="delete">حذف</string>
     <string name="task_deleted_success">تم حذف المهمة بنجاح.</string>
+
     <string name="no_tasks">لا توجد مهام هنا!</string>
     <string name="add_first_task_hint">اضغط على زر + لإضافة أول مهمة.</string>
     <string name="select_date">اختر التاريخ</string>
@@ -25,6 +29,7 @@
     <string name="default_task_description">راجع بنية الخلية ووظائفها للغد...</string>
     <string name="default_priority">متوسطة</string>
     <string name="you_ve_completed_3_out_of_10_tasks_keep_going">لقد أنجزت 3 من أصل 10 مهام، واصل التقدم!</string>
+    <string name="tasks">المهام</string>
 
     <!-- Content description -->
     <string name="switch_sun_icon_content_description">شمس</string>
@@ -81,10 +86,17 @@
     <string name="medium_priority">أولوية متوسطة</string>
     <string name="low_priority">أولوية ضقليلة</string>
     <string name="in_progress">قيد التنفيذ</string>
+    <string name="Tasks">المهام</string>
     <string name="to_do">معلقة</string>
     <string name="done">مكتملة</string>
     <string name="category_image_desc">صورة الصنف</string>
     <string name="upload_image">رفع صورة</string>
     <string name="edit_uploaded_image">تعديل الصورة</string>
+    <string name="snack_bar_category_added">تم إضافة الصنف بنجاح.</string>
+    <string name="no_tasks_in_category">لا يوجد مهام في صنف %1$s</string>
+    <string name="category_not_found">الصنف غير موجود!</string>
+    <string name="category_title">تعديل الصنف</string>
+    <string name="edit_image">تعديل الصورة</string>
+    <string name="add_image">اضافة صورة</string>
     <string name="image_for_on_boarding_page">صوره صفحة البدايه</string>
 </resources>

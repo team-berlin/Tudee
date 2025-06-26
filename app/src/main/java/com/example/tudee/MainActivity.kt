@@ -8,9 +8,12 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.naviagtion.TudeeNavGraph
+import com.example.tudee.presentation.themeViewModel.ThemeViewModel
+import org.koin.androidx.compose.koinViewModel
 
 class MainActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -22,10 +25,13 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
+            val themeViewModel: ThemeViewModel = koinViewModel()
+            val isDarkMode by themeViewModel.isDarkMode.collectAsStateWithLifecycle()
             val navController = rememberNavController()
 
-            TudeeTheme {
+            TudeeTheme(isDarkTheme = isDarkMode) {
                 TudeeNavGraph(navController)
+
             }
         }
     }
@@ -38,4 +44,3 @@ fun GreetingPreview() {
         MainActivity()
     }
 }
-

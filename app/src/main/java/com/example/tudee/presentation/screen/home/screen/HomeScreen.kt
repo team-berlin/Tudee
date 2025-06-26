@@ -2,6 +2,7 @@ package com.example.tudee.presentation.screen.home.screen
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,6 +19,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
@@ -36,14 +38,14 @@ import com.example.tudee.presentation.components.TudeeScaffold
 import com.example.tudee.presentation.components.TudeeTaskDetailsBottomSheet
 import com.example.tudee.presentation.components.buttons.ButtonState
 import com.example.tudee.presentation.components.buttons.FabButton
-import com.example.tudee.presentation.screen.home.components.TasksSection
-import com.example.tudee.presentation.screen.task_screen.ui.TaskScreenBottomAppBar
-import com.example.tudee.presentation.screens.home.components.NoTask
 import com.example.tudee.presentation.screen.home.components.HomeOverviewCard
+import com.example.tudee.presentation.screen.home.components.TasksSection
 import com.example.tudee.presentation.screen.home.viewmodel.HomeActions
 import com.example.tudee.presentation.screen.home.viewmodel.HomeUiState
 import com.example.tudee.presentation.screen.home.viewmodel.HomeViewModel
 import com.example.tudee.presentation.screen.home.viewmodel.TaskStatusUiState
+import com.example.tudee.presentation.screen.task_screen.component.TaskScreenBottomAppBar
+import com.example.tudee.presentation.screen.task_screen.ui.NotTaskForTodayDialogue
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -132,88 +134,104 @@ fun HomeContent(
         ) {
             BackgroundBlueCard()
             Column(
-                modifier = modifier
+                modifier = Modifier
                     .verticalScroll(rememberScrollState())
                     .fillMaxSize()
-//                    .padding(top = 72.dp)
-                    .padding(
-                        horizontal = 16.dp
-                    )
-                    .clip(
-                        RoundedCornerShape(topEnd = 16.dp, topStart = 16.dp)
-                    )
-                    .background(color = TudeeTheme.color.surface)
-
             ) {
-                HomeOverviewCard(
-                    todayDate = state.taskTodayDateUiState.todayDateNumber,
-                    month = state.taskTodayDateUiState.month,
-                    year = state.taskTodayDateUiState.year,
-                    tasksDoneCount = state.tasksUiCount.tasksDoneCount,
-                    tasksTodoCount = state.tasksUiCount.tasksTodoCount,
-                    tasksInProgressCount = state.tasksUiCount.tasksInProgressCount,
-                    sliderUiState = state.sliderUiState
-                )
-                    Column(modifier = Modifier.padding(start = 16.dp)) {
-                        if (state.allTasks.isEmpty()) {
-                            NoTask(modifier = Modifier.padding(top= 48.dp))
-                        } else {
-                            if(state.todayTasksTodo.isNotEmpty())
+                Column(
+                    modifier = modifier
+                        .fillMaxSize()
+                        .padding(
+                            horizontal = 16.dp
+                        )
+                        .clip(
+                            RoundedCornerShape(topEnd = 16.dp, topStart = 16.dp)
+                        )
+                        .background(color = TudeeTheme.color.surface)
+
+                ) {
+                    HomeOverviewCard(
+                        todayDate = state.taskTodayDateUiState.todayDateNumber,
+                        month = state.taskTodayDateUiState.month,
+                        year = state.taskTodayDateUiState.year,
+                        tasksDoneCount = state.tasksUiCount.tasksDoneCount,
+                        tasksTodoCount = state.tasksUiCount.tasksTodoCount,
+                        tasksInProgressCount = state.tasksUiCount.tasksInProgressCount,
+                        sliderUiState = state.sliderUiState
+                    )
+                }
+                Column(
+                    modifier = modifier
+                        .fillMaxSize()
+                        .padding(top = 24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    if (state.allTasks.isEmpty()) {
+                        NotTaskForTodayDialogue(
+                            modifier = Modifier.padding(top = 24.dp),
+
+                             )
+                    } else {
+                        if (state.todayTasksTodo.isNotEmpty())
                             TasksSection(
                                 actions = actions,
                                 statusTitle = stringResource(R.string.todo),
                                 numberOfElement = state.todayTasksTodo.size.toString(),
                                 tasks = state.todayTasksTodo
                             )
-                            if(state.todayTasksInProgress.isNotEmpty())
+                        if (state.todayTasksInProgress.isNotEmpty())
                             TasksSection(
                                 actions = actions,
                                 statusTitle = stringResource(R.string.in_progress),
                                 numberOfElement = state.todayTasksInProgress.size.toString(),
                                 tasks = state.todayTasksInProgress
                             )
-                            if(state.todayTasksDone.isNotEmpty())
+                        if (state.todayTasksDone.isNotEmpty())
                             TasksSection(
                                 actions = actions,
                                 statusTitle = stringResource(R.string.done),
                                 numberOfElement = state.todayTasksDone.size.toString(),
                                 tasks = state.todayTasksDone
                             )
-                        }
                     }
+                }
             }
         }
-        if(state.isPreviewSheetVisible){
-            TudeeTaskDetailsBottomSheet(
-                isVisible = true,
-                task = state.selectedTask,
-                onDismissRequest = { actions(HomeActions.OnBottomSheetDismissed) },
-                onEditButtonClicked = {actions(HomeActions.OnOpenBottomSheet)},
-                isChangeStatusButtonEnable = state.selectedTask.taskStatusUiState != TaskStatusUiState.DONE,
-                onMoveActionClicked = {
-                    actions(HomeActions.OnTaskStatusChanged(
-                        if(state.selectedTask.taskStatusUiState == TaskStatusUiState.TODO) TaskStatusUiState.IN_PROGRESS else TaskStatusUiState.DONE
-                    ))
-                },
-                changeStatusButtonState = ButtonState.IDLE
-            )
-        }
-        if (state.isBottomSheetVisible) {
-            BottomSheetContent(
-                state = state,
-                onDismiss = { actions(HomeActions.OnBottomSheetDismissed) },
-                actions = actions
-            )
-        }
+    }
+    if (state.isPreviewSheetVisible) {
+        TudeeTaskDetailsBottomSheet(
+            isVisible = true,
+            task = state.selectedTask,
+            onDismissRequest = { actions(HomeActions.OnBottomSheetDismissed) },
+            onEditButtonClicked = { actions(HomeActions.OnOpenBottomSheet) },
+            isChangeStatusButtonEnable = state.selectedTask.taskStatusUiState != TaskStatusUiState.DONE,
+            onMoveActionClicked = {
+                actions(
+                    HomeActions.OnTaskStatusChanged(
+                        if (state.selectedTask.taskStatusUiState == TaskStatusUiState.TODO) TaskStatusUiState.IN_PROGRESS else TaskStatusUiState.DONE
+                    )
+                )
+            },
+            changeStatusButtonState = ButtonState.IDLE
+        )
+    }
+    if (state.isBottomSheetVisible) {
+        BottomSheetContent(
+            state = state,
+            onDismiss = { actions(HomeActions.OnBottomSheetDismissed) },
+            actions = actions
+        )
     }
 }
+
 
 @Composable
 fun BackgroundBlueCard(modifier: Modifier = Modifier) {
     Box(
         modifier
             .fillMaxWidth()
-            .height(176.dp)
+            .height(55.dp)
             .background(color = TudeeTheme.color.primary)
     )
 }
@@ -234,14 +252,14 @@ fun BottomSheetContent(
     ) {
         TaskContent(
             state = state,
-            categories = state.allTasks.mapNotNull { it.taskCategory }.distinctBy { it.id },
+            categories = state.categories,
             onAction = actions,
             mode = if (state.selectedTask.taskId.isNotEmpty()) TaskContentMode.EDIT else TaskContentMode.ADD
         )
     }
 }
 
-@Preview(showSystemUi = true, showBackground = true, locale = "ar")
+@Preview(showSystemUi = true, showBackground = true)
 @Composable
 private fun HomeScreenPreview() {
     TudeeTheme {

@@ -4,6 +4,7 @@ import com.example.tudee.data.model.TaskEntity
 import com.example.tudee.domain.entity.Task
 import com.example.tudee.domain.entity.TaskPriority
 import com.example.tudee.domain.entity.TaskStatus
+import com.example.tudee.presentation.screen.home.viewmodel.CategoryUiState
 import com.example.tudee.presentation.screen.home.viewmodel.TaskPriorityUiState
 import com.example.tudee.presentation.screen.home.viewmodel.TaskStatusUiState
 import com.example.tudee.presentation.screen.home.viewmodel.TaskUiState
@@ -12,13 +13,15 @@ import kotlinx.coroutines.flow.map
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.toLocalDate
 
-fun Task.toTaskUiState(): TaskUiState = TaskUiState(
+fun Task.toTaskUiState(categories: List<CategoryUiState>): TaskUiState = TaskUiState(
     taskId = id.toString(),
     taskTitle = title,
     taskDescription = description,
     taskPriority = priority.toTaskPriorityUiState(),
     taskStatusUiState = status.toTaskStatusUiState(),
-    taskAssignedDate = assignedDate
+    taskAssignedDate = assignedDate,
+    taskCategory = categories.find { it.id == this.categoryId } ?: CategoryUiState()
+
 )
 
 fun TaskUiState.toTask(): Task = Task(

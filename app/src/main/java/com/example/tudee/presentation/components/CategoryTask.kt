@@ -112,6 +112,8 @@ private fun CategoryTaskComponentInformation(
             text = title,
             style = TudeeTheme.textStyle.label.large,
             color = TudeeTheme.color.textColors.body
+            , maxLines = 1,
+            overflow = TextOverflow.Ellipsis
         )
         description?.let {
             Text(

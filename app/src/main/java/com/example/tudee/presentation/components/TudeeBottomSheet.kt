@@ -43,6 +43,7 @@ import com.example.tudee.presentation.screen.home.viewmodel.CategoryUiState
 import com.example.tudee.presentation.screen.home.viewmodel.TaskPriorityUiState
 import com.example.tudee.presentation.screen.home.viewmodel.TaskStatusUiState
 import com.example.tudee.presentation.screen.home.viewmodel.TaskUiState
+import com.example.tudee.presentation.utils.toCategoryIcon
 import kotlinx.datetime.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -143,7 +144,7 @@ private fun TudeeTaskDetails(task: TaskUiState, modifier: Modifier = Modifier) {
             .padding(top = 12.dp)
             .background(color = TudeeTheme.color.surfaceHigh, shape = CircleShape)
     ) {
-        task.taskCategory.image?.let { painterResource(it) }?.let {
+        task.taskCategory.image?.let { painterResource(it.toCategoryIcon()) }?.let {
             Image(
                 modifier = Modifier.padding(15.dp), painter = it,
                 contentDescription = null
@@ -288,9 +289,8 @@ private fun BottomSheetPreview() {
             taskDescription = R.string.default_task_description.toString(),
             taskPriority = TaskPriorityUiState.HIGH,
             taskCategory = CategoryUiState(
-                id = "cat1",
+                id = 0,
                 title = "Work",
-                image = R.drawable.ic_eduction,
                 isPredefined = true
             ),
             taskStatusUiState = TaskStatusUiState.DONE,
