@@ -42,9 +42,9 @@ import androidx.compose.ui.unit.dp
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.presentation.components.CategoryTaskComponent
+import com.example.tudee.presentation.screen.category.model.toUiImage
 import com.example.tudee.presentation.screen.task_screen.ui.NotTaskForTodayDialogue
 import com.example.tudee.presentation.screen.task_screen.ui_states.TaskUiState
-import com.example.tudee.presentation.utils.toCategoryIcon
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
@@ -87,7 +87,7 @@ fun TasksListContent(
                             priorityBackgroundColor = task.priority.containerColor,
                             taskIcon = {
                                 Icon(
-                                    painter = painterResource(task.categoryIcon.toCategoryIcon()),
+                                    painter = task.categoryIcon.toUiImage().asPainter(),
                                     contentDescription = "Task Icon",
                                     modifier = Modifier.size(32.dp),
                                     tint = Color.Unspecified
@@ -126,8 +126,8 @@ fun SwipeableCardWrapper(
                     hiddenIconWidth = it.width.toFloat()
                 }
                 .padding(horizontal = 16.dp), onClick = {
-            onDeleteIconClick()
-        }) {
+                onDeleteIconClick()
+            }) {
             Icon(
                 modifier = Modifier.size(32.dp),
                 painter = painterResource(R.drawable.delete_ic),

@@ -1,8 +1,8 @@
 package com.example.tudee.presentation.screen.task_screen.ui_states
 
-import com.example.tudee.domain.entity.TaskCategory
 import com.example.tudee.domain.entity.TaskPriority
 import com.example.tudee.domain.entity.TaskStatus
+import com.example.tudee.presentation.screen.home.viewmodel.CategoryUiState
 
 data class TaskBottomSheetState(
     val isButtonSheetVisible: Boolean = false,
@@ -15,7 +15,7 @@ data class TaskBottomSheetState(
     val selectedCategoryId: Long? = null,
     val isEditMode: Boolean = false,
     val snackBarMessage: Boolean? = null,
-    val categories: List<TaskCategory> = emptyList(),
+    val categories: List<CategoryUiState> = emptyList(),
     val taskPriorities: List<TaskPriority> = listOf(
         TaskPriority.HIGH,
         TaskPriority.MEDIUM,
@@ -24,3 +24,4 @@ data class TaskBottomSheetState(
     val isDatePickerVisible: Boolean=false,
 
     )
+

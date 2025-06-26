@@ -3,6 +3,7 @@ package com.example.tudee.presentation.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.tudee.data.mapper.toCategoryUiState
 import com.example.tudee.domain.TaskCategoryService
 import com.example.tudee.domain.TaskService
 import com.example.tudee.domain.entity.Task
@@ -36,13 +37,12 @@ class TaskBottomSheetViewModel(
 
     init {
         viewModelScope.launch {
-            _taskBottomSheetUiState.update {
-                it.copy(
-                    categories = categoryService.getCategories().first()
-                )
+            val categoryUiStates =
+                categoryService.getCategories().first().map { it.toCategoryUiState() }
+            _taskBottomSheetUiState.update { it.copy(categories = categoryUiStates) }
             }
         }
-    }
+
 
     val isTaskValid: StateFlow<Boolean> = _taskBottomSheetUiState
         .map { state ->

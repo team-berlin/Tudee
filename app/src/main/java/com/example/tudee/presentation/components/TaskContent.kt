@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -291,6 +292,10 @@ fun DatePickerDialogComponent(
 
     DatePickerDialog(
         onDismissRequest = onDismiss,
+        colors = DatePickerDefaults.colors(
+            containerColor = TudeeTheme.color.surface
+            , titleContentColor = TudeeTheme.color.textColors.title
+        ),
         confirmButton = {
             Button(onClick = {
                 val selectedDateMillis = datePickerState.selectedDateMillis
@@ -314,7 +319,24 @@ fun DatePickerDialogComponent(
             }
         }
     ) {
-        DatePicker(state = datePickerState)
+        DatePicker(state = datePickerState
+,   headline = {
+
+            },
+            colors = DatePickerDefaults.colors(
+                navigationContentColor =TudeeTheme.color.textColors.title ,
+                headlineContentColor = TudeeTheme.color.textColors.title,
+                titleContentColor = TudeeTheme.color.textColors.title,
+                weekdayContentColor = TudeeTheme.color.textColors.title,
+                dayContentColor=TudeeTheme.color.textColors.title,
+                containerColor = TudeeTheme.color.statusColors.greenAccent ,
+                selectedDayContainerColor = TudeeTheme.color.primary,
+                selectedDayContentColor = TudeeTheme.color.textColors.onPrimary,
+                todayContentColor = TudeeTheme.color.primary,
+                todayDateBorderColor = TudeeTheme.color.primary,
+
+                )
+        )
     }
 }
 
