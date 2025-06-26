@@ -15,7 +15,7 @@ fun TaskCategory.toUiModel(taskCount: Int): TaskCategoryUiModel {
     return TaskCategoryUiModel(
         id = id,
         name = title,
-        iconResId = uiImage,
+        categoryImage = uiImage,
         tasksCount = taskCount,
         isPredefined = isPredefined
     )
