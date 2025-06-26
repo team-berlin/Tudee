@@ -37,9 +37,9 @@ import com.example.tudee.presentation.components.TabBarComponent
 import com.example.tudee.presentation.components.TopAppBar
 import com.example.tudee.presentation.components.TudeeScaffold
 import com.example.tudee.presentation.screen.category.EditCategorySheet
-import com.example.tudee.presentation.screen.category.component.NotTaskForTodayCard
 import com.example.tudee.presentation.screen.category.model.CategoryData
-import com.example.tudee.presentation.screen.category.model.toUiImage
+import com.example.tudee.presentation.screen.category.model.UiImage
+import com.example.tudee.presentation.screen.task_screen.ui.NotTaskForTodayDialogue
 import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 
@@ -75,20 +75,28 @@ fun CategoryTasksScreen(
                 showBackButton = true,
                 title = uiState.categoryTasksUiModel?.title,
                 trailingComposable = {
-                    IconButton(onClick = {
-                        isEditCategorySheetVisible = true
-                    }) {
-                        Icon(
-                            modifier = Modifier
-                                .border(
-                                    1.dp, TudeeTheme.color.stroke, RoundedCornerShape(100.dp)
+                    uiState.categoryTasksUiModel?.isPredefined?.let {
+                        if (!(it)) {
+                            IconButton(
+                                onClick = {
+                                    isEditCategorySheetVisible = true
+                                }
+                            ) {
+                                Icon(
+                                    modifier = Modifier
+                                        .border(
+                                            1.dp,
+                                            TudeeTheme.color.stroke,
+                                            RoundedCornerShape(100.dp)
+                                        )
+                                        .padding(10.dp)
+                                        .size(20.dp),
+                                    painter = painterResource(R.drawable.pencil_edit),
+                                    contentDescription = null,
+                                    tint = TudeeTheme.color.textColors.body
                                 )
-                                .padding(10.dp)
-                                .size(20.dp),
-                            painter = painterResource(R.drawable.pencil_edit),
-                            contentDescription = null,
-                            tint = TudeeTheme.color.textColors.body
-                        )
+                            }
+                        }
                     }
                 }
             )
@@ -162,7 +170,7 @@ private fun SuccessState(
     modifier: Modifier,
     categoryTaskUIState: CategoryTasksUiState,
     categoryName: String,
-    categoryImage: String,
+    categoryImage: UiImage,
     categoryTasks: List<TaskUIModel>,
     isEditCategorySheetVisible: Boolean,
     allTasks: List<TaskUIModel>,
@@ -173,7 +181,7 @@ private fun SuccessState(
     onCancelButtonClicked: () -> Unit
 ) {
     Column(
-        modifier = modifier
+        modifier = modifier.fillMaxSize()
     ) {
         categoryTaskUIState.categoryTasksUiModel?.let {
             TabBarComponent(
@@ -184,58 +192,65 @@ private fun SuccessState(
                 }
             )
         }
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            if (allTasks.isEmpty()) {
-                NotTaskForTodayCard(
-                    title = stringResource(R.string.no_tasks_in_category, categoryName),
+        if (allTasks.isEmpty()) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                NotTaskForTodayDialogue(
+                    title = stringResource(
+                        R.string.no_tasks_in_category,
+                        categoryName
+                    ),
                     description = null
                 )
-
-            } else if (categoryTasks.isEmpty()) {
-                NotTaskForTodayCard(
-                    title = stringResource(R.string.no_tasks),
+            }
+        } else if (categoryTasks.isEmpty()) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                NotTaskForTodayDialogue(
+                    title = stringResource(
+                        R.string.no_tasks,
+                        categoryName
+                    ),
                     description = null
                 )
             }
         }
-    }
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = PaddingValues(vertical = 12.dp)
-    ) {
-        items(categoryTasks) { categoryTask ->
-
-            CategoryTaskComponent(
-                title = categoryTask.title,
-                description = categoryTask.description,
-                priority = stringResource(categoryTask.priority.labelRes),
-                priorityBackgroundColor = categoryTask.priority.getContainerColor(),
-                dateText = categoryTask.assignedDate,
-                taskIcon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_category_book_open), // this will be change
-                        contentDescription = "Task Icon",
-                        modifier = Modifier.size(32.dp),
-                        tint = TudeeTheme.color.statusColors.purpleAccent
-                    )
-                },
-                priorityIcon = painterResource(categoryTask.priority.drawableRes),
-                onClick = {
-                    //TODO()
-                }
-            )
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = PaddingValues(vertical = 12.dp)
+        ) {
+            items(categoryTasks) { categoryTask ->
+                CategoryTaskComponent(
+                    title = categoryTask.title,
+                    description = categoryTask.description,
+                    priority = stringResource(categoryTask.priority.labelRes),
+                    priorityBackgroundColor = categoryTask.priority.getContainerColor(),
+                    dateText = categoryTask.assignedDate,
+                    taskIcon = {
+                        Icon(
+                            painter = categoryImage.asPainter(),
+                            contentDescription = "Task Icon",
+                            modifier = Modifier.size(32.dp),
+                            tint = TudeeTheme.color.statusColors.purpleAccent
+                        )
+                    },
+                    priorityIcon = painterResource(categoryTask.priority.drawableRes),
+                    onClick = {
+                        //TODO()
+                    }
+                )
+            }
         }
+        EditCategorySheet(
+            isBottomSheetVisible = isEditCategorySheetVisible,
+            onDeleteButtonClicked = onDeleteCategory,
+            onBottomSheetDismissed = { onBottomSheetDismissed() },
+            onCancelButtonClicked = { onCancelButtonClicked() },
+            onSaveButtonClicked = { onSaveButtonClicked(it) },
+            initialCategoryImage = categoryImage,
+            initialCategoryName = categoryName
+        )
     }
-    EditCategorySheet(
-        isBottomSheetVisible = isEditCategorySheetVisible,
-        onDeleteButtonClicked = onDeleteCategory,
-        onBottomSheetDismissed = { onBottomSheetDismissed() },
-        onCancelButtonClicked = { onCancelButtonClicked() },
-        onSaveButtonClicked = { onSaveButtonClicked(it) },
-        initialCategoryImage = categoryImage.toUiImage(),
-        initialCategoryName = categoryName
-    )
+
 }
