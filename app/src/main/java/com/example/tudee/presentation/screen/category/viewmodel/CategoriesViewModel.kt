@@ -21,11 +21,10 @@ import kotlinx.coroutines.launch
 
 class CategoriesViewModel(
     private val taskCategoryService: TaskCategoryService,
-    private val taskService: TaskService,
-    themePrefs: ThemePreferenceManager
+    private val taskService: TaskService
 ) : ViewModel() {
     private val _uiState =
-        MutableStateFlow(CategoriesUiState(isDarkMode = themePrefs.isDarkMode()))
+        MutableStateFlow(CategoriesUiState())
     val uiState = _uiState.asStateFlow()
 
     private val _snackBarEvent = MutableSharedFlow<SnackBarEvent>()

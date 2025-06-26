@@ -129,7 +129,6 @@ private fun CategorySheetContent(
                 Log.d("IMAGE_PICKER", "Selected image URI: $uri")
             } catch (e: Exception) {
                 Log.e("PERMISSION", "Error: ${e.message}")
-                selectedUiImage = UiImage.External(it.toString())
             }
         }
     }
