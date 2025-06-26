@@ -246,7 +246,11 @@ fun TaskContent(
         ) {
             PrimaryButton(
                 modifier = Modifier.fillMaxWidth(),
-                state = if (state.selectedTask.taskDescription.isNotBlank() == true && state.selectedTask.taskTitle.isNotBlank() == true) ButtonState.IDLE else ButtonState.DISABLED,
+                state = if (state.selectedTask.taskDescription.isNotBlank() == true &&
+                    state.selectedTask.taskTitle.isNotBlank() == true &&
+                    state.selectedTask.taskCategory.title.isNotBlank()==true
+
+                    ) ButtonState.IDLE else ButtonState.DISABLED,
                 onClick = {
                     if (mode == TaskContentMode.EDIT) {
                         onAction(HomeActions.OnEditTaskButtonClicked)
