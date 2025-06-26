@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -34,7 +35,8 @@ fun OnBoardingPage(
 ) {
     if (orientation) {
         Column(
-            modifier = Modifier.padding(horizontal = 16.dp),
+            modifier = Modifier
+                .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -69,6 +71,7 @@ private fun OnBoardingPageContent(
         ) {
             Column(
                 modifier = modifier
+                    .fillMaxWidth()
                     .clip(RoundedCornerShape(32.dp))
                     .border(
                         width = 1.dp,
