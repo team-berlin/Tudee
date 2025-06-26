@@ -191,7 +191,7 @@ fun TaskContent(
             }
             item {
                 Text(
-                    modifier = Modifier.padding(top = 16.dp),
+                    modifier = Modifier.padding(top = 16.dp, bottom = 8.dp),
                     text = stringResource(R.string.category),
                     style = TudeeTheme.textStyle.title.medium,
                     color = TudeeTheme.color.textColors.title
