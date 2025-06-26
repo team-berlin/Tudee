@@ -55,9 +55,7 @@ import com.example.tudee.presentation.screen.category.model.CategorySheetState
 import com.example.tudee.presentation.screen.category.model.UiImage
 import com.example.tudee.presentation.screen.task_screen.component.DeleteConfirmationBottomSheet
 import com.example.tudee.presentation.screen.task_screen.ui.NotTaskForTodayDialogue
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -151,26 +149,26 @@ fun CategoryTasksScreen(
                 },
                 onBottomSheetDismissed = viewModel::hideEditCategorySheet,
                 onCancelButtonClicked = viewModel::hideEditCategorySheet,
-                showDeleteCategorySheet = viewModel::showDeleteCategorySheet,
-                hideDeleteCategorySheet = viewModel::hideDeleteCategorySheet
+                showDeleteCategorySheet = {
+                    viewModel.hideEditCategorySheet()
+                    viewModel.showDeleteCategorySheet()
+                },
+                hideDeleteCategorySheet = {
+                    viewModel.hideDeleteCategorySheet()
+                    viewModel.showEditCategorySheet()
+                }
             )
         } else if (uiState.loading) {
             LoadingState(modifier = modifier)
         }
     }
+
     CategoryTasksSnackBar(
         isSnackBarVisible = showSnackBar,
-        hideSnackBar = {
-            showSnackBar = false
-            coroutineScope.launch(Dispatchers.Main) {
-                delay(3000)
-                navController.navigateUp()
-            }
-        },
+        hideSnackBar = { showSnackBar = false },
         snackBarStringId = snackBarMessageId,
         snackBarIconId = snackBarIconId,
-
-        )
+    )
 }
 
 

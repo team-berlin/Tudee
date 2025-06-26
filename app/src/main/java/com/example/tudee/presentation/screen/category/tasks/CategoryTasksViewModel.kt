@@ -46,7 +46,6 @@ class CategoryTasksViewModel(
         _categoryTasksUiState.update { currentState ->
             currentState.copy(isEditCategorySheetVisible = false)
         }
-
     }
 
     fun showDeleteCategorySheet() {
@@ -59,7 +58,6 @@ class CategoryTasksViewModel(
         _categoryTasksUiState.update { currentState ->
             currentState.copy(isDeleteCategorySheetVisible = false)
         }
-
     }
 
     init {
