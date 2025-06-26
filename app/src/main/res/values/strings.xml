@@ -111,7 +111,7 @@ Tudee is proud of you</string>
     <string name="previous_week_arrow_content_description">Previous week</string>
     <string name="next_week_arrow_content_description">Next week</string>
     <string name="open_calendar_content_description">Open calendar</string>
-    <string name="save">SAVE</string>
+e    <string name="save">Save</string>
     <string name="snack_bar_category_added">Added category successfully.</string>
     <string name="no_tasks_in_category">No tasks in %1$s category!</string>
     <string name="category_not_found">Category not found!</string>
