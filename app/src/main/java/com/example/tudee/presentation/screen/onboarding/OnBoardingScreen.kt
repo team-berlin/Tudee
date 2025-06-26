@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
@@ -108,21 +109,23 @@ private fun OnBoardingContent(
             ) {
                 Text(
                     stringResource(R.string.skip_button),
-                    modifier = Modifier.padding(16.dp),
+                    modifier = Modifier.statusBarsPadding(),
                     style = TudeeTextStyle.label.large,
                     color = TudeeTheme.color.primary
                 )
             }
         Image(
-            modifier = Modifier.align(alignment = Alignment.TopEnd),
+            modifier = Modifier.fillMaxSize(),
             painter = painterResource(R.drawable.background_ellipse),
-            contentDescription = stringResource(R.string.back_ground_ellipse)
+            contentDescription = stringResource(R.string.back_ground_ellipse),
+            alignment = Alignment.TopEnd,
         )
         HorizontalPager(
             modifier = modifier
-                .align(alignment = Alignment.BottomCenter)
-                .padding(bottom = 75.dp),
-            state = pageState
+                .fillMaxSize()
+                .padding(bottom = 88.dp),
+            state = pageState,
+            verticalAlignment = Alignment.Bottom
         ) { index ->
             OnBoardingPage(
                 orientation = (orientation == Configuration.ORIENTATION_PORTRAIT),

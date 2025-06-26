@@ -7,9 +7,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -18,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -37,7 +41,10 @@ fun OnBoardingPage(
 ) {
     if (orientation) {
         Column(
-            modifier = modifier.padding(horizontal = 16.dp),
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .statusBarsPadding(),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -46,8 +53,9 @@ fun OnBoardingPage(
     } else {
         Row(
             modifier = modifier
+                .fillMaxHeight()
                 .padding(horizontal = 16.dp)
-                .padding(top = 16.dp),
+                .statusBarsPadding(),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -61,54 +69,28 @@ private fun OnBoardingPageContent(
     onBoardingPageUiModel: OnBoardingPageUiModel,
     onClick: () -> Unit
 ) {
-    Box(modifier = Modifier, contentAlignment = Alignment.Center) {
+    val imageSize = LocalConfiguration.current.screenWidthDp.dp * 0.8f
+    Box(contentAlignment = Alignment.Center) {
         Image(
-            modifier = Modifier.size(350.dp),
+            modifier = Modifier.size(imageSize),
             contentDescription = "Image for On boarding page",
             painter = painterResource(R.drawable.blur_background_shape),
             contentScale = ContentScale.Fit,
         )
         Image(
-            modifier = Modifier.size(350.dp),
+            modifier = Modifier.size(imageSize),
             contentDescription = "Image for On boarding page",
             painter = onBoardingPageUiModel.image,
             contentScale = ContentScale.Fit,
         )
     }
-    Box {
-        Column(
-            modifier = Modifier
-                .clip(RoundedCornerShape(32.dp))
-                .border(
-                    width = 2.dp,
-                    color = TudeeTheme.color.textColors.onPrimaryStroke,
-                    shape = RoundedCornerShape(32.dp)
-                )
-                .background(TudeeTheme.color.textColors.onPrimaryCard),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-        ) {
-            Text(
-                text = onBoardingPageUiModel.title,
-                style = TudeeTheme.textStyle.title.medium,
-                modifier = Modifier.padding(top = 24.dp, start = 16.dp, end = 16.dp),
-                textAlign = TextAlign.Center,
-                color = TudeeTheme.color.textColors.title,
-            )
-
-            Text(
-                text = onBoardingPageUiModel.description,
-                style = TudeeTheme.textStyle.body.medium,
-                modifier = Modifier.padding(
-                    top = 16.dp,
-                    bottom = 50.dp,
-                    start = 16.dp,
-                    end = 16.dp,
-                ),
-                textAlign = TextAlign.Center,
-                color = TudeeTheme.color.textColors.body
-            )
-        }
+    Box(
+        modifier = Modifier.padding(bottom = 23.dp),
+        contentAlignment = Alignment.BottomCenter) {
+        OnBoardingTextCard(
+            title = onBoardingPageUiModel.title,
+            description = onBoardingPageUiModel.description
+        )
             FabButton(
                 modifier = Modifier
                     .align(alignment = Alignment.BottomCenter)
@@ -123,6 +105,47 @@ private fun OnBoardingPageContent(
             }
         }
     }
+
+@Composable
+private fun OnBoardingTextCard(
+    title: String,
+    description: String
+) {
+    Column(
+        modifier = Modifier
+            .clip(RoundedCornerShape(32.dp))
+            .border(
+                width = 2.dp,
+                color = TudeeTheme.color.textColors.onPrimaryStroke,
+                shape = RoundedCornerShape(32.dp)
+            )
+            .background(TudeeTheme.color.textColors.onPrimaryCard),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        Text(
+            text = title,
+            style = TudeeTheme.textStyle.title.medium,
+            modifier = Modifier.padding(top = 24.dp, start = 16.dp, end = 16.dp),
+            textAlign = TextAlign.Center,
+            color = TudeeTheme.color.textColors.title,
+        )
+
+        Text(
+            text = description,
+            style = TudeeTheme.textStyle.body.medium,
+            modifier = Modifier.padding(
+                top = 16.dp,
+                bottom = 50.dp,
+                start = 16.dp,
+                end = 16.dp,
+            ),
+            textAlign = TextAlign.Center,
+            color = TudeeTheme.color.textColors.body
+        )
+    }
+}
+
 
 @Composable
 @PreviewLightDark
