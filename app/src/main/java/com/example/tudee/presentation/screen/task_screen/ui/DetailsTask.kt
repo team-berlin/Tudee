@@ -34,6 +34,7 @@ import com.example.tudee.presentation.screen.task_screen.mappers.TaskPriorityUiS
 import com.example.tudee.presentation.screen.task_screen.mappers.TaskStatusUiState
 import com.example.tudee.presentation.screen.task_screen.mappers.toDomain
 import com.example.tudee.presentation.screen.task_screen.ui_states.TaskDetailsUiState
+import com.example.tudee.presentation.utils.clickWithRipple
 import com.example.tudee.presentation.utils.toCategoryIcon
 import com.example.tudee.presentation.viewmodel.TaskBottomSheetViewModel
 
@@ -176,7 +177,7 @@ fun IconFab(
                 color = TudeeTheme.color.stroke,
                 shape = RoundedCornerShape(100.dp)
             )
-            .clickable(onClick = onClick)
+            .clickWithRipple(onClick = onClick)
             .padding(horizontal = 24.dp, vertical = 8.dp),
         contentAlignment = Alignment.Center
     ) {

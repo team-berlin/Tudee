@@ -5,7 +5,6 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -14,12 +13,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tudee.designsystem.theme.TudeeTheme
+import com.example.tudee.presentation.utils.clickWithRipple
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -33,10 +34,11 @@ fun TudeeDayCard(
 ) {
     Column(
         modifier = modifier
-            .padding(vertical = 12.dp, horizontal = 12.dp)
-            .clickable {
+            .clip(RoundedCornerShape(16.dp))
+            .clickWithRipple {
                 onClick()
-            },
+            }
+            .padding(vertical = 12.dp, horizontal = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
