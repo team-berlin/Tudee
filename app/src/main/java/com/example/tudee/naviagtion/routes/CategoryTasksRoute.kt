@@ -7,8 +7,7 @@ import com.example.tudee.naviagtion.Destination.CategoryTasksScreen
 import com.example.tudee.presentation.screen.category.tasks.CategoryTasksScreen
 
 fun NavGraphBuilder.categoryTasksRoute(navController: NavHostController) {
-    composable<CategoryTasksScreen>(
-    ) { backStackEntry ->
+    composable<CategoryTasksScreen> { backStackEntry ->
         CategoryTasksScreen(navController = navController)
     }
 }

@@ -52,35 +52,32 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun TasksScreen(navController: NavController, tasksScreenViewModel: TasksScreenViewModel) {
     val taskScreenUiState by tasksScreenViewModel.taskScreenUiState.collectAsState()
-    val isDarkMode = taskScreenUiState.isDarkMode
     val taskBottomSheetViewModel: TaskBottomSheetViewModel = koinViewModel()
     val taskBottomSheetUiState by taskBottomSheetViewModel.uiState.collectAsState()
     val isEditeMode by taskBottomSheetViewModel.isTaskValid.collectAsState()
-    TudeeTheme(isDarkTheme = isDarkMode) {
-        TasksScreenContent(
-            navController = navController,
-            taskBottomSheetUiState = taskBottomSheetUiState,
-            taskBottomSheetViewModel = taskBottomSheetViewModel,
-            taskScreenUiState = taskScreenUiState,
-            onTabSelected = tasksScreenViewModel::onTabSelected,
-            onTaskCardClicked = tasksScreenViewModel::onTaskCardClicked,
-            onDayCardClicked = tasksScreenViewModel::onDayCardClicked,
-            onCalendarClicked = tasksScreenViewModel::onCalendarClicked,
-            onPreviousArrowClicked = tasksScreenViewModel::onPreviousArrowClicked,
-            onNextArrowClicked = tasksScreenViewModel::onNextArrowClicked,
-            onDeleteIconClicked = tasksScreenViewModel::onDeleteIconClicked,
-            onDeleteButtonClicked = tasksScreenViewModel::onConfirmDelete,
-            onBottomSheetDismissed = tasksScreenViewModel::onBottomSheetDismissed,
-            onCancelButtonClicked = tasksScreenViewModel::onCancelButtonClicked,
-            onDismissDatePicker = tasksScreenViewModel::onDismissDatePicker,
-            onConfirmDatePicker = tasksScreenViewModel::onConfirmDatePicker,
-            hideSnackBar = tasksScreenViewModel::hideSnackBar,
-            version = tasksScreenViewModel.triggerEffectVersion.collectAsState().value,
-            hideDetailsBottomSheet = tasksScreenViewModel::hideDetailsBottomSheet,
-            Interactor = tasksScreenViewModel,
-            isEditeMode = isEditeMode,
-        )
-    }
+    TasksScreenContent(
+        navController = navController,
+        taskBottomSheetUiState = taskBottomSheetUiState,
+        taskBottomSheetViewModel = taskBottomSheetViewModel,
+        taskScreenUiState = taskScreenUiState,
+        onTabSelected = tasksScreenViewModel::onTabSelected,
+        onTaskCardClicked = tasksScreenViewModel::onTaskCardClicked,
+        onDayCardClicked = tasksScreenViewModel::onDayCardClicked,
+        onCalendarClicked = tasksScreenViewModel::onCalendarClicked,
+        onPreviousArrowClicked = tasksScreenViewModel::onPreviousArrowClicked,
+        onNextArrowClicked = tasksScreenViewModel::onNextArrowClicked,
+        onDeleteIconClicked = tasksScreenViewModel::onDeleteIconClicked,
+        onDeleteButtonClicked = tasksScreenViewModel::onConfirmDelete,
+        onBottomSheetDismissed = tasksScreenViewModel::onBottomSheetDismissed,
+        onCancelButtonClicked = tasksScreenViewModel::onCancelButtonClicked,
+        onDismissDatePicker = tasksScreenViewModel::onDismissDatePicker,
+        onConfirmDatePicker = tasksScreenViewModel::onConfirmDatePicker,
+        hideSnackBar = tasksScreenViewModel::hideSnackBar,
+        version = tasksScreenViewModel.triggerEffectVersion.collectAsState().value,
+        hideDetailsBottomSheet = tasksScreenViewModel::hideDetailsBottomSheet,
+        Interactor = tasksScreenViewModel,
+        isEditeMode = isEditeMode,
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -106,7 +103,7 @@ fun TasksScreenContent(
     version: Int,
     hideDetailsBottomSheet: () -> Unit,
     taskBottomSheetViewModel: TaskBottomSheetViewModel,
-    isEditeMode:Boolean
+    isEditeMode: Boolean
 
 ) {
 
@@ -142,7 +139,7 @@ fun TasksScreenContent(
                         taskDetailsState =
                             taskScreenUiState.taskDetailsUiState!!,
                         taskBottomSheetViewModel,
-                         hideDetailsBottomSheet
+                        hideDetailsBottomSheet
                     )
                 }
             }
@@ -158,13 +155,13 @@ fun TasksScreenContent(
             onUpdateTaskPriority = taskBottomSheetViewModel::onSelectTaskPriority,
             onSelectTaskCategory = taskBottomSheetViewModel::onSelectTaskCategory,
             hideButtonSheet = taskBottomSheetViewModel::hideButtonSheet,
-            isEditMode =isEditeMode,
+            isEditMode = isEditeMode,
             onSaveClicked = taskBottomSheetViewModel::onSaveClicked,
             onAddClicked = taskBottomSheetViewModel::onAddNewTaskClicked,
             onCancelButtonClicked = taskBottomSheetViewModel::onCancelClicked,
             onDateFieldClicked = taskBottomSheetViewModel::onDateFieldClicked,
             onConfirmDatePicker = taskBottomSheetViewModel::onConfirmDatePicker,
-            onDismissDatePicker =taskBottomSheetViewModel::onDismissDatePicker
+            onDismissDatePicker = taskBottomSheetViewModel::onDismissDatePicker
         )
 
 
@@ -224,6 +221,7 @@ fun TasksScreenContent(
         isSnackBarVisible = taskScreenUiState.isSnackBarVisible, hideSnackBar = hideSnackBar
     )
 }
+
 @Composable
 fun SnackBarSection(
     isSnackBarVisible: Boolean, hideSnackBar: () -> Unit

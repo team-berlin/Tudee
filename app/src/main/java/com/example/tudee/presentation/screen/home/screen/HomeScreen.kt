@@ -76,14 +76,12 @@ fun HomeScreen(
             viewModel.resetStatus()
         }
     }
-    TudeeTheme(isDarkTheme = state.isDarkMode) {
-        HomeContent(
-            navController = navController,
-            modifier = modifier,
-            state = state,
-            actions = viewModel::handleActions,
-        )
-    }
+    HomeContent(
+        navController = navController,
+        modifier = modifier,
+        state = state,
+        actions = viewModel::handleActions,
+    )
 }
 
 @SuppressLint("SuspiciousIndentation")
@@ -171,7 +169,7 @@ fun HomeContent(
                         NotTaskForTodayDialogue(
                             modifier = Modifier.padding(top = 24.dp),
 
-                             )
+                            )
                     } else {
                         if (state.todayTasksTodo.isNotEmpty())
                             TasksSection(
