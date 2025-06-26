@@ -7,16 +7,17 @@ import androidx.compose.ui.graphics.Color
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.presentation.components.TabBarItem
+import com.example.tudee.presentation.screen.category.model.UiImage
 
 data class CategoryTasksUiState(
-    val loading: Boolean,
+    val loading: Boolean = false,
     val categoryTasksUiModel: CategoryTasksUiModel? = null
 )
 
 data class CategoryTasksUiModel(
     val id: Long,
     val title: String,
-    val image: String,
+    val image: UiImage,
     val isPredefined: Boolean,
     val tasks: List<TaskUIModel> = emptyList(),
     val listOfTabBarItem: List<TabBarItem> = defaultTabBarItem,
@@ -25,6 +26,7 @@ data class CategoryTasksUiModel(
 
 data class TaskUIModel(
     val id: Long,
+    val categoryId: Long,
     val title: String,
     val description: String,
     val priority: TaskPriorityUiModel,
