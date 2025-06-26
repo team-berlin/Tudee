@@ -67,7 +67,6 @@ fun CategoriesScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
     var showSnackBar by remember { mutableStateOf(false) }
-    val isDarkMode = state.isDarkMode
 
     LaunchedEffect(Unit) {
         viewModel.snackBarEvent.collect { event ->
@@ -79,27 +78,24 @@ fun CategoriesScreen(
             }
         }
     }
-    TudeeTheme(isDarkTheme = isDarkMode ) {
-        CategoriesScreenContent(
-            state = state,
-            onCategoryClick = { categoryId ->
-                navController.navigate(Destination.CategoryTasksScreen(categoryId))
-            },
-            onAddCategoryClick = viewModel::showEditCategorySheet,
-            navController = navController,
-            isEditCategorySheetVisible = state.isEditCategorySheetVisible,
-            onDismissEditCategorySheet = viewModel::hideEditCategorySheet,
-            onConfirmEditCategorySheet = { categoryData ->
-                categoryData.uiImage?.let {
-                    viewModel.addCategory(categoryData.name, it.asString())
-                }
-            },
-            onCancelCategorySheet = viewModel::hideEditCategorySheet,
-            showSnackBar = showSnackBar,
-            hideSnackBar = { showSnackBar = false }
-        )
-
-    }
+    CategoriesScreenContent(
+        state = state,
+        onCategoryClick = { categoryId ->
+            navController.navigate(Destination.CategoryTasksScreen(categoryId))
+        },
+        onAddCategoryClick = viewModel::showEditCategorySheet,
+        navController = navController,
+        isEditCategorySheetVisible = state.isEditCategorySheetVisible,
+        onDismissEditCategorySheet = viewModel::hideEditCategorySheet,
+        onConfirmEditCategorySheet = { categoryData ->
+            categoryData.uiImage?.let {
+                viewModel.addCategory(categoryData.name, it.asString())
+            }
+        },
+        onCancelCategorySheet = viewModel::hideEditCategorySheet,
+        showSnackBar = showSnackBar,
+        hideSnackBar = { showSnackBar = false }
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
