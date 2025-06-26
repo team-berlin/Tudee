@@ -1,6 +1,9 @@
 package com.example.tudee.presentation.screen.category.component
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -46,6 +49,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.presentation.components.DefaultLeadingContent
@@ -124,9 +128,23 @@ private fun CategorySheetContent(
                     Intent.FLAG_GRANT_READ_URI_PERMISSION
                 )
                 selectedUiImage = UiImage.External(it.toString())
+                Log.d("IMAGE_PICKER", "Selected image URI: $uri")
             } catch (e: Exception) {
-                Log.e("PERMISSION", e.toString())
+                Log.e("PERMISSION", "Error: ${e.message}")
+                selectedUiImage = UiImage.External(it.toString())
             }
+        }
+    }
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            photoPickerLauncher.launch(
+                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+            )
+        } else {
+            Log.e("PERMISSION", "Storage permission denied")
         }
     }
 
@@ -154,9 +172,26 @@ private fun CategorySheetContent(
             CategoryImageSection(
                 selectedImage = selectedUiImage,
                 onEditImage = {
-                    photoPickerLauncher.launch(
-                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                    )
+                    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
+                        when {
+                            ContextCompat.checkSelfPermission(
+                                context,
+                                Manifest.permission.READ_EXTERNAL_STORAGE
+                            ) == PackageManager.PERMISSION_GRANTED -> {
+                                photoPickerLauncher.launch(
+                                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                )
+                            }
+
+                            else -> {
+                                permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+                            }
+                        }
+                    } else {
+                        photoPickerLauncher.launch(
+                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                        )
+                    }
                 }
             )
         }
@@ -201,7 +236,7 @@ private fun CategorySheetHeader(
                 contentPadding = PaddingValues(0.dp)
             ) {
                 Text(
-                    text = "Delete",
+                    text = stringResource(R.string.delete),
                     style = TudeeTheme.textStyle.label.large,
                     color = TudeeTheme.color.statusColors.error,
                 )
@@ -224,7 +259,7 @@ private fun CategoryNameField(
     TudeeTextField(
         value = value,
         onValueChange = onValueChange,
-        placeholder = "Category title",
+        placeholder = stringResource(R.string.category_title),
         leadingContent = { isFocused ->
             DefaultLeadingContent(
                 painter = painterResource(R.drawable.menu_circle),
@@ -245,7 +280,7 @@ private fun CategoryImageSection(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Text(
-            text = "Category image",
+            text = stringResource(R.string.category_image_desc),
             style = TudeeTheme.textStyle.title.medium,
             color = TudeeTheme.color.textColors.title,
         )
@@ -315,7 +350,7 @@ private fun EditImageIcon(modifier: Modifier = Modifier) {
             .background(TudeeTheme.color.surfaceHigh)
             .padding(6.dp)
             .size(20.dp),
-        contentDescription = "Edit image",
+        contentDescription = stringResource(R.string.edit_image),
         tint = TudeeTheme.color.secondary
     )
 }
@@ -328,13 +363,13 @@ private fun EmptyImagePlaceholder() {
     ) {
         Icon(
             painter = painterResource(R.drawable.ic_upload_image),
-            contentDescription = "Add image",
+            contentDescription = stringResource(R.string.add_image),
             modifier = Modifier.size(22.dp),
             tint = TudeeTheme.color.textColors.hint
         )
 
         Text(
-            text = "Upload",
+            text = stringResource(R.string.upload_image),
             style = TudeeTheme.textStyle.label.medium,
             color = TudeeTheme.color.textColors.hint
         )
@@ -363,8 +398,8 @@ private fun CategorySheetActions(
         ) {
             Text(
                 text = when (mode) {
-                    CategorySheetMode.Add -> "Add"
-                    CategorySheetMode.Edit -> "Save"
+                    CategorySheetMode.Add -> stringResource(R.string.add)
+                    CategorySheetMode.Edit -> stringResource(R.string.save)
                 },
                 style = TudeeTheme.textStyle.label.large
             )
@@ -375,13 +410,12 @@ private fun CategorySheetActions(
             onClick = onCancel
         ) {
             Text(
-                text = "Cancel",
+                text = stringResource(R.string.cancel),
                 style = TudeeTheme.textStyle.label.large
             )
         }
     }
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(widthDp = 360, heightDp = 800)
