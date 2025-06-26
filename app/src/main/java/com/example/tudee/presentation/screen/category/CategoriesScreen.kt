@@ -75,12 +75,11 @@ fun CategoriesScreen(
         viewModel.snackBarEvent.collect { event ->
             when (event) {
                 is SnackBarEvent.ShowError -> {}
-                is SnackBarEvent.ShowSuccess -> {
-                    showSnackBar = true
-                }
+                is SnackBarEvent.ShowSuccess -> { showSnackBar = true }
             }
         }
     }
+
     CategoriesScreenContent(
         state = state,
         onCategoryClick = { categoryId ->
