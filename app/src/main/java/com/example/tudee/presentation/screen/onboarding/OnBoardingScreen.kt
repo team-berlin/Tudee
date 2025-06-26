@@ -149,7 +149,12 @@ private fun OnBoardingContent(
             pageNumber = pageState.currentPage,
             modifier = Modifier
                 .align(alignment = Alignment.BottomCenter)
-                .padding(bottom = 24.dp)
+                .padding(bottom = 24.dp),
+            onIndicatorClicked = {
+                scope.launch {
+                    pageState.animateScrollToPage(it)
+                }
+            }
         )
     }
 }
