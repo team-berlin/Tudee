@@ -86,4 +86,5 @@
     <string name="category_image_desc">صورة الصنف</string>
     <string name="upload_image">رفع صورة</string>
     <string name="edit_uploaded_image">تعديل الصورة</string>
+    <string name="image_for_on_boarding_page">صوره صفحة البدايه</string>
 </resources>
