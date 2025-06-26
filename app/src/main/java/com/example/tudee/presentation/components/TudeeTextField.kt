@@ -33,9 +33,9 @@ import com.example.tudee.designsystem.theme.TudeeTheme
 @Composable
 fun TudeeTextField(
     value: String,
+    modifier: Modifier = Modifier,
     enabled: Boolean = true,
     onValueChange: (String) -> Unit,
-    modifier: Modifier = Modifier,
     singleLine: Boolean = true,
     leadingContent: @Composable ((isFocused: Boolean) -> Unit)? = null,
     placeholder: String? = null,
@@ -115,8 +115,8 @@ private fun TextFieldContent(
     placeholder: String?
 ) {
     Box(
-        modifier = modifier
-            .padding(12.dp)
+        modifier = modifier.padding(12.dp),
+        contentAlignment = Alignment.CenterStart
     ) {
         innerTextField()
         if (value.isEmpty() && placeholder != null) {

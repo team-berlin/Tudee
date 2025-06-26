@@ -4,11 +4,14 @@ import com.example.tudee.domain.entity.Task
 import com.example.tudee.domain.entity.TaskCategory
 import com.example.tudee.domain.entity.TaskPriority
 import com.example.tudee.domain.entity.TaskStatus
+import com.example.tudee.presentation.screen.category.model.UiImage
+import com.example.tudee.presentation.utils.toCategoryIcon
 
 
 fun Task.toTaskUIModel(): TaskUIModel {
     return TaskUIModel(
         id = this.id,
+        categoryId = this.categoryId,
         title = this.title,
         description = this.description,
         priority = this.priority.toTaskPriorityUi(),
@@ -25,11 +28,16 @@ fun TaskPriority.toTaskPriorityUi(): TaskPriorityUiModel {
     }
 }
 
-fun TaskCategory.toTaskCategoryUiModel(tasks: List<Task>): CategoryTasksUiModel {
+fun TaskCategory.toTaskCategoryUiModel(tasks: List<Task> = emptyList()): CategoryTasksUiModel {
+    val uiImage: UiImage = if (isPredefined) {
+        UiImage.Drawable(this.image.toCategoryIcon())
+    } else {
+        UiImage.External(image)
+    }
     return CategoryTasksUiModel(
         id = this.id,
         title = this.title,
-        image = this.image,
+        image = uiImage,
         isPredefined = this.isPredefined,
         tasks = tasks.map { it.toTaskUIModel() }
     )

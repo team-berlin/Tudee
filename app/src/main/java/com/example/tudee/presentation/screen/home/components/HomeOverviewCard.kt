@@ -18,11 +18,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
@@ -55,6 +58,7 @@ fun HomeOverviewCard(
             Icon(
                 modifier = Modifier.size(16.dp),
                 imageVector = ImageVector.vectorResource(R.drawable.ic_calendar),
+                tint = TudeeTheme.color.textColors.body,
                 contentDescription = null
             )
             Text(
@@ -122,7 +126,7 @@ private fun OverviewCard(
                 color = cardColor, shape = RoundedCornerShape(20.dp)
             )
     ) {
-        Column{
+        Column {
             Box(
                 modifier = Modifier
                     .padding(top = 12.dp, start = 12.dp, end = 44.dp)
@@ -161,12 +165,18 @@ private fun OverviewCard(
                 color = TudeeTheme.color.textColors.onPrimaryCaption
             )
         }
-        Image(modifier = Modifier.align(Alignment.TopEnd), painter = painterResource(R.drawable.overview_card_background), contentDescription = null)
+        Image(
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .graphicsLayer(scaleX = if (LocalLayoutDirection.current == LayoutDirection.Rtl) -1f else 1f),
+            painter = painterResource(R.drawable.overview_card_background),
+            contentDescription = null
+        )
     }
 
 }
 
-@Preview
+@Preview(locale = "ar")
 @Composable
 private fun HomeOverviewCardPreview() {
     TudeeTheme {

@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tudee.presentation.components.SpinningProgressIndicatorLines
+import com.example.tudee.presentation.utils.clickWithRipple
 
 @Composable
 fun DefaultButton(
@@ -66,7 +67,8 @@ fun DefaultButton(
                 ) else Modifier.background(backgroundColor, shape)
             )
             .then(if (border != null) Modifier.border(border, shape) else Modifier)
-            .clickable(enabled = enabled) { onClick() }, contentAlignment = Alignment.Center
+            .clickWithRipple(isEnable = enabled) { onClick() }
+        , contentAlignment = Alignment.Center
     ) {
         val mergedStyle = LocalTextStyle.current.merge(contentColor)
         CompositionLocalProvider(

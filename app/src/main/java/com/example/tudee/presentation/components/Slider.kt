@@ -35,7 +35,7 @@ fun TudeeSlider(
         Column(
             modifier = Modifier
                 .weight(1f)
-                .padding(vertical = 16.dp)
+                .padding(vertical = 15.dp)
                 .padding(end = 8.dp),
         ) {
             Row(modifier = Modifier.padding(bottom = 8.dp)) {

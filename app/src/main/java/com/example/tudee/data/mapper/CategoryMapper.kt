@@ -24,9 +24,9 @@ fun TaskCategory.toEntity(): TaskCategoryEntity {
 
 fun TaskCategory.toCategoryUiState(): CategoryUiState {
     return CategoryUiState(
-        id = this.id.toString(),
+        id = this.id,
         title = this.title,
-        image = this.image.toInt(),
+        image = this.image,
         isPredefined = this.isPredefined
     )
 }

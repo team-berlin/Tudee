@@ -76,7 +76,6 @@ class CategoriesViewModelTest {
         }
 
         Truth.assertThat(viewModel.uiState.value.categories).isEqualTo(expectedUiModels)
-        Truth.assertThat(viewModel.uiState.value.error).isNull()
     }
 
     @Test

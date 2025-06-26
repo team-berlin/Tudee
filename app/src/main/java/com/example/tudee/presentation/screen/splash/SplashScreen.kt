@@ -59,6 +59,7 @@ fun SplashScreen(
                 .background(overlayColor),
         ) {
             Image(
+                modifier = Modifier.fillMaxSize(),
                 painter = backgroundPainter,
                 contentDescription = null,
                 contentScale = ContentScale.Crop
