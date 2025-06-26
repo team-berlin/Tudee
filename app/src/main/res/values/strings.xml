@@ -115,4 +115,7 @@ Tudee is proud of you</string>
     <string name="snack_bar_category_added">Added category successfully.</string>
     <string name="no_tasks_in_category">No tasks in %1$s category!</string>
     <string name="category_not_found">Category not found!</string>
+    <string name="category_title">Category title</string>
+    <string name="edit_image">Edit image</string>
+    <string name="add_image">Add image</string>
 </resources>
