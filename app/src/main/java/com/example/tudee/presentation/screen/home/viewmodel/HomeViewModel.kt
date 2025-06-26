@@ -30,16 +30,12 @@ import kotlinx.datetime.toLocalDateTime
 class HomeViewModel(
     val taskService: TaskService,
     private val categoryService: TaskCategoryService,
-    private val themePreferenceManager: ThemePreferenceManager
 ) : ViewModel() {
     private val _homeUiState = MutableStateFlow(HomeUiState())
     val homeUiState = _homeUiState.asStateFlow()
 
     fun init() {
         viewModelScope.launch {
-            val isDark = themePreferenceManager.isDarkMode()
-            _homeUiState.update { it.copy(isDarkMode = isDark) }
-
             getCategories()
             getTodayDate()
             getMonth()
@@ -76,7 +72,6 @@ class HomeViewModel(
             HomeActions.OnFabClicked -> onFabClicked()
             is HomeActions.OnTaskCardClicked -> onTaskCardClicked(actions.taskUiState)
             is HomeActions.OnTaskStatusChanged -> onTaskStatusChanged(actions.status)
-            is HomeActions.OnThemeChanged -> onThemeChanged(actions.isDarkMode)
             HomeActions.OnOpenBottomSheet -> onOpenBottomSheet()
         }
 
@@ -466,13 +461,6 @@ class HomeViewModel(
 
     private fun filterTasksByStatus(taskStatus: TaskStatus, taskList: List<Task>): List<Task> {
         return taskList.filter { it.status == taskStatus }
-    }
-
-    private fun onThemeChanged(isDarkMode: Boolean) {
-        themePreferenceManager.setDarkMode(isDarkMode)
-        _homeUiState.update { oldValue ->
-            oldValue.copy(isDarkMode = isDarkMode)
-        }
     }
 
     fun resetStatus() {

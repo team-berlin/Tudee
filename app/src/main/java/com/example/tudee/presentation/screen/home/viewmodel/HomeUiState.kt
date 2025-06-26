@@ -6,7 +6,6 @@ import com.example.tudee.R
 
 
 data class HomeUiState(
-    val isDarkMode: Boolean = false,
     val taskUiState: TaskUiState = TaskUiState(),
     val taskTodayDateUiState: TaskTodayDateUiState = TaskTodayDateUiState(),
     val sliderUiState: SliderUiState = SliderUiState(),
