@@ -36,8 +36,9 @@ import com.example.tudee.presentation.components.CategoryTaskComponent
 import com.example.tudee.presentation.components.TabBarComponent
 import com.example.tudee.presentation.components.TopAppBar
 import com.example.tudee.presentation.components.TudeeScaffold
-import com.example.tudee.presentation.screen.category.EditCategorySheet
+import com.example.tudee.presentation.screen.category.component.CategorySheet
 import com.example.tudee.presentation.screen.category.model.CategoryData
+import com.example.tudee.presentation.screen.category.model.CategorySheetState
 import com.example.tudee.presentation.screen.category.model.UiImage
 import com.example.tudee.presentation.screen.task_screen.ui.NotTaskForTodayDialogue
 import kotlinx.coroutines.delay
@@ -242,14 +243,19 @@ private fun SuccessState(
                 )
             }
         }
-        EditCategorySheet(
-            isBottomSheetVisible = isEditCategorySheetVisible,
-            onDeleteButtonClicked = onDeleteCategory,
-            onBottomSheetDismissed = { onBottomSheetDismissed() },
-            onCancelButtonClicked = { onCancelButtonClicked() },
-            onSaveButtonClicked = { onSaveButtonClicked(it) },
-            initialCategoryImage = categoryImage,
-            initialCategoryName = categoryName
+
+        CategorySheet(
+            state = CategorySheetState.edit(
+                isVisible = isEditCategorySheetVisible,
+                initialData = CategoryData(
+                    name = categoryName,
+                    uiImage = categoryImage
+                )
+            ),
+            onDismiss = onBottomSheetDismissed,
+            onConfirm = { onSaveButtonClicked(it) },
+            onCancel = onCancelButtonClicked,
+            onDelete = onDeleteCategory
         )
     }
 
