@@ -18,6 +18,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,41 +47,46 @@ import com.example.tudee.presentation.screen.home.viewmodel.HomeViewModel
 import com.example.tudee.presentation.screen.home.viewmodel.TaskStatusUiState
 import com.example.tudee.presentation.screen.task_screen.component.TaskScreenBottomAppBar
 import com.example.tudee.presentation.screen.task_screen.ui.NotTaskForTodayDialogue
+import com.example.tudee.presentation.themeViewModel.ThemeViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HomeScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel = koinViewModel(),
+    homeViewModel: HomeViewModel = koinViewModel(),
+    themeViewModel: ThemeViewModel = koinViewModel(),
     navigateDoneTasks: () -> Unit = {},
     navigateInProgressTasks: () -> Unit = {},
     navigateTodoTasks: () -> Unit = {}
 ) {
-    val state by viewModel.homeUiState.collectAsStateWithLifecycle()
+    val homeState by homeViewModel.homeUiState.collectAsStateWithLifecycle()
+    val isDarkMode by themeViewModel.isDarkMode.collectAsState()
     LaunchedEffect(Unit) {
-        viewModel.init()
+        homeViewModel.init()
     }
     LaunchedEffect(
-        state.navigateDoneTasks,
-        state.navigateInProgressTasks,
-        state.navigateTodoTasks
+        homeState.navigateDoneTasks,
+        homeState.navigateInProgressTasks,
+        homeState.navigateTodoTasks
     ) {
-        if (state.navigateDoneTasks) {
+        if (homeState.navigateDoneTasks) {
             navigateDoneTasks()
-        } else if (state.navigateInProgressTasks) {
+        } else if (homeState.navigateInProgressTasks) {
             navigateInProgressTasks()
-        } else if (state.navigateTodoTasks) {
+        } else if (homeState.navigateTodoTasks) {
             navigateTodoTasks()
         } else {
-            viewModel.resetStatus()
+            homeViewModel.resetStatus()
         }
     }
     HomeContent(
         navController = navController,
         modifier = modifier,
-        state = state,
-        actions = viewModel::handleActions,
+        state = homeState,
+        actions = homeViewModel::handleActions,
+        isDarkMode = isDarkMode,
+        onThemeChanged = themeViewModel::toggleTheme
     )
 }
 
@@ -91,16 +97,16 @@ fun HomeContent(
     modifier: Modifier = Modifier,
     state: HomeUiState,
     actions: (HomeActions) -> Unit = {},
+    onThemeChanged: (Boolean) -> Unit,
+    isDarkMode: Boolean,
 ) {
     TudeeScaffold(
         showTopAppBar = true,
         topAppBar = {
             AppBar(
-                isDarkMode = state.isDarkMode,
+                isDarkMode = isDarkMode,
                 onThemeChanged = {
-                    actions(
-                        HomeActions.OnThemeChanged(it)
-                    )
+                    onThemeChanged(it)
                 }
             )
         },
@@ -264,7 +270,9 @@ private fun HomeScreenPreview() {
         HomeContent(
             navController = rememberNavController(),
             state = HomeUiState(),
-            actions = {}
+            actions = {},
+            onThemeChanged = {},
+            isDarkMode = false
         )
     }
 }

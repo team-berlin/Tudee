@@ -34,7 +34,7 @@ val appModule = module {
         get<AppDatabase>().taskCategoryDao()
     }
     viewModel<HomeViewModel>{
-        HomeViewModel(get(),get(),get())
+        HomeViewModel(get(),get())
     }
     single<TaskService> { TaskServiceImpl(get()) }  // replace with your real implementation
     single<TaskCategoryService> { TaskCategoryServiceImpl(get()) }
