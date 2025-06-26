@@ -66,7 +66,6 @@ fun CategoriesScreen(
     viewModel: CategoriesViewModel = koinViewModel(),
 ) {
     val state by viewModel.uiState.collectAsState()
-    val isEditCategorySheetVisible by viewModel.isEditCategorySheetVisible.collectAsState()
     var showSnackBar by remember { mutableStateOf(false) }
     val isDarkMode = state.isDarkMode
 
@@ -88,7 +87,7 @@ fun CategoriesScreen(
             },
             onAddCategoryClick = viewModel::showEditCategorySheet,
             navController = navController,
-            isEditCategorySheetVisible = isEditCategorySheetVisible,
+            isEditCategorySheetVisible = state.isEditCategorySheetVisible,
             onDismissEditCategorySheet = viewModel::hideEditCategorySheet,
             onConfirmEditCategorySheet = { categoryData ->
                 categoryData.uiImage?.let {
@@ -169,7 +168,7 @@ fun CategoriesScreenContent(
                         items = state.categories
                     ) { category ->
                         CategoryItemWithBadge(
-                            categoryPainter = category.iconResId.asPainter(),
+                            categoryPainter = category.categoryImage.asPainter(),
                             categoryName = category.name,
                             badgeCount = category.tasksCount,
                             categoryImageContentDescription = category.name,

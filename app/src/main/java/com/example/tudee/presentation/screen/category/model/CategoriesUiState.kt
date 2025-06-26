@@ -5,4 +5,5 @@ data class CategoriesUiState(
     val isLoading: Boolean = false,
     val error: String? = null,
     val isDarkMode: Boolean = false,
+    val isEditCategorySheetVisible: Boolean = false
 )

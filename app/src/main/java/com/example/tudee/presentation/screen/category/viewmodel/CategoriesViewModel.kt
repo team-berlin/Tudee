@@ -22,14 +22,11 @@ import kotlinx.coroutines.launch
 class CategoriesViewModel(
     private val taskCategoryService: TaskCategoryService,
     private val taskService: TaskService,
-    private val themePrefs: ThemePreferenceManager
-
+    themePrefs: ThemePreferenceManager
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(CategoriesUiState( isDarkMode = themePrefs.isDarkMode()))
+    private val _uiState =
+        MutableStateFlow(CategoriesUiState(isDarkMode = themePrefs.isDarkMode()))
     val uiState = _uiState.asStateFlow()
-
-    private val _isEditCategorySheetVisible = MutableStateFlow(false)
-    val isEditCategorySheetVisible = _isEditCategorySheetVisible.asStateFlow()
 
     private val _snackBarEvent = MutableSharedFlow<SnackBarEvent>()
     val snackBarEvent = _snackBarEvent.asSharedFlow()
@@ -38,8 +35,8 @@ class CategoriesViewModel(
         loadCategories()
     }
 
-    fun showEditCategorySheet() = _isEditCategorySheetVisible.update { true }
-    fun hideEditCategorySheet() = _isEditCategorySheetVisible.update { false }
+    fun showEditCategorySheet() = _uiState.update { it.copy(isEditCategorySheetVisible = true) }
+    fun hideEditCategorySheet() = _uiState.update { it.copy(isEditCategorySheetVisible = false) }
 
     fun loadCategories() {
         viewModelScope.launch {
