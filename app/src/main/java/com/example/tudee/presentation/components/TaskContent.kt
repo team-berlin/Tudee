@@ -2,7 +2,6 @@ package com.example.tudee.presentation.components
 
 import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,6 +16,8 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -30,6 +31,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,6 +46,7 @@ import com.example.tudee.presentation.screen.home.viewmodel.HomeActions
 import com.example.tudee.presentation.screen.home.viewmodel.HomeUiState
 import com.example.tudee.presentation.screen.home.viewmodel.TaskPriorityUiState
 import com.example.tudee.presentation.screen.home.viewmodel.TaskUiState
+import com.example.tudee.presentation.utils.clickWithRipple
 import com.example.tudee.presentation.utils.toCategoryIcon
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
@@ -64,7 +67,7 @@ fun TaskContent(
     mode: TaskContentMode = TaskContentMode.ADD
 ) {
 
-    Log.d("TaskContent", "Selected task category ID: ${state.taskUiState.taskCategory?.id}")
+    Log.d("TaskContent", "Selected task category ID: ${state.taskUiState.taskCategory.id}")
     categories.forEachIndexed { index, category ->
         Log.d("TaskContent", "Category $index: title='${category.title}', id=${category.id}")
     }
@@ -140,7 +143,7 @@ fun TaskContent(
                     placeholder = stringResource(R.string.set_due_date),
                     leadingContent = { isFocused ->
                         DefaultLeadingContent(
-                            modifier = Modifier.clickable { showDatePicker = true },
+                            modifier = Modifier.clickWithRipple{ showDatePicker = true },
                             painter = painterResource(R.drawable.ic_add_calendar),
                             isFocused = isFocused
                         )
@@ -176,11 +179,12 @@ fun TaskContent(
                         TudeeChip(
                             label = label,
                             icon = painterResource(iconRes),
-                            backgroundColor = if (state.selectedTask?.taskPriority == priority) backgroundColor else TudeeTheme.color.surfaceLow,
-                            labelColor = if (state.selectedTask?.taskPriority == priority) TudeeTheme.color.textColors.onPrimary else TudeeTheme.color.textColors.body,
+                            backgroundColor = if (state.selectedTask.taskPriority == priority) backgroundColor else TudeeTheme.color.surfaceLow,
+                            labelColor = if (state.selectedTask.taskPriority == priority) TudeeTheme.color.textColors.onPrimary else TudeeTheme.color.textColors.body,
                             modifier = Modifier
                                 .padding(top = 8.dp)
-                                .clickable { onAction(HomeActions.OnEditTaskPriorityChanged(priority)) }
+                                .clip(CircleShape)
+                                .clickWithRipple { onAction(HomeActions.OnEditTaskPriorityChanged(priority)) }
                         )
                     }
                 }
@@ -210,13 +214,14 @@ fun TaskContent(
                             categoryPainter = painterResource(
                                 categories.image.toCategoryIcon()
                             ),
-                            showCheckedIcon = state.selectedTask.taskCategory?.id == categories.id,
+                            showCheckedIcon = state.selectedTask.taskCategory.id == categories.id,
                             badgeBackgroundColor = TudeeTheme.color.statusColors.greenAccent,
                             categoryName = categories.title,
                             categoryImageContentDescription = "Category ${categories.title}",
                             modifier = Modifier
                                 .padding(horizontal = 4.dp)
-                                .clickable {
+                                .clip(RoundedCornerShape(10.dp))
+                                .clickWithRipple {
                                     onAction(
                                         HomeActions.OnEditTaskCategoryChanged(
                                             categories
@@ -241,12 +246,12 @@ fun TaskContent(
         ) {
             PrimaryButton(
                 modifier = Modifier.fillMaxWidth(),
-                state = if (state.selectedTask?.taskDescription?.isNotBlank() == true && state.selectedTask?.taskTitle?.isNotBlank() == true) ButtonState.IDLE else ButtonState.DISABLED,
+                state = if (state.selectedTask.taskDescription.isNotBlank() == true && state.selectedTask.taskTitle.isNotBlank() == true) ButtonState.IDLE else ButtonState.DISABLED,
                 onClick = {
                     if (mode == TaskContentMode.EDIT) {
                         onAction(HomeActions.OnEditTaskButtonClicked)
                     } else {
-                        onAction(HomeActions.OnCreateTaskButtonClicked(state.selectedTask!!))
+                        onAction(HomeActions.OnCreateTaskButtonClicked(state.selectedTask))
                     }
                 },
             ) {

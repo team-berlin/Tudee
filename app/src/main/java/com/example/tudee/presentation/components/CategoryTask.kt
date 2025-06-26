@@ -28,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
+import com.example.tudee.presentation.utils.clickWithRipple
 
 @Composable
 fun CategoryTaskComponent(
@@ -45,7 +46,7 @@ fun CategoryTaskComponent(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .clickable { onClick()}
+            .clickWithRipple(onClick = onClick)
             .border(1.dp, TudeeTheme.color.surfaceHigh, RoundedCornerShape(16.dp))
             .background( TudeeTheme.color.surfaceHigh,RoundedCornerShape(16.dp))
             .padding(top = 4.dp, start = 4.dp, end = 12.dp),

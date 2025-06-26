@@ -22,6 +22,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -35,6 +36,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -57,6 +59,7 @@ import com.example.tudee.presentation.screen.category.model.CategorySheetState
 import com.example.tudee.presentation.screen.category.tasks.SnackBarEvent
 import com.example.tudee.presentation.screen.category.viewmodel.CategoriesViewModel
 import com.example.tudee.presentation.screen.task_screen.component.TaskScreenBottomAppBar
+import com.example.tudee.presentation.utils.clickWithRipple
 import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 
@@ -175,7 +178,8 @@ fun CategoriesScreenContent(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .wrapContentHeight()
-                                .clickable {
+                                .clip(RoundedCornerShape(10.dp))
+                                .clickWithRipple {
                                     onCategoryClick(category.id)
                                 }
                         )

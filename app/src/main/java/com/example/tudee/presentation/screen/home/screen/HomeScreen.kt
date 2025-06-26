@@ -171,7 +171,7 @@ fun HomeContent(
                         NotTaskForTodayDialogue(
                             modifier = Modifier.padding(top = 24.dp),
 
-                             )
+                            )
                     } else {
                         if (state.todayTasksTodo.isNotEmpty())
                             TasksSection(
