@@ -68,7 +68,7 @@ import com.example.tudee.presentation.screen.category.model.isNotNull
 fun CategorySheet(
     modifier: Modifier = Modifier,
     state: CategorySheetState,
-    sheetState: SheetState = rememberModalBottomSheetState(),
+    sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
     onDismiss: () -> Unit,
     onConfirm: (CategoryData) -> Unit,
     onCancel: () -> Unit,
