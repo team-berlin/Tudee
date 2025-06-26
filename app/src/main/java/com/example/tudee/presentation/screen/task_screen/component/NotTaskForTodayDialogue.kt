@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -19,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -32,7 +30,11 @@ import com.example.tudee.designsystem.theme.TudeeTheme
 
 @Preview(showBackground = true)
 @Composable
-fun NotTaskForTodayDialogue(modifier: Modifier = Modifier) {
+fun NotTaskForTodayDialogue(
+    modifier: Modifier = Modifier,
+    title: String = stringResource(id = R.string.no_tasks),
+    description: String? = stringResource(R.string.add_first_task_hint)
+) {
     Box(
         modifier
             .background(TudeeTheme.color.surface)
@@ -60,16 +62,17 @@ fun NotTaskForTodayDialogue(modifier: Modifier = Modifier) {
 
         ) {
             Text(
-                text = stringResource(id = R.string.no_tasks),
+                text = title,
                 style = TudeeTheme.textStyle.title.small,
                 color = TudeeTheme.color.textColors.body,
-
                 )
-            Text(
-                text = stringResource(R.string.add_first_task_hint),
-                style = TudeeTheme.textStyle.body.small,
-                color = TudeeTheme.color.textColors.hint,
-            )
+            if (description != null) {
+                Text(
+                    text = description,
+                    style = TudeeTheme.textStyle.body.small,
+                    color = TudeeTheme.color.textColors.hint,
+                )
+            }
         }
         Box(
             Modifier.align(Alignment.BottomEnd)
