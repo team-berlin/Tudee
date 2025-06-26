@@ -20,7 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -29,14 +28,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
-import com.example.tudee.presentation.composables.buttons.ButtonState
-import com.example.tudee.presentation.composables.buttons.PrimaryButton
-import com.example.tudee.presentation.composables.buttons.SecondaryButton
-import com.example.tudee.ui.home.viewmodel.CategoryUiState
-import com.example.tudee.ui.home.viewmodel.HomeActions
-import com.example.tudee.ui.home.viewmodel.HomeUiState
-import com.example.tudee.ui.home.viewmodel.TaskPriorityUiState
-import com.example.tudee.ui.home.viewmodel.TaskUiState
+import com.example.tudee.presentation.components.buttons.ButtonState
+import com.example.tudee.presentation.components.buttons.PrimaryButton
+import com.example.tudee.presentation.components.buttons.SecondaryButton
+import com.example.tudee.presentation.screen.home.viewmodel.CategoryUiState
+import com.example.tudee.presentation.screen.home.viewmodel.HomeActions
+import com.example.tudee.presentation.screen.home.viewmodel.HomeUiState
+import com.example.tudee.presentation.screen.home.viewmodel.TaskPriorityUiState
+import com.example.tudee.presentation.screen.home.viewmodel.TaskUiState
+import com.example.tudee.presentation.utils.toCategoryIcon
 
 @Composable
 fun AddTaskContent(
@@ -69,7 +69,6 @@ fun AddTaskContent(
             modifier = modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             item {
                 Text(
@@ -114,7 +113,7 @@ fun AddTaskContent(
                     placeholder = stringResource(R.string.set_due_date),
                     leadingContent = { isFocused ->
                         DefaultLeadingContent(
-                            painter = painterResource(R.drawable.ic_calendar),
+                            painter = painterResource(R.drawable.ic_add_calendar),
                             isFocused = isFocused
                         )
                     }
@@ -171,8 +170,7 @@ fun AddTaskContent(
                     items(categories) { categories ->
                         CategoryItemWithBadge(
                             categoryPainter = painterResource(
-                                id = categories.image
-                                    ?: R.drawable.category
+                                categories.image.toCategoryIcon()
                             ),
                             showCheckedIcon = state.taskUiState.taskCategory?.id == categories.id,
                             badgeBackgroundColor = TudeeTheme.color.statusColors.greenAccent,
@@ -204,7 +202,7 @@ fun AddTaskContent(
         ) {
             PrimaryButton(
                 modifier = Modifier.fillMaxWidth(),
-          state = if (addButtonClick) ButtonState.IDLE else ButtonState.DISABLED,
+                state = if (addButtonClick) ButtonState.IDLE else ButtonState.DISABLED,
                 onClick = { onAction(HomeActions.OnCreateTaskButtonClicked(state.taskUiState)) },
             ) {
                 Text(text = stringResource(R.string.add))
@@ -222,99 +220,40 @@ fun AddTaskContent(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = false)
+@Preview(showBackground = true)
 @Composable
 private fun AddTaskContentPreview() {
     TudeeTheme {
         val sampleCategories = listOf(
             CategoryUiState(
-                id = "1",
+                id = 1,
                 title = "Education",
-                image = R.drawable.ic_education
+                image = "education"
             ),
             CategoryUiState(
-                id = "2",
+                id = 2,
                 title = "Work",
-                image = R.drawable.ic_education
+                image = "work"
             ),
             CategoryUiState(
-                id = "3",
+                id = 3,
                 title = "Personal",
-                image = R.drawable.ic_education
-            ),
-            CategoryUiState(
-                id = "4",
-                title = "Education",
-                image = R.drawable.ic_education
-            ),
-            CategoryUiState(
-                id = "5",
-                title = "Work",
-                image = R.drawable.ic_education
-            ),
-            CategoryUiState(
-                id = "6",
-                title = "Personal",
-                image = R.drawable.ic_education
-            ),
-
-            CategoryUiState(
-                id = "4",
-                title = "Education",
-                image = R.drawable.ic_education
-            ),
-            CategoryUiState(
-                id = "5",
-                title = "Work",
-                image = R.drawable.ic_education
-            ),
-            CategoryUiState(
-                id = "6",
-                title = "Personal",
-                image = R.drawable.ic_education
+                image = "personal"
             )
         )
 
-
-        var taskUiState by remember {
-            mutableStateOf(
-                TaskUiState(
-                )
-            )
-        }
+        val taskUiState = TaskUiState(
+            taskTitle = "Finish Homework",
+            taskDescription = "Complete math and science exercises.",
+            taskAssignedDate = kotlinx.datetime.LocalDate(2025, 6, 25),
+            taskPriority = TaskPriorityUiState.HIGH,
+            taskCategory = sampleCategories.first()
+        )
 
         AddTaskContent(
             state = HomeUiState(taskUiState = taskUiState),
             categories = sampleCategories,
-            onAction = { action ->
-                when (action) {
-                    is HomeActions.OnEditTaskTitleChanged -> {
-                        taskUiState = taskUiState.copy(taskTitle = action.title)
-                    }
-
-                    is HomeActions.OnEditTaskDescriptionChanged -> {
-                        taskUiState = taskUiState.copy(taskDescription = action.description)
-                    }
-
-                    is HomeActions.OnEditTaskPriorityChanged -> {
-                        taskUiState = taskUiState.copy(taskPriority = action.priority)
-                    }
-
-                    is HomeActions.OnEditTaskCategoryChanged -> {
-                        taskUiState = taskUiState.copy(taskCategory = action.category)
-                    }
-
-                    is HomeActions.OnCreateTaskButtonClicked -> {
-                    }
-
-                    is HomeActions.OnCancelButtonClicked -> {
-                        taskUiState = TaskUiState()
-                    }
-
-                    else -> {
-                    }
-                }
-            }
+            onAction = {}
         )
     }
 }

@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
@@ -15,14 +16,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -49,7 +49,7 @@ fun OnBoardingScreen(
         navController.navigate(Destination.HomeScreen.route)
     }
 
-    val onboardingOnBoardingPageUiModels = listOf(
+    val listOfOnBoardingPageUiModels = listOf(
         OnBoardingPageUiModel(
             title = stringResource(R.string.on_boarding_title1),
             description = stringResource(R.string.on_boarding_description1),
@@ -67,19 +67,17 @@ fun OnBoardingScreen(
         )
     )
     val onBoardingPageState = rememberPagerState(initialPage = 0) {
-        onboardingOnBoardingPageUiModels.size
+        listOfOnBoardingPageUiModels.size
     }
     val coroutineScope = rememberCoroutineScope()
 
-    val configuration = LocalConfiguration.current
-
-    val orientation = rememberSaveable { configuration.orientation }
+    val orientation = LocalConfiguration.current.orientation
 
     OnBoardingContent(
         modifier = modifier,
         pageState = onBoardingPageState,
         scope = coroutineScope,
-        onBoardingPageUiModels = onboardingOnBoardingPageUiModels,
+        onBoardingPageUiModels = listOfOnBoardingPageUiModels,
         orientation = orientation,
         navController = navController,
     )
@@ -95,66 +93,77 @@ private fun OnBoardingContent(
     navController: NavController,
     orientation: Int,
 ) {
+
     Box(
         modifier = modifier
             .fillMaxSize()
+            .background(TudeeTheme.color.surface)
             .background(TudeeTheme.color.statusColors.overlay),
-        contentAlignment = Alignment.Center
     ) {
-        if (pageState.currentPage != Pages.ThirdPage.page)
-            TextButton(
-                modifier = Modifier.align(alignment = Alignment.TopStart),
-                onClick = { navController.navigate(Destination.HomeScreen.route) },
-            ) {
-                Text(
-                    stringResource(R.string.skip_button),
-                    modifier = Modifier.padding(16.dp),
-                    style = TudeeTextStyle.label.large,
-                    color = TudeeTheme.color.primary
+        Image(
+            modifier = Modifier.fillMaxSize(),
+            painter = painterResource(R.drawable.background_ellipse),
+            contentDescription = stringResource(R.string.back_ground_ellipse),
+            contentScale = ContentScale.Crop
+        )
+        Box(
+            modifier = modifier
+                .fillMaxSize()
+                .statusBarsPadding(),
+            contentAlignment = Alignment.Center
+        ) {
+            if (pageState.currentPage != Pages.ThirdPage.page)
+                TextButton(
+                    modifier = Modifier.align(alignment = Alignment.TopStart),
+                    onClick = { navController.navigate(Destination.HomeScreen.route) },
+                ) {
+                    Text(
+                        stringResource(R.string.skip_button),
+                        modifier = Modifier.padding(start = 16.dp),
+                        style = TudeeTextStyle.label.large,
+                        color = TudeeTheme.color.primary
+                    )
+                }
+            HorizontalPager(
+                modifier = modifier
+                    .align(alignment = Alignment.BottomCenter)
+                    .padding(bottom = 59.dp),
+                state = pageState
+            ) { index ->
+                OnBoardingPage(
+                    orientation = (orientation == Configuration.ORIENTATION_PORTRAIT),
+                    onBoardingPageUiModel = onBoardingPageUiModels[index],
+                    onClick = {
+                        scope.launch {
+                            if (pageState.currentPage != onBoardingPageUiModels.lastIndex) {
+                                pageState.animateScrollToPage(pageState.currentPage + Pages.SecondPage.page)
+                            } else {
+                                navController.navigate(Destination.HomeScreen.route)
+                                viewModel.loadInitialData()
+                                viewModel.saveFirstEntry()
+                            }
+                        }
+                    }
                 )
             }
-        Image(
-            modifier = Modifier.align(alignment = Alignment.TopEnd),
-            painter = painterResource(R.drawable.background_ellipse),
-            contentDescription = stringResource(R.string.back_ground_ellipse)
-        )
-        HorizontalPager(
-            modifier = modifier
-                .align(alignment = Alignment.BottomCenter)
-                .padding(bottom = 75.dp),
-            state = pageState
-        ) { index ->
-            OnBoardingPage(
-                orientation = (orientation == Configuration.ORIENTATION_PORTRAIT),
-                modifier = Modifier.align(alignment = Alignment.Center),
-                onBoardingPageUiModel = onBoardingPageUiModels[index],
-                onClick = {
+            BottomPageIndicator(
+                onBoardingPageUiModels = onBoardingPageUiModels,
+                pageNumber = pageState.currentPage,
+                modifier = Modifier
+                    .align(alignment = Alignment.BottomCenter)
+                    .padding(bottom = 24.dp),
+                onIndicatorClicked = { page ->
                     scope.launch {
-                        if (pageState.currentPage != onBoardingPageUiModels.lastIndex) {
-                            pageState.animateScrollToPage(pageState.currentPage + Pages.SecondPage.page)
-                        } else {
-                            navController.navigate(Destination.HomeScreen.route)
-                            viewModel.loadInitialData()
-                            viewModel.saveFirstEntry()
-                        }
+                        pageState.animateScrollToPage(page)
                     }
                 }
             )
         }
-        BottomPageIndicator(
-            onBoardingPageUiModels = onBoardingPageUiModels,
-            pageNumber = pageState.currentPage,
-            modifier = Modifier
-                .align(alignment = Alignment.BottomCenter)
-                .padding(bottom = 24.dp)
-        )
     }
 }
 
 @Composable
-@PreviewLightDark()
-@Preview(locale = "ar")
-@Preview(heightDp = 360, widthDp = 800)
+@Preview(showSystemUi = true)
 private fun OnBoardingScreenPreview() {
     TudeeTheme {
         OnBoardingScreen()

@@ -2,7 +2,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
     id("com.google.devtools.ksp")
+    id("org.jetbrains.kotlinx.kover")
 }
 
 android {
@@ -70,9 +72,30 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.kotlinx.datetime)
+    implementation(libs.kotlinx.serialization.json)
 
-    testImplementation(libs.truth)
     testImplementation(libs.mockk)
+    testImplementation(libs.junit)
+    testImplementation(libs.truth)
     testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.turbine)
+}
+
+kover {
+    reports {
+        filters {
+            includes {
+                classes("**ViewModel")
+                classes("**viewModel")
+                classes("**viewmodel")
+                classes("**Viewmodel")
+            }
+        }
+        verify {
+            rule {
+                bound {
+                    minValue = 70
+                }
+            }
+        }
+    }
 }

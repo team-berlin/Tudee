@@ -3,9 +3,11 @@ package com.example.tudee.presentation.screen.category.model
 import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.core.text.isDigitsOnly
 import coil3.compose.rememberAsyncImagePainter
+import coil3.imageLoader
 import java.io.File
 
 sealed class UiImage {
@@ -21,7 +23,8 @@ sealed class UiImage {
                     uri.startsWith("content://") || uri.startsWith("file://") -> uri
                     uri.startsWith("/") -> File(uri)
                     else -> uri
-                }
+                },
+                imageLoader = LocalContext.current.imageLoader
             )
         }
     }
@@ -38,4 +41,8 @@ fun String.toUiImage(): UiImage {
     } else {
         UiImage.External(this)
     }
+}
+
+fun UiImage?.isNotNull(): Boolean {
+    return this != null
 }

@@ -28,6 +28,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.painterResource
@@ -37,12 +38,14 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
-import com.example.tudee.presentation.composables.buttons.ButtonState
-import com.example.tudee.presentation.composables.buttons.SecondaryButton
-import com.example.tudee.ui.home.viewmodel.CategoryUiState
-import com.example.tudee.ui.home.viewmodel.TaskPriorityUiState
-import com.example.tudee.ui.home.viewmodel.TaskStatusUiState
-import com.example.tudee.ui.home.viewmodel.TaskUiState
+import com.example.tudee.presentation.components.buttons.ButtonState
+import com.example.tudee.presentation.components.buttons.SecondaryButton
+import com.example.tudee.presentation.screen.home.viewmodel.CategoryUiState
+import com.example.tudee.presentation.screen.home.viewmodel.TaskPriorityUiState
+import com.example.tudee.presentation.screen.home.viewmodel.TaskStatusUiState
+import com.example.tudee.presentation.screen.home.viewmodel.TaskUiState
+import com.example.tudee.presentation.utils.clickWithRipple
+import com.example.tudee.presentation.utils.toCategoryIcon
 import kotlinx.datetime.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -75,6 +78,7 @@ fun TudeeBottomSheet(
         content()
     }
 }
+
 //region TaskDetailsBottomSheet
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -86,18 +90,19 @@ fun TudeeTaskDetailsBottomSheet(
     onMoveActionClicked: () -> Unit,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
-    isVisible: Boolean=false
+    isVisible: Boolean = false
 ) {
-    TudeeBottomSheet(isVisible = isVisible, onDismissRequest = {onDismissRequest()}) {
+    TudeeBottomSheet(isVisible = isVisible, onDismissRequest = { onDismissRequest() }) {
         TudeeTaskDetailsBottomSheetContent(
             task = task,
-            onEditButtonClicked = {onEditButtonClicked()},
+            onEditButtonClicked = { onEditButtonClicked() },
             changeStatusButtonState = changeStatusButtonState,
             isChangeStatusButtonEnable = isChangeStatusButtonEnable,
-            onMoveActionClicked = {onMoveActionClicked()}
+            onMoveActionClicked = { onMoveActionClicked() }
         )
     }
 }
+
 @Composable
 private fun TudeeTaskDetailsBottomSheetContent(
     task: TaskUiState,
@@ -143,7 +148,7 @@ private fun TudeeTaskDetails(task: TaskUiState, modifier: Modifier = Modifier) {
             .padding(top = 12.dp)
             .background(color = TudeeTheme.color.surfaceHigh, shape = CircleShape)
     ) {
-        task.taskCategory.image?.let { painterResource(it) }?.let {
+        task.taskCategory.image?.let { painterResource(it.toCategoryIcon()) }?.let {
             Image(
                 modifier = Modifier.padding(15.dp), painter = it,
                 contentDescription = null
@@ -170,7 +175,7 @@ private fun TudeeTaskDetailPriorityRow(task: TaskUiState, modifier: Modifier = M
         Row(
             modifier = Modifier.background(
                 TudeeTheme.color.statusColors.purpleVariant,
-                shape = RoundedCornerShape(100.dp)
+                shape = CircleShape
             ), verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
@@ -232,13 +237,14 @@ private fun TudeeTaskDetailsButtonsRow(
                 .border(
                     width = 1.dp,
                     color = TudeeTheme.color.stroke,
-                    shape = RoundedCornerShape(100.dp)
+                    shape = CircleShape
                 )
                 .background(
                     color = TudeeTheme.color.surface,
-                    shape = RoundedCornerShape(100.dp)
+                    shape = CircleShape
                 )
-                .clickable { onEditButtonClicked() },
+                .clip(CircleShape)
+                .clickWithRipple(onClick = onEditButtonClicked),
             contentAlignment = Alignment.Center
         ) {
             Icon(
@@ -276,6 +282,7 @@ private fun TudeeTaskDetailsButtonsRow(
         }
     }
 }
+
 //endregion
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
@@ -288,9 +295,8 @@ private fun BottomSheetPreview() {
             taskDescription = R.string.default_task_description.toString(),
             taskPriority = TaskPriorityUiState.HIGH,
             taskCategory = CategoryUiState(
-                id = "cat1",
+                id = 0,
                 title = "Work",
-                image = R.drawable.ic_eduction,
                 isPredefined = true
             ),
             taskStatusUiState = TaskStatusUiState.DONE,

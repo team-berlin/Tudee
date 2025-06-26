@@ -15,7 +15,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -34,27 +33,28 @@ import androidx.navigation.compose.rememberNavController
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.presentation.components.CategoryTaskComponent
-import com.example.tudee.presentation.components.SnackBarComponent
 import com.example.tudee.presentation.components.TabBarComponent
 import com.example.tudee.presentation.components.TopAppBar
 import com.example.tudee.presentation.components.TudeeScaffold
-import com.example.tudee.presentation.screen.category.EditCategorySheet
+import com.example.tudee.presentation.screen.category.component.CategorySheet
 import com.example.tudee.presentation.screen.category.model.CategoryData
-import com.example.tudee.presentation.screen.category.model.toUiImage
+import com.example.tudee.presentation.screen.category.model.CategorySheetState
+import com.example.tudee.presentation.screen.category.model.UiImage
+import com.example.tudee.presentation.screen.task_screen.ui.NotTaskForTodayDialogue
 import kotlinx.coroutines.delay
-import org.koin.compose.getKoin
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun CategoryTasksScreen(
     modifier: Modifier = Modifier,
     navController: NavController = rememberNavController(),
-    viewModel: CategoryTasksViewModel = getKoin().get()
+    viewModel: CategoryTasksViewModel = koinViewModel()
 ) {
     val uiState by viewModel.categoryTasksUiState.collectAsState()
     val showSnackBar = remember { mutableStateOf(false) }
-
     var selectedTabIndex by remember { mutableIntStateOf(0) }
-
+    var isEditCategorySheetVisible by remember { mutableStateOf(false) }
+    val allTasks by viewModel.allTasks.collectAsState()
     LaunchedEffect(Unit) {
         viewModel.snackBarEvent.collect { event ->
             when (event) {
@@ -63,41 +63,65 @@ fun CategoryTasksScreen(
                     delay(3000L)
                     showSnackBar.value = false
                 }
+
+                SnackBarEvent.ShowSuccess -> {}
             }
         }
     }
-
-    Box(modifier = modifier.fillMaxSize()) {
+    TudeeScaffold(
+        showTopAppBar = true,
+        topAppBar = {
+            TopAppBar(
+                onBackButtonClicked = { navController.navigateUp() },
+                showBackButton = true,
+                title = uiState.categoryTasksUiModel?.title,
+                trailingComposable = {
+                    uiState.categoryTasksUiModel?.isPredefined?.let {
+                        if (!(it)) {
+                            IconButton(
+                                onClick = {
+                                    isEditCategorySheetVisible = true
+                                }
+                            ) {
+                                Icon(
+                                    modifier = Modifier
+                                        .border(
+                                            1.dp,
+                                            TudeeTheme.color.stroke,
+                                            RoundedCornerShape(100.dp)
+                                        )
+                                        .padding(10.dp)
+                                        .size(20.dp),
+                                    painter = painterResource(R.drawable.pencil_edit),
+                                    contentDescription = null,
+                                    tint = TudeeTheme.color.textColors.body
+                                )
+                            }
+                        }
+                    }
+                }
+            )
+        }
+    ) { paddingValues ->
         if (uiState.categoryTasksUiModel != null) {
             CategoryTasksContent(
-                modifier = modifier,
+                modifier = modifier.padding(paddingValues),
                 categoryTaskUIState = uiState,
-                onBackClick = { navController.navigateUp() },
+                isEditCategorySheetVisible = isEditCategorySheetVisible,
+                allTasks = allTasks,
                 onDeleteCategory = viewModel::deleteCategory,
                 onSaveButtonClicked = { categoryData ->
                     viewModel.editCategory(categoryData)
                 },
                 onTabSelected = { index ->
                     selectedTabIndex = index
-                    viewModel.getTasksByStatus(uiState, index)
+                    viewModel.updateSelectedIndex(index)
                 },
+                onBottomSheetDismissed = { isEditCategorySheetVisible = false },
+                onCancelButtonClicked = { isEditCategorySheetVisible = false },
             )
         } else if (uiState.loading) {
             LoadingState(modifier = modifier)
-        } else {
-            Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("No tasks available")
-            }
-        }
-
-        if (showSnackBar.value) {
-            SnackBarComponent(
-                message = stringResource(R.string.snack_bar_error_message),
-                iconPainter = painterResource(id = R.drawable.ic_error),
-                iconDescription = stringResource(R.string.snack_bar_error_message),
-                iconBackgroundColor = TudeeTheme.color.statusColors.errorVariant,
-                iconTint = TudeeTheme.color.statusColors.greenAccent,
-            )
         }
     }
 }
@@ -107,12 +131,15 @@ fun CategoryTasksScreen(
 fun CategoryTasksContent(
     modifier: Modifier = Modifier,
     categoryTaskUIState: CategoryTasksUiState,
-    onBackClick: () -> Unit,
+    isEditCategorySheetVisible: Boolean,
+    allTasks: List<TaskUIModel>,
     onDeleteCategory: () -> Unit,
     onSaveButtonClicked: (CategoryData) -> Unit,
-    onTabSelected: (Int) -> Unit
-) {
+    onTabSelected: (Int) -> Unit,
+    onBottomSheetDismissed: () -> Unit,
+    onCancelButtonClicked: () -> Unit
 
+) {
     if (categoryTaskUIState.categoryTasksUiModel != null) {
         SuccessState(
             modifier = modifier,
@@ -120,10 +147,13 @@ fun CategoryTasksContent(
             categoryName = categoryTaskUIState.categoryTasksUiModel.title,
             categoryTasks = categoryTaskUIState.categoryTasksUiModel.tasks,
             categoryImage = categoryTaskUIState.categoryTasksUiModel.image,
-            onBackClick = { onBackClick() },
             onDeleteCategory = onDeleteCategory,
             onSaveButtonClicked = onSaveButtonClicked,
-            onTabSelected = { onTabSelected(it) }
+            allTasks = allTasks,
+            onTabSelected = { onTabSelected(it) },
+            isEditCategorySheetVisible = isEditCategorySheetVisible,
+            onBottomSheetDismissed = { onBottomSheetDismissed() },
+            onCancelButtonClicked = { onCancelButtonClicked() }
         )
     }
 }
@@ -141,104 +171,92 @@ private fun SuccessState(
     modifier: Modifier,
     categoryTaskUIState: CategoryTasksUiState,
     categoryName: String,
-    categoryImage: String,
+    categoryImage: UiImage,
     categoryTasks: List<TaskUIModel>,
-    onBackClick: () -> Unit,
+    isEditCategorySheetVisible: Boolean,
+    allTasks: List<TaskUIModel>,
     onDeleteCategory: () -> Unit,
     onSaveButtonClicked: (CategoryData) -> Unit,
-    onTabSelected: (Int) -> Unit
+    onTabSelected: (Int) -> Unit,
+    onBottomSheetDismissed: () -> Unit,
+    onCancelButtonClicked: () -> Unit
 ) {
-    var isEditCategorySheetVisible by remember { mutableStateOf(false) }
-    TudeeScaffold(
-        modifier = modifier.fillMaxSize(),
-        showTopAppBar = true,
-        topAppBar = {
-            Column {
-                TopAppBar(
-                    onBackButtonClicked = { onBackClick() },
-                    showBackButton = true,
-                    title = categoryName,
-                    trailingComposable = {
-                        IconButton(onClick = {
-                            isEditCategorySheetVisible = true
-                        }) {
-                            Icon(
-                                modifier = Modifier
-                                    .border(
-                                        1.dp, TudeeTheme.color.stroke, RoundedCornerShape(100.dp)
-                                    )
-                                    .padding(10.dp)
-                                    .size(20.dp),
-                                painter = painterResource(R.drawable.pencil_edit),
-                                contentDescription = null,
-                                tint = TudeeTheme.color.textColors.body
-                            )
-                        }
-                    }
-                )
-            }
-
-        }
-    ) { paddingValues ->
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        ) {
-            categoryTaskUIState.categoryTasksUiModel?.let {
-                TabBarComponent(
-                    selectedTabIndex = it.selectedTabIndex,
-                    tabBarItems = it.listOfTabBarItem,
-                    onTabSelected = { index ->
-                        onTabSelected(index)
-                    }
-                )
-            }
-            LazyColumn(
-                modifier = modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = PaddingValues(bottom = 12.dp)
-            ) {
-
-                items(categoryTasks) { categoryTask ->
-                    val taskPriorityBackgroundColor = when (categoryTask.priority.tasPriorityType) {
-                        TaskPriorityType.HIGH -> TudeeTheme.color.statusColors.pinkAccent
-                        TaskPriorityType.MEDIUM -> TudeeTheme.color.statusColors.yellowAccent
-                        TaskPriorityType.LOW -> TudeeTheme.color.statusColors.greenAccent
-                    }
-                    CategoryTaskComponent(
-                        title = categoryTask.title,
-                        description = categoryTask.description,
-                        priority = stringResource(categoryTask.priority.priorityTextId),
-                        priorityBackgroundColor = taskPriorityBackgroundColor,
-                        dateText = categoryTask.assignedDate,
-                        taskIcon = {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_category_book_open), // this will be change
-                                contentDescription = "Task Icon",
-                                modifier = Modifier.size(32.dp),
-                                tint = TudeeTheme.color.statusColors.purpleAccent
-                            )
-                        },
-                        priorityIcon = painterResource(id = R.drawable.ic_priority_medium),
-                        onClick = {
-
-                        }
-                    )
+    Column(
+        modifier = modifier.fillMaxSize()
+    ) {
+        categoryTaskUIState.categoryTasksUiModel?.let {
+            TabBarComponent(
+                selectedTabIndex = it.selectedTabIndex,
+                tabBarItems = it.listOfTabBarItem,
+                onTabSelected = { index ->
+                    onTabSelected(index)
                 }
-            }
-
-            EditCategorySheet(
-                isBottomSheetVisible = isEditCategorySheetVisible,
-                onDeleteButtonClicked = onDeleteCategory,
-                onBottomSheetDismissed = { isEditCategorySheetVisible = false },
-                onCancelButtonClicked = { isEditCategorySheetVisible = false },
-                onSaveButtonClicked = { onSaveButtonClicked(it) },
-                initialCategoryImage = categoryImage.toUiImage(),
-                initialCategoryName = categoryName
             )
         }
+        if (allTasks.isEmpty()) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                NotTaskForTodayDialogue(
+                    title = stringResource(
+                        R.string.no_tasks_in_category,
+                        categoryName
+                    ),
+                    description = null
+                )
+            }
+        } else if (categoryTasks.isEmpty()) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                NotTaskForTodayDialogue(
+                    title = stringResource(
+                        R.string.no_tasks,
+                        categoryName
+                    ),
+                    description = null
+                )
+            }
+        }
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = PaddingValues(vertical = 12.dp)
+        ) {
+            items(categoryTasks) { categoryTask ->
+                CategoryTaskComponent(
+                    title = categoryTask.title,
+                    description = categoryTask.description,
+                    priority = stringResource(categoryTask.priority.labelRes),
+                    priorityBackgroundColor = categoryTask.priority.getContainerColor(),
+                    dateText = categoryTask.assignedDate,
+                    taskIcon = {
+                        Icon(
+                            painter = categoryImage.asPainter(),
+                            contentDescription = "Task Icon",
+                            modifier = Modifier.size(32.dp),
+                            tint = TudeeTheme.color.statusColors.purpleAccent
+                        )
+                    },
+                    priorityIcon = painterResource(categoryTask.priority.drawableRes),
+                    onClick = {
+                        //TODO()
+                    }
+                )
+            }
+        }
+
+        CategorySheet(
+            state = CategorySheetState.edit(
+                isVisible = isEditCategorySheetVisible,
+                initialData = CategoryData(
+                    name = categoryName,
+                    uiImage = categoryImage
+                )
+            ),
+            onDismiss = onBottomSheetDismissed,
+            onConfirm = { onSaveButtonClicked(it) },
+            onCancel = onCancelButtonClicked,
+            onDelete = onDeleteCategory
+        )
     }
+
 }

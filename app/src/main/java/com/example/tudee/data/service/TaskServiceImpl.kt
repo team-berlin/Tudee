@@ -1,15 +1,13 @@
 package com.example.tudee.data.service
 
 import com.example.tudee.data.dao.TaskDao
-import com.example.tudee.data.mapper.toDomain
-import com.example.tudee.data.mapper.toEntity
 import com.example.tudee.data.model.TaskEntity
 import com.example.tudee.domain.TaskService
 import com.example.tudee.domain.entity.Task
 import com.example.tudee.domain.entity.TaskStatus
 import com.example.tudee.domain.request.TaskCreationRequest
-import com.example.tudee.ui.mapper.toDomain
-import com.example.tudee.ui.mapper.toEntity
+import com.example.tudee.presentation.screen.home.toDomain
+import com.example.tudee.presentation.screen.home.toEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.LocalDate
@@ -60,6 +58,10 @@ class TaskServiceImpl(
 
     override fun getTasksByStatus(status: TaskStatus): Flow<List<Task>> {
         return taskDao.getTasksByStatus(status).toDomain()
+    }
+
+    override fun getTasksByStatusAndDate(status: TaskStatus, date: String): Flow<List<Task>> {
+        return taskDao.getTasksByStatusAndDate(status, date).toDomain()
     }
 
     override fun getTasksByAssignedDate(date: LocalDate): Flow<List<Task>> {

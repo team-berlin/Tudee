@@ -13,16 +13,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
-import com.example.tudee.ui.home.viewmodel.SliderEnum
-import com.example.tudee.ui.home.viewmodel.SliderUiState
+import com.example.tudee.presentation.screen.home.viewmodel.SliderEnum
+import com.example.tudee.presentation.screen.home.viewmodel.SliderUiState
 
 @Composable
 fun TudeeSlider(
@@ -37,7 +35,7 @@ fun TudeeSlider(
         Column(
             modifier = Modifier
                 .weight(1f)
-                .padding(vertical = 16.dp)
+                .padding(vertical = 15.dp)
                 .padding(end = 8.dp),
         ) {
             Row(modifier = Modifier.padding(bottom = 8.dp)) {

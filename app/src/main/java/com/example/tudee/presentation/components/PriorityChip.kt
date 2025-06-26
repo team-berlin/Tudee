@@ -5,8 +5,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
 
@@ -30,12 +32,16 @@ fun TudeeChip(
     icon: Painter?,
     backgroundColor: Color = TudeeTheme.color.primary,
     labelSize: TextUnit = TudeeTheme.textStyle.label.small.fontSize,
-    iconSize: Dp = 12.dp
+    iconSize: Dp = 12.dp,
+    cornerRadius: Dp = 100.dp
 ) {
+    val clampedRadius = cornerRadius.coerceIn(4.dp, 100.dp)
+    val clampedTextSize = labelSize.value.coerceIn(10f, 24f).sp
+
     Surface(
         modifier = modifier,
         color = backgroundColor,
-        shape = MaterialTheme.shapes.large
+        shape = RoundedCornerShape(clampedRadius)
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
@@ -47,13 +53,18 @@ fun TudeeChip(
                     painter = icon,
                     contentDescription = label,
                     tint = labelColor,
-                    modifier = Modifier.size(iconSize)
+                    modifier = Modifier
+                        .sizeIn(minWidth = 12.dp,
+                            minHeight = 12.dp,
+                            maxWidth = 24.dp,
+                            maxHeight = 24.dp)
+                        .size(iconSize)
                 )
             }
             Text(
                 text = label,
                 color = labelColor,
-                style = TudeeTheme.textStyle.label.small.copy(fontSize = labelSize)
+                style = TudeeTheme.textStyle.label.small.copy(fontSize = clampedTextSize)
             )
         }
     }
