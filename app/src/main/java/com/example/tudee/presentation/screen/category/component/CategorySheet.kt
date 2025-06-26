@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -40,7 +39,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -150,66 +148,64 @@ private fun CategorySheetContent(
 
     val isFormValid = categoryName.isNotBlank() && selectedUiImage.isNotNull()
 
-    Column {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 24.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            CategorySheetHeader(
-                title = state.title,
-                showDeleteButton = state.mode == CategorySheetMode.Edit,
-                onDelete = onDelete
-            )
 
-            CategoryNameField(
-                value = categoryName,
-                onValueChange = { categoryName = it }
-            )
+    Column(
+        modifier = Modifier
+            .padding(horizontal = 16.dp)
+            .padding(bottom = 24.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        CategorySheetHeader(
+            title = state.title,
+            showDeleteButton = state.mode == CategorySheetMode.Edit,
+            onDelete = onDelete
+        )
 
-            CategoryImageSection(
-                selectedImage = selectedUiImage,
-                onEditImage = {
-                    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
-                        when {
-                            ContextCompat.checkSelfPermission(
-                                context,
-                                Manifest.permission.READ_EXTERNAL_STORAGE
-                            ) == PackageManager.PERMISSION_GRANTED -> {
-                                photoPickerLauncher.launch(
-                                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                                )
-                            }
+        CategoryNameField(
+            value = categoryName,
+            onValueChange = { categoryName = it }
+        )
 
-                            else -> {
-                                permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
-                            }
+        CategoryImageSection(
+            selectedImage = selectedUiImage,
+            onEditImage = {
+                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
+                    when {
+                        ContextCompat.checkSelfPermission(
+                            context,
+                            Manifest.permission.READ_EXTERNAL_STORAGE
+                        ) == PackageManager.PERMISSION_GRANTED -> {
+                            photoPickerLauncher.launch(
+                                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                            )
                         }
-                    } else {
-                        photoPickerLauncher.launch(
-                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                        )
-                    }
-                }
-            )
-        }
 
-        CategorySheetActions(
-            mode = state.mode,
-            isFormValid = isFormValid,
-            onConfirm = {
-                onConfirm(
-                    CategoryData(
-                        name = categoryName.trim(),
-                        uiImage = selectedUiImage
+                        else -> {
+                            permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+                        }
+                    }
+                } else {
+                    photoPickerLauncher.launch(
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                     )
-                )
-            },
-            onCancel = onCancel
+                }
+            }
         )
     }
+
+    CategorySheetActions(
+        mode = state.mode,
+        isFormValid = isFormValid,
+        onConfirm = {
+            onConfirm(
+                CategoryData(
+                    name = categoryName.trim(),
+                    uiImage = selectedUiImage
+                )
+            )
+        },
+        onCancel = onCancel
+    )
 }
 
 @Composable
@@ -275,7 +271,6 @@ private fun CategoryImageSection(
     onEditImage: () -> Unit
 ) {
     Column(
-        modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
@@ -324,28 +319,21 @@ fun CategoryImagePicker(
 
 @Composable
 private fun ImageWithOverlay(image: UiImage) {
-    Box(modifier = Modifier.fillMaxSize()) {
-        Image(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color(0x1A000000)),
-            painter = image.asPainter(),
-            contentDescription = stringResource(R.string.category_image_desc),
-            contentScale = ContentScale.Crop
-        )
+    Image(
+        modifier = Modifier.background(TudeeTheme.color.overlay),
+        painter = image.asPainter(),
+        contentDescription = stringResource(R.string.category_image_desc),
+        contentScale = ContentScale.Crop
+    )
 
-        EditImageIcon(
-            modifier = Modifier
-                .align(Alignment.Center)
-        )
-    }
+    EditImageIcon()
 }
 
 @Composable
-private fun EditImageIcon(modifier: Modifier = Modifier) {
+private fun EditImageIcon() {
     Icon(
         painter = painterResource(R.drawable.pencil_edit),
-        modifier = modifier
+        modifier = Modifier
             .clip(RoundedCornerShape(12.dp))
             .background(TudeeTheme.color.surfaceHigh)
             .padding(6.dp)
