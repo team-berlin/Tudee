@@ -20,10 +20,7 @@ class MainActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
-
-        this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
-
+        this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         enableEdgeToEdge()
         setContent {
             val themeViewModel: ThemeViewModel = koinViewModel()
