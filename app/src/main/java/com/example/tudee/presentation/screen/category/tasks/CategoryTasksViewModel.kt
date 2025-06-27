@@ -145,7 +145,13 @@ class CategoryTasksViewModel(
                 try {
                     taskCategoryService.deleteCategory(it.id)
                     _snackBarEvent.emit(CategoryTasksSnackBarEvent.ShowDeleteSuccess)
-
+                    _categoryTasksUiState.value.categoryTasksUiModel?.let {
+                        if (it.tasks.isNotEmpty()) {
+                            it.tasks.forEach {
+                                taskService.deleteTask(it.id)
+                            }
+                        }
+                    }
                     hideDeleteCategorySheet()
                     hideEditCategorySheet()
                 } catch (_: Exception) {
@@ -156,17 +162,17 @@ class CategoryTasksViewModel(
     }
 
     fun editCategory(category: CategoryData) {
-        _categoryTasksUiState.value.categoryTasksUiModel?.let {
+        _categoryTasksUiState.value.categoryTasksUiModel?.let { categoryTasksUiModel ->
             viewModelScope.launch {
                 try {
-                    taskCategoryService.editCategory(
-                        TaskCategory(
-                            id = it.id,
-                            title = category.name,
-                            image = category.uiImage?.asString()!!,
-                            isPredefined = it.isPredefined
-                        )
+                    val taskCategory = TaskCategory(
+                        id = categoryTasksUiModel.id,
+                        title = category.name,
+                        image = category.uiImage?.asString()!!,
+                        isPredefined = categoryTasksUiModel.isPredefined
                     )
+                    taskCategoryService.editCategory(taskCategory)
+                    updateState(taskCategory, categoryTasksUiModel.tasks)
                     hideEditCategorySheet()
                     _snackBarEvent.emit(CategoryTasksSnackBarEvent.ShowEditSuccess)
                 } catch (_: Exception) {
@@ -175,7 +181,22 @@ class CategoryTasksViewModel(
             }
         }
     }
+
+    private fun updateState(taskCategory: TaskCategory, tasks: List<TaskUIModel>) {
+        _categoryTasksUiState.value.categoryTasksUiModel?.let { categoryTasksUiModel ->
+            _categoryTasksUiState.update {
+                it.copy(
+                    categoryTasksUiModel = taskCategory
+                        .toTaskCategoryUiModel(
+                            tasks = tasks.map { it.toDomain() }
+                        )
+                )
+            }
+        }
+
+    }
 }
+
 
 sealed class CategoryTasksSnackBarEvent() {
     data object ShowEditError : CategoryTasksSnackBarEvent()
