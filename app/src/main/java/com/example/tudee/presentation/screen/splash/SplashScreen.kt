@@ -42,7 +42,7 @@ fun SplashScreen(
     val isDark by themeViewModel.isDarkMode.collectAsState()
     LaunchedEffect(Unit) {
         delay(3000)
-        if (prefs.isOnboardingCompleted()) {
+        if (prefs.isOnboardingCompleted().not()) {
             navController.navigate(Destination.OnBoardingScreen.route) {
                 popUpTo(Destination.SplashScreen.route) { inclusive = true }
             }
