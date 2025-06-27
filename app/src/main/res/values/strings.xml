@@ -111,7 +111,7 @@ Tudee is proud of you</string>
     <string name="previous_week_arrow_content_description">Previous week</string>
     <string name="next_week_arrow_content_description">Next week</string>
     <string name="open_calendar_content_description">Open calendar</string>
-    <string name="save">SAVE</string>
+e    <string name="save">Save</string>
     <string name="snack_bar_category_added">Added category successfully.</string>
     <string name="no_tasks_in_category">No tasks in %1$s category!</string>
     <string name="category_not_found">Category not found!</string>
@@ -119,4 +119,10 @@ Tudee is proud of you</string>
     <string name="edit_image">Edit image</string>
     <string name="add_image">Add image</string>
     <string name="image_for_on_boarding_page">Image for On boarding page</string>
+    <string name="failed_to_delete_category">Failed to delete category.</string>
+    <string name="delete_category_successfully">Deleted category successfully.</string>
+    <string name="failed_to_edit_category">Failed to edit category.</string>
+    <string name="edited_category_successfully">Edited category successfully.</string>
+    <string name="delete_category">Delete Category</string>
+    <string name="delete_category_confirmation">Are you sure to continue?</string>
 </resources>

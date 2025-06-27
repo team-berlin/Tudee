@@ -30,11 +30,35 @@ class CategoryTasksViewModel(
     private val _categoryTasksUiState = MutableStateFlow(CategoryTasksUiState())
     val categoryTasksUiState: StateFlow<CategoryTasksUiState> = _categoryTasksUiState
 
-    private val _snackBarEvent = MutableSharedFlow<SnackBarEvent>()
+    private val _snackBarEvent = MutableSharedFlow<CategoryTasksSnackBarEvent>()
     val snackBarEvent = _snackBarEvent.asSharedFlow()
 
     private val _allTasks = MutableStateFlow<MutableList<TaskUIModel>>(mutableListOf())
     val allTasks = _allTasks.asStateFlow()
+
+    fun showEditCategorySheet() {
+        _categoryTasksUiState.update { currentState ->
+            currentState.copy(isEditCategorySheetVisible = true)
+        }
+    }
+
+    fun hideEditCategorySheet() {
+        _categoryTasksUiState.update { currentState ->
+            currentState.copy(isEditCategorySheetVisible = false)
+        }
+    }
+
+    fun showDeleteCategorySheet() {
+        _categoryTasksUiState.update { currentState ->
+            currentState.copy(isDeleteCategorySheetVisible = true)
+        }
+    }
+
+    fun hideDeleteCategorySheet() {
+        _categoryTasksUiState.update { currentState ->
+            currentState.copy(isDeleteCategorySheetVisible = false)
+        }
+    }
 
     init {
         viewModelScope.launch {
@@ -55,8 +79,7 @@ class CategoryTasksViewModel(
                     )
                 }
                 updateSelectedIndex(0)
-            } catch (_: Exception) {
-                _snackBarEvent.emit(SnackBarEvent.ShowError)
+            } catch (e: Exception) {
                 _categoryTasksUiState.update { currentState ->
                     currentState.copy(
                         loading = false,
@@ -119,7 +142,15 @@ class CategoryTasksViewModel(
     fun deleteCategory() {
         _categoryTasksUiState.value.categoryTasksUiModel?.let {
             viewModelScope.launch {
-                taskCategoryService.deleteCategory(it.id)
+                try {
+                    taskCategoryService.deleteCategory(it.id)
+                    _snackBarEvent.emit(CategoryTasksSnackBarEvent.ShowDeleteSuccess)
+
+                    hideDeleteCategorySheet()
+                    hideEditCategorySheet()
+                } catch (_: Exception) {
+                    _snackBarEvent.emit(CategoryTasksSnackBarEvent.ShowDeleteError)
+                }
             }
         }
     }
@@ -127,15 +158,28 @@ class CategoryTasksViewModel(
     fun editCategory(category: CategoryData) {
         _categoryTasksUiState.value.categoryTasksUiModel?.let {
             viewModelScope.launch {
-                taskCategoryService.editCategory(
-                    TaskCategory(
-                        id = it.id,
-                        title = category.name,
-                        image = category.uiImage?.asString()!!,
-                        isPredefined = it.isPredefined
+                try {
+                    taskCategoryService.editCategory(
+                        TaskCategory(
+                            id = it.id,
+                            title = category.name,
+                            image = category.uiImage?.asString()!!,
+                            isPredefined = it.isPredefined
+                        )
                     )
-                )
+                    hideEditCategorySheet()
+                    _snackBarEvent.emit(CategoryTasksSnackBarEvent.ShowEditSuccess)
+                } catch (_: Exception) {
+                    _snackBarEvent.emit(CategoryTasksSnackBarEvent.ShowEditError)
+                }
             }
         }
     }
+}
+
+sealed class CategoryTasksSnackBarEvent() {
+    data object ShowEditError : CategoryTasksSnackBarEvent()
+    data object ShowEditSuccess : CategoryTasksSnackBarEvent()
+    data object ShowDeleteError : CategoryTasksSnackBarEvent()
+    data object ShowDeleteSuccess : CategoryTasksSnackBarEvent()
 }

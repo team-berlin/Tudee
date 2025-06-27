@@ -11,6 +11,8 @@ import com.example.tudee.presentation.screen.category.model.UiImage
 
 data class CategoryTasksUiState(
     val loading: Boolean = false,
+    val isEditCategorySheetVisible: Boolean = false,
+    val isDeleteCategorySheetVisible: Boolean = false,
     val categoryTasksUiModel: CategoryTasksUiModel? = null
 )
 
