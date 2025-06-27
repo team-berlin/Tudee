@@ -71,12 +71,19 @@ fun HomeScreen(
         homeState.navigateTodoTasks
     ) {
         if (homeState.navigateDoneTasks) {
+            homeViewModel.resetStatus()
             navigateDoneTasks()
+
         } else if (homeState.navigateInProgressTasks) {
+            homeViewModel.resetStatus()
             navigateInProgressTasks()
+
         } else if (homeState.navigateTodoTasks) {
+            homeViewModel.resetStatus()
             navigateTodoTasks()
+
         } else {
+            homeViewModel.resetStatus()
             homeViewModel.resetStatus()
         }
     }
