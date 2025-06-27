@@ -5,9 +5,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.core.text.isDigitsOnly
 import coil3.compose.rememberAsyncImagePainter
 import coil3.imageLoader
+import com.example.tudee.presentation.utils.predefinedCategories
+import com.example.tudee.presentation.utils.toCategoryIcon
 import java.io.File
 
 sealed class UiImage {
@@ -36,8 +37,8 @@ sealed class UiImage {
 }
 
 fun String.toUiImage(): UiImage {
-    return if (isDigitsOnly()) {
-        UiImage.Drawable(toInt())
+    return if (this in predefinedCategories.map { it.image }) {
+        UiImage.Drawable(this.toCategoryIcon())
     } else {
         UiImage.External(this)
     }

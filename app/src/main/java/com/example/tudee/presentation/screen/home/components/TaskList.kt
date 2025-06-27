@@ -21,13 +21,13 @@ import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.domain.entity.TaskPriority
 import com.example.tudee.domain.entity.TaskStatus
 import com.example.tudee.presentation.components.CategoryTaskComponent
+import com.example.tudee.presentation.screen.category.model.toUiImage
 import com.example.tudee.presentation.screen.home.toTaskPriorityUiState
 import com.example.tudee.presentation.screen.home.toTaskStatusUiState
 import com.example.tudee.presentation.screen.home.viewmodel.CategoryUiState
 import com.example.tudee.presentation.screen.home.viewmodel.HomeActions
 import com.example.tudee.presentation.screen.home.viewmodel.TaskPriorityUiState
 import com.example.tudee.presentation.screen.home.viewmodel.TaskUiState
-import com.example.tudee.presentation.utils.toCategoryIcon
 import kotlinx.datetime.LocalDate
 
 @Composable
@@ -73,8 +73,9 @@ fun TaskList(
                 priorityIcon = painterResource(id = priorityIcon),
                 priorityBackgroundColor = priorityColor,
                 taskIcon = {
+
                     Image(
-                        painter = painterResource(task.taskCategory.image.toCategoryIcon()),
+                        painter = task.taskCategory.image.toUiImage().asPainter(),
                         contentDescription = "taskIcon",
                     )
                 },

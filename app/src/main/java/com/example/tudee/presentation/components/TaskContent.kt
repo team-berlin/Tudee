@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -41,13 +42,13 @@ import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.presentation.components.buttons.ButtonState
 import com.example.tudee.presentation.components.buttons.PrimaryButton
 import com.example.tudee.presentation.components.buttons.SecondaryButton
+import com.example.tudee.presentation.screen.category.model.toUiImage
 import com.example.tudee.presentation.screen.home.viewmodel.CategoryUiState
 import com.example.tudee.presentation.screen.home.viewmodel.HomeActions
 import com.example.tudee.presentation.screen.home.viewmodel.HomeUiState
 import com.example.tudee.presentation.screen.home.viewmodel.TaskPriorityUiState
 import com.example.tudee.presentation.screen.home.viewmodel.TaskUiState
 import com.example.tudee.presentation.utils.clickWithRipple
-import com.example.tudee.presentation.utils.toCategoryIcon
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -143,7 +144,7 @@ fun TaskContent(
                     placeholder = stringResource(R.string.set_due_date),
                     leadingContent = { isFocused ->
                         DefaultLeadingContent(
-                            modifier = Modifier.clickWithRipple{ showDatePicker = true },
+                            modifier = Modifier.clickWithRipple { showDatePicker = true },
                             painter = painterResource(R.drawable.ic_add_calendar),
                             isFocused = isFocused
                         )
@@ -184,7 +185,13 @@ fun TaskContent(
                             modifier = Modifier
                                 .padding(top = 8.dp)
                                 .clip(CircleShape)
-                                .clickWithRipple { onAction(HomeActions.OnEditTaskPriorityChanged(priority)) }
+                                .clickWithRipple {
+                                    onAction(
+                                        HomeActions.OnEditTaskPriorityChanged(
+                                            priority
+                                        )
+                                    )
+                                }
                         )
                     }
                 }
@@ -202,7 +209,7 @@ fun TaskContent(
                     columns = GridCells.Adaptive(minSize = 104.dp),
                     verticalArrangement = Arrangement.spacedBy(24.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier =Modifier
+                    modifier = Modifier
                         .heightIn(max = 3000.dp)
                         .fillMaxWidth()
                         .padding(bottom = 160.dp),
@@ -211,9 +218,7 @@ fun TaskContent(
                     items(categories) { categories ->
 
                         CategoryItemWithBadge(
-                            categoryPainter = painterResource(
-                                categories.image.toCategoryIcon()
-                            ),
+                            categoryPainter = categories.image.toUiImage().asPainter(),
                             showCheckedIcon = state.selectedTask.taskCategory.id == categories.id,
                             badgeBackgroundColor = TudeeTheme.color.statusColors.greenAccent,
                             categoryName = categories.title,
@@ -246,7 +251,11 @@ fun TaskContent(
         ) {
             PrimaryButton(
                 modifier = Modifier.fillMaxWidth(),
-                state = if (state.selectedTask.taskDescription.isNotBlank() == true && state.selectedTask.taskTitle.isNotBlank() == true) ButtonState.IDLE else ButtonState.DISABLED,
+                state = if (state.selectedTask.taskDescription.isNotBlank() == true &&
+                    state.selectedTask.taskTitle.isNotBlank() == true &&
+                    state.selectedTask.taskCategory.title.isNotBlank() == true
+
+                ) ButtonState.IDLE else ButtonState.DISABLED,
                 onClick = {
                     if (mode == TaskContentMode.EDIT) {
                         onAction(HomeActions.OnEditTaskButtonClicked)
@@ -283,6 +292,10 @@ fun DatePickerDialogComponent(
 
     DatePickerDialog(
         onDismissRequest = onDismiss,
+        colors = DatePickerDefaults.colors(
+            containerColor = TudeeTheme.color.surface
+            , titleContentColor = TudeeTheme.color.textColors.title
+        ),
         confirmButton = {
             Button(onClick = {
                 val selectedDateMillis = datePickerState.selectedDateMillis
@@ -306,7 +319,24 @@ fun DatePickerDialogComponent(
             }
         }
     ) {
-        DatePicker(state = datePickerState)
+        DatePicker(state = datePickerState
+,   headline = {
+
+            },
+            colors = DatePickerDefaults.colors(
+                navigationContentColor =TudeeTheme.color.textColors.title ,
+                headlineContentColor = TudeeTheme.color.textColors.title,
+                titleContentColor = TudeeTheme.color.textColors.title,
+                weekdayContentColor = TudeeTheme.color.textColors.title,
+                dayContentColor=TudeeTheme.color.textColors.title,
+                containerColor = TudeeTheme.color.statusColors.greenAccent ,
+                selectedDayContainerColor = TudeeTheme.color.primary,
+                selectedDayContentColor = TudeeTheme.color.textColors.onPrimary,
+                todayContentColor = TudeeTheme.color.primary,
+                todayDateBorderColor = TudeeTheme.color.primary,
+
+                )
+        )
     }
 }
 

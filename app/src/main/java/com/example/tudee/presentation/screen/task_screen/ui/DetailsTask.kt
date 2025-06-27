@@ -2,7 +2,6 @@ package com.example.tudee.presentation.screen.task_screen.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,12 +29,12 @@ import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.domain.entity.TaskStatus
 import com.example.tudee.presentation.components.TudeeChip
 import com.example.tudee.presentation.components.buttons.SecondaryButton
+import com.example.tudee.presentation.screen.category.model.toUiImage
 import com.example.tudee.presentation.screen.task_screen.mappers.TaskPriorityUiState
 import com.example.tudee.presentation.screen.task_screen.mappers.TaskStatusUiState
 import com.example.tudee.presentation.screen.task_screen.mappers.toDomain
 import com.example.tudee.presentation.screen.task_screen.ui_states.TaskDetailsUiState
 import com.example.tudee.presentation.utils.clickWithRipple
-import com.example.tudee.presentation.utils.toCategoryIcon
 import com.example.tudee.presentation.viewmodel.TaskBottomSheetViewModel
 
 @Composable
@@ -83,7 +82,7 @@ private fun TaskCategoryIcon(categoryIconRes: String) {
         contentAlignment = Alignment.Center
     ) {
         Icon(
-            painter = painterResource(categoryIconRes.toCategoryIcon()),
+            painter = categoryIconRes.toUiImage().asPainter(),
             contentDescription = "category icon",
             modifier = Modifier.size(32.dp),
             tint = Color.Unspecified

@@ -3,7 +3,6 @@ package com.example.tudee.presentation.screen.task_screen.component
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -47,9 +46,9 @@ import com.example.tudee.presentation.components.buttons.ButtonColors
 import com.example.tudee.presentation.components.buttons.ButtonState
 import com.example.tudee.presentation.components.buttons.DefaultButton
 import com.example.tudee.presentation.components.buttons.PrimaryButton
+import com.example.tudee.presentation.screen.category.model.toUiImage
 import com.example.tudee.presentation.screen.task_screen.ui_states.TaskBottomSheetState
 import com.example.tudee.presentation.utils.clickWithRipple
-import com.example.tudee.presentation.utils.toCategoryIcon
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
@@ -79,10 +78,10 @@ fun TaskContent(
     val scope = rememberCoroutineScope()
 
 
-    if (taskState.isDatePickerVisible){
+    if (taskState.isDatePickerVisible) {
         TudeeDateDialog(
-            onConfirm = {onConfirmDatePicker(it)},
-            onDismiss = {onDismissDatePicker()},
+            onConfirm = { onConfirmDatePicker(it) },
+            onDismiss = { onDismissDatePicker() },
             onClear = {}
         )
     }
@@ -134,16 +133,18 @@ fun TaskContent(
             }
         }
     }
- Box (Modifier
-     .fillMaxWidth()
-     .zIndex(1f)){
-     taskState.snackBarMessage?.let { isSuccess ->
-     SnackBarSection(
-         isSnackBarVisible = isSuccess,
-         showSnackBar= true
-     )
- }
- }
+    Box(
+        Modifier
+            .fillMaxWidth()
+            .zIndex(1f)
+    ) {
+        taskState.snackBarMessage?.let { isSuccess ->
+            SnackBarSection(
+                isSnackBarVisible = isSuccess,
+                showSnackBar = true
+            )
+        }
+    }
 
 }
 
@@ -164,18 +165,18 @@ fun BottomSheetContent(
             .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        if(isEditMode){
-            item{
+        if (isEditMode) {
+            item {
                 Text(
-                    text = stringResource(R.string.editNewTask) ,
+                    text = stringResource(R.string.editNewTask),
                     style = TudeeTheme.textStyle.title.large,
                     color = TudeeTheme.color.textColors.title
                 )
             }
-        }else{
+        } else {
             item {
                 Text(
-                    text = stringResource(R.string.addNewTask) ,
+                    text = stringResource(R.string.addNewTask),
                     style = TudeeTheme.textStyle.title.large,
                     color = TudeeTheme.color.textColors.title
                 )
@@ -205,37 +206,37 @@ fun BottomSheetContent(
                 value = taskState.taskDescription
             )
         }
-            item {
-                TudeeTextField(
-                    value = taskState.taskDueDate?.toString() ?: "2024, 1, 1",
-                    onValueChange = { newValue ->
-                        val parts = newValue.split(", ")
-                        if (parts.size == 3) {
-                            try {
-                                val year = parts[0].toInt()
-                                val month = parts[1].toInt()
-                                val day = parts[2].toInt()
-                                onUpdateTaskDueDate(LocalDate(year, month, day))
-                            } catch (e: Exception) {
-                                Log.e(
-                                    "BottomSheetContent",
-                                    "Invalid date format: $newValue, ${e.message}"
-                                )
-                            }
+        item {
+            TudeeTextField(
+                value = taskState.taskDueDate?.toString() ?: "2024, 1, 1",
+                onValueChange = { newValue ->
+                    val parts = newValue.split(", ")
+                    if (parts.size == 3) {
+                        try {
+                            val year = parts[0].toInt()
+                            val month = parts[1].toInt()
+                            val day = parts[2].toInt()
+                            onUpdateTaskDueDate(LocalDate(year, month, day))
+                        } catch (e: Exception) {
+                            Log.e(
+                                "BottomSheetContent",
+                                "Invalid date format: $newValue, ${e.message}"
+                            )
                         }
-                    },
-                    leadingContent = { isFocused ->
-                        DefaultLeadingContent(
-                            modifier = Modifier.clickWithRipple {
-                                onDateFieldClicked()
-                            },
-                            painter = painterResource(R.drawable.ic_add_calendar),
-                            isFocused = isFocused
-                        )
-                    },
-                    placeholder = stringResource(R.string.set_due_date)
-                )
-            }
+                    }
+                },
+                leadingContent = { isFocused ->
+                    DefaultLeadingContent(
+                        modifier = Modifier.clickWithRipple {
+                            onDateFieldClicked()
+                        },
+                        painter = painterResource(R.drawable.ic_add_calendar),
+                        isFocused = isFocused
+                    )
+                },
+                placeholder = stringResource(R.string.set_due_date)
+            )
+        }
 
         item {
             Text(
@@ -252,7 +253,9 @@ fun BottomSheetContent(
                     val isSelected = taskState.selectedTaskPriority == taskPriority
                     TudeeChip(
                         label = taskPriority.name,
-                        modifier = Modifier.clip(CircleShape).clickWithRipple { onUpdateTaskPriority(taskPriority) },
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .clickWithRipple { onUpdateTaskPriority(taskPriority) },
                         labelColor = if (isSelected) TudeeTheme.color.textColors.onPrimary else TudeeTheme.color.textColors.hint,
                         backgroundColor = if (isSelected) {
                             when (taskPriority) {
@@ -281,7 +284,7 @@ fun BottomSheetContent(
         item {
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(minSize = 104.dp),
-                modifier =Modifier
+                modifier = Modifier
                     .heightIn(max = 3000.dp)
                     .fillMaxWidth()
                     .padding(bottom = 160.dp),
@@ -291,8 +294,10 @@ fun BottomSheetContent(
             ) {
                 items(taskState.categories) { category ->
                     CategoryComponent(
-                        modifier = Modifier.clip(RoundedCornerShape(10.dp)).clickWithRipple { onSelectTaskCategory(category.id) },
-                        categoryPainter = painterResource(category.image.toCategoryIcon()),
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(10.dp))
+                            .clickWithRipple { onSelectTaskCategory(category.id) },
+                        categoryPainter = category.image.toUiImage().asPainter(),
                         categoryImageContentDescription = category.title,
                         categoryName = category.title,
                         showCheckedIcon = category.id == taskState.selectedCategoryId
@@ -304,13 +309,14 @@ fun BottomSheetContent(
 }
 
 @Composable
-private fun Title_operation(title:String) {
+private fun Title_operation(title: String) {
     Text(
-        text = stringResource(R.string.editNewTask) ,
+        text = stringResource(R.string.editNewTask),
         style = TudeeTheme.textStyle.title.large,
         color = TudeeTheme.color.textColors.title
     )
 }
+
 @Composable
 fun AddOrSaveButtons(
     modifier: Modifier = Modifier,
@@ -350,7 +356,9 @@ fun AddOrSaveButtons(
                             priority = taskState.selectedTaskPriority!!,
                             categoryId = taskState.selectedCategoryId!!,
                             status = TaskStatus.TODO,
-                            assignedDate = taskState.taskDueDate?.toLocalDate() ?: Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
+                            assignedDate = taskState.taskDueDate?.toLocalDate()
+                                ?: Clock.System.now()
+                                    .toLocalDateTime(TimeZone.currentSystemDefault()).date
                         )
 
                     )

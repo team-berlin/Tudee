@@ -4,7 +4,6 @@ import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -40,12 +39,12 @@ import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.presentation.components.buttons.ButtonState
 import com.example.tudee.presentation.components.buttons.SecondaryButton
+import com.example.tudee.presentation.screen.category.model.toUiImage
 import com.example.tudee.presentation.screen.home.viewmodel.CategoryUiState
 import com.example.tudee.presentation.screen.home.viewmodel.TaskPriorityUiState
 import com.example.tudee.presentation.screen.home.viewmodel.TaskStatusUiState
 import com.example.tudee.presentation.screen.home.viewmodel.TaskUiState
 import com.example.tudee.presentation.utils.clickWithRipple
-import com.example.tudee.presentation.utils.toCategoryIcon
 import kotlinx.datetime.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -148,7 +147,9 @@ private fun TudeeTaskDetails(task: TaskUiState, modifier: Modifier = Modifier) {
             .padding(top = 12.dp)
             .background(color = TudeeTheme.color.surfaceHigh, shape = CircleShape)
     ) {
-        task.taskCategory.image?.let { painterResource(it.toCategoryIcon()) }?.let {
+        task.taskCategory.image?.let {
+            it.toUiImage().asPainter()
+        }?.let {
             Image(
                 modifier = Modifier.padding(15.dp), painter = it,
                 contentDescription = null

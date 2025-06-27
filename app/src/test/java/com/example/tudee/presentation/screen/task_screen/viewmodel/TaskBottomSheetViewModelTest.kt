@@ -7,6 +7,7 @@ import com.example.tudee.domain.entity.TaskCategory
 import com.example.tudee.domain.entity.TaskPriority
 import com.example.tudee.domain.entity.TaskStatus
 import com.example.tudee.domain.request.TaskCreationRequest
+import com.example.tudee.presentation.screen.home.viewmodel.CategoryUiState
 import com.example.tudee.presentation.viewmodel.TaskBottomSheetViewModel
 import com.google.common.truth.Truth.assertThat
 import io.mockk.clearAllMocks
@@ -73,6 +74,10 @@ class TaskBottomSheetViewModelTest {
 
     @Test
     fun `init should load categories`() = runTest {
+        val dummyCategories=listOf(CategoryUiState(id=1,
+            title="Shopping", image="ic_shopping", isPredefined=false),
+        CategoryUiState(id=2, title="Work", image="ic_work", isPredefined=false)
+        )
         // When
         val state = viewModel.uiState.value
         // Then
