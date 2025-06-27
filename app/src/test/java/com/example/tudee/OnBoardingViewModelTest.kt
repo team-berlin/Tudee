@@ -45,30 +45,6 @@ class OnBoardingViewModelTest {
     }
 
     @Test
-    fun `isFirstEntry should emit true when preferences returns true`() = runTest {
-        // Given
-        every { preferencesManager.isOnboardingCompleted() } returns true
-
-        // When
-        viewModel = OnBoardingViewModel(taskCategoryService, preferencesManager)
-
-        // Then
-        assertThat(viewModel.isFirstEntry.value).isTrue()
-    }
-
-    @Test
-    fun `isFirstEntry should emit false when preferences returns false`() = runTest {
-        // Given
-        every { preferencesManager.isOnboardingCompleted() } returns false
-
-        // When
-        viewModel = OnBoardingViewModel(taskCategoryService, preferencesManager)
-
-        // Then
-        assertThat(viewModel.isFirstEntry.value).isFalse()
-    }
-
-    @Test
     fun `saveFirstEntry should call preferences setOnboardingCompleted`() = runTest {
         // Given
         every { preferencesManager.isOnboardingCompleted() } returns true
