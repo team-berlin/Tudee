@@ -11,7 +11,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -34,6 +33,7 @@ import com.example.tudee.designsystem.theme.textstyle.TudeeTextStyle
 import com.example.tudee.naviagtion.Destination
 import com.example.tudee.presentation.components.BottomPageIndicator
 import com.example.tudee.presentation.components.OnBoardingPage
+import com.example.tudee.presentation.components.buttons.TextButton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.koin.compose.getKoin
