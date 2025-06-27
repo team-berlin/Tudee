@@ -8,7 +8,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -70,7 +69,7 @@ fun CategoriesScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
     var showSnackBar by remember { mutableStateOf(false) }
-
+    viewModel.loadCategories()
     LaunchedEffect(Unit) {
         viewModel.snackBarEvent.collect { event ->
             when (event) {

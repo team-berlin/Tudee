@@ -56,6 +56,7 @@ import com.example.tudee.presentation.screen.category.model.UiImage
 import com.example.tudee.presentation.screen.task_screen.component.DeleteConfirmationBottomSheet
 import com.example.tudee.presentation.screen.task_screen.ui.NotTaskForTodayDialogue
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -82,6 +83,10 @@ fun CategoryTasksScreen(
                 CategoryTasksSnackBarEvent.ShowDeleteSuccess -> {
                     snackBarMessageId = R.string.delete_category_successfully
                     snackBarIconId = R.drawable.ic_success
+                    coroutineScope.launch {
+                        delay(3000)
+                        navController.navigateUp()
+                    }
                     true
                 }
 
@@ -111,7 +116,6 @@ fun CategoryTasksScreen(
                         if (!(it)) {
                             IconButton(
                                 onClick = viewModel::showEditCategorySheet
-
                             ) {
                                 Icon(
                                     modifier = Modifier
