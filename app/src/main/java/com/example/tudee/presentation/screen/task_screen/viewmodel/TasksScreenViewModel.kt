@@ -3,10 +3,9 @@ package com.example.tudee.presentation.screen.task_screen.viewmodel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.tudee.data.preferences.ThemePreferenceManager
+import com.example.tudee.data.preferences.PreferencesManager
 import com.example.tudee.domain.TaskCategoryService
 import com.example.tudee.domain.TaskService
-import com.example.tudee.domain.entity.TaskPriority
 import com.example.tudee.domain.entity.TaskStatus
 import com.example.tudee.presentation.components.buttons.ButtonState
 import com.example.tudee.presentation.screen.task_screen.interactors.TaskScreenInteractor
@@ -33,7 +32,7 @@ class TasksScreenViewModel(
     private val taskService: TaskService,
     private val categoryService: TaskCategoryService,
     private val savedStateHandle: SavedStateHandle,
-    private val themePrefs: ThemePreferenceManager
+    private val themePrefs: PreferencesManager
 ) : ViewModel(), TaskScreenInteractor {
     private val _taskScreenUiState = MutableStateFlow(TasksScreenUiState( isDarkMode = themePrefs.isDarkMode()))
     val taskScreenUiState = _taskScreenUiState
