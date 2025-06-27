@@ -1,6 +1,7 @@
 package com.example.tudee.presentation.screen.onboarding
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -11,8 +12,8 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -25,6 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.tudee.R
@@ -33,6 +35,7 @@ import com.example.tudee.designsystem.theme.textstyle.TudeeTextStyle
 import com.example.tudee.naviagtion.Destination
 import com.example.tudee.presentation.components.BottomPageIndicator
 import com.example.tudee.presentation.components.OnBoardingPage
+import com.example.tudee.presentation.components.buttons.TextButton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.koin.compose.getKoin
@@ -46,8 +49,14 @@ fun OnBoardingScreen(
 
     val isFirstEntry by viewModel.isFirstEntry.collectAsState()
 
-    if (!isFirstEntry) {
-        navController.navigate(Destination.HomeScreen.route)
+    LaunchedEffect(isFirstEntry) {
+        if (!isFirstEntry) {
+            navController.navigate(Destination.HomeScreen.route) {
+                popUpTo(navController.graph.startDestinationId) {
+                    inclusive = true
+                }
+            }
+        }
     }
 
     val onboardingOnBoardingPageUiModels = listOf(
@@ -82,19 +91,26 @@ fun OnBoardingScreen(
         scope = coroutineScope,
         onBoardingPageUiModels = onboardingOnBoardingPageUiModels,
         orientation = orientation,
-        navController = navController,
+        navigateToHome = {
+            viewModel.loadInitialData()
+            viewModel.saveFirstEntry()
+            navController.navigate(Destination.HomeScreen.route) {
+                popUpTo(navController.graph.startDestinationId) {
+                    inclusive = true
+                }
+            }
+        }
     )
 }
 
 @Composable
 private fun OnBoardingContent(
     modifier: Modifier = Modifier,
-    viewModel: OnBoardingViewModel = getKoin().get(),
     onBoardingPageUiModels: List<OnBoardingPageUiModel>,
     pageState: PagerState,
     scope: CoroutineScope,
-    navController: NavController,
     orientation: Int,
+    navigateToHome: () -> Unit
 ) {
     Box(
         modifier = modifier
@@ -102,10 +118,15 @@ private fun OnBoardingContent(
             .background(TudeeTheme.color.statusColors.overlay),
         contentAlignment = Alignment.Center
     ) {
-        if (pageState.currentPage != Pages.ThirdPage.page)
+        if (pageState.currentPage != Pages.ThirdPage.page) {
             TextButton(
-                modifier = Modifier.align(alignment = Alignment.TopStart),
-                onClick = { navController.navigate(Destination.HomeScreen.route) },
+                modifier = Modifier
+                    .align(alignment = Alignment.TopStart)
+                    .zIndex(10f),
+                onClick = {
+                    Log.d("OnBoarding", "Skip button clicked")
+                    navigateToHome()
+                },
             ) {
                 Text(
                     stringResource(R.string.skip_button),
@@ -114,12 +135,15 @@ private fun OnBoardingContent(
                     color = TudeeTheme.color.primary
                 )
             }
+        }
+
         Image(
             modifier = Modifier.fillMaxSize(),
             painter = painterResource(R.drawable.background_ellipse),
             contentDescription = stringResource(R.string.back_ground_ellipse),
             alignment = Alignment.TopEnd,
         )
+
         HorizontalPager(
             modifier = modifier
                 .fillMaxSize()
@@ -134,16 +158,15 @@ private fun OnBoardingContent(
                 onClick = {
                     scope.launch {
                         if (pageState.currentPage != onBoardingPageUiModels.lastIndex) {
-                            pageState.animateScrollToPage(pageState.currentPage + Pages.SecondPage.page)
+                            pageState.animateScrollToPage(pageState.currentPage + 1)
                         } else {
-                            navController.navigate(Destination.HomeScreen.route)
-                            viewModel.loadInitialData()
-                            viewModel.saveFirstEntry()
+                            navigateToHome()
                         }
                     }
                 }
             )
         }
+
         BottomPageIndicator(
             onBoardingPageUiModels = onBoardingPageUiModels,
             pageNumber = pageState.currentPage,
@@ -158,6 +181,7 @@ private fun OnBoardingContent(
         )
     }
 }
+
 
 @Composable
 @PreviewLightDark()
