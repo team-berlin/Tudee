@@ -2,10 +2,14 @@ package com.example.tudee.presentation.components
 
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -293,53 +297,83 @@ fun DatePickerDialogComponent(
     DatePickerDialog(
         onDismissRequest = onDismiss,
         colors = DatePickerDefaults.colors(
-            containerColor = TudeeTheme.color.surface
-            , titleContentColor = TudeeTheme.color.textColors.title
+            containerColor = TudeeTheme.color.surface,
+            titleContentColor = TudeeTheme.color.textColors.title
         ),
-        confirmButton = {
-            Button(onClick = {
-                val selectedDateMillis = datePickerState.selectedDateMillis
-                if (selectedDateMillis != null) {
-                    val instant = Instant.fromEpochMilliseconds(selectedDateMillis)
-                    val localDateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())
-                    val localDate = LocalDate(
-                        year = localDateTime.year,
-                        monthNumber = localDateTime.monthNumber,
-                        dayOfMonth = localDateTime.dayOfMonth
+        confirmButton = {},
+        dismissButton = {}
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 20.dp)
+        ) {
+            DatePicker(
+                state = datePickerState,
+                headline = {},
+                colors = DatePickerDefaults.colors(
+                    navigationContentColor = TudeeTheme.color.textColors.title,
+                    headlineContentColor = TudeeTheme.color.textColors.title,
+                    titleContentColor = TudeeTheme.color.textColors.title,
+                    weekdayContentColor = TudeeTheme.color.textColors.title,
+                    dayContentColor = TudeeTheme.color.textColors.title,
+                    containerColor = TudeeTheme.color.statusColors.greenAccent,
+                    selectedDayContainerColor = TudeeTheme.color.primary,
+                    selectedDayContentColor = TudeeTheme.color.textColors.onPrimary,
+                    todayContentColor = TudeeTheme.color.primary,
+                    todayDateBorderColor = TudeeTheme.color.primary
+                )
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 12.dp, end = 40.dp, bottom = 10.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    modifier = Modifier.clickable {
+                        datePickerState.selectedDateMillis = null
+                    },
+                    text = stringResource(R.string.date_picker_clear_button_text),
+                    color = TudeeTheme.color.primary,
+                    style = TudeeTheme.textStyle.label.large
+                )
+
+                Row(horizontalArrangement = Arrangement.spacedBy(35.dp)) {
+                    Text(
+                        modifier = Modifier.clickable { onDismiss() },
+                        text = stringResource(R.string.date_picker_cancel_button_text),
+                        color = TudeeTheme.color.primary,
+                        style = TudeeTheme.textStyle.label.large
                     )
-                    onDateSelected(localDate)
+
+                    Text(
+                        modifier = Modifier.clickable {
+                            val selectedDateMillis = datePickerState.selectedDateMillis
+                            if (selectedDateMillis != null) {
+                                val instant = Instant.fromEpochMilliseconds(selectedDateMillis)
+                                val localDateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())
+                                val localDate = LocalDate(
+                                    year = localDateTime.year,
+                                    monthNumber = localDateTime.monthNumber,
+                                    dayOfMonth = localDateTime.dayOfMonth
+                                )
+                                onDateSelected(localDate)
+                            }
+                        },
+                        text = stringResource(R.string.date_picker_ok_button_text),
+                        color = TudeeTheme.color.primary,
+                        style = TudeeTheme.textStyle.label.large
+                    )
                 }
-            }) {
-                Text("OK")
-            }
-        },
-        dismissButton = {
-            Button(onClick = onDismiss) {
-                Text("Cancel")
             }
         }
-    ) {
-        DatePicker(state = datePickerState
-,   headline = {
-
-            },
-            colors = DatePickerDefaults.colors(
-                navigationContentColor =TudeeTheme.color.textColors.title ,
-                headlineContentColor = TudeeTheme.color.textColors.title,
-                titleContentColor = TudeeTheme.color.textColors.title,
-                weekdayContentColor = TudeeTheme.color.textColors.title,
-                dayContentColor=TudeeTheme.color.textColors.title,
-                containerColor = TudeeTheme.color.statusColors.greenAccent ,
-                selectedDayContainerColor = TudeeTheme.color.primary,
-                selectedDayContentColor = TudeeTheme.color.textColors.onPrimary,
-                todayContentColor = TudeeTheme.color.primary,
-                todayDateBorderColor = TudeeTheme.color.primary,
-
-                )
-        )
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable
