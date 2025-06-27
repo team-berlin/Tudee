@@ -1,6 +1,13 @@
 package com.example.tudee.presentation.screen.home.screen
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,12 +36,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.tudee.R
 import com.example.tudee.designsystem.theme.TudeeTheme
 import com.example.tudee.presentation.components.AppBar
+import com.example.tudee.presentation.components.SnackBarComponent
 import com.example.tudee.presentation.components.TaskContent
 import com.example.tudee.presentation.components.TaskContentMode
 import com.example.tudee.presentation.components.TudeeScaffold
@@ -49,6 +59,7 @@ import com.example.tudee.presentation.screen.home.viewmodel.TaskStatusUiState
 import com.example.tudee.presentation.screen.task_screen.component.TaskScreenBottomAppBar
 import com.example.tudee.presentation.screen.task_screen.ui.NotTaskForTodayDialogue
 import com.example.tudee.presentation.themeViewModel.ThemeViewModel
+import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -109,8 +120,22 @@ fun HomeContent(
     isDarkMode: Boolean,
 ) {
     TudeeScaffold(
+
         showTopAppBar = true,
+
         topAppBar = {
+            Box(
+                modifier = modifier
+                    .padding(top = 12.dp)
+                    .zIndex(2f)
+
+            ){
+                SnackBarSection(
+                    isSnackBarVisible = state.showSnackBar,
+                    hideSnackBar = { actions(HomeActions.HideSnackBar) },
+                )
+            }
+
             AppBar(
                 isDarkMode = isDarkMode,
                 onThemeChanged = {
@@ -144,6 +169,7 @@ fun HomeContent(
                 .background(color = TudeeTheme.color.surface)
 
         ) {
+
             BackgroundBlueCard()
             Column(
                 modifier = Modifier
@@ -270,6 +296,46 @@ fun BottomSheetContent(
             onAction = actions,
             mode = if (state.selectedTask.taskId.isNotEmpty()) TaskContentMode.EDIT else TaskContentMode.ADD
         )
+    }
+}
+
+
+@Composable
+private fun SnackBarSection(
+    isSnackBarVisible: Boolean,
+    hideSnackBar: () -> Unit,
+) {
+    LaunchedEffect(isSnackBarVisible) {
+        delay(3000)
+        hideSnackBar()
+    }
+
+    AnimatedVisibility(
+        visible = isSnackBarVisible, enter = slideInVertically(
+            initialOffsetY = { fullHeight -> -fullHeight }, animationSpec = spring(
+                stiffness = Spring.StiffnessLow, dampingRatio = Spring.DampingRatioMediumBouncy
+            )
+        ) + fadeIn(),
+
+        exit = slideOutVertically(
+            targetOffsetY = { fullHeight -> fullHeight }, animationSpec = spring(
+                stiffness = Spring.StiffnessMedium, dampingRatio = Spring.DampingRatioNoBouncy
+            )
+        ) + fadeOut()
+    ) {
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .zIndex(1f)
+        ) {
+            SnackBarComponent(
+                message = stringResource(R.string.snack_bar_success_message),
+                iconPainter = painterResource(R.drawable.check_mark_ic),
+                iconTint = TudeeTheme.color.statusColors.greenAccent,
+                iconBackgroundColor = TudeeTheme.color.statusColors.greenVariant
+            )
+        }
     }
 }
 
