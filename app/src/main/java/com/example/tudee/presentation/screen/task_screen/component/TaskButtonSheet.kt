@@ -208,7 +208,8 @@ fun BottomSheetContent(
         }
         item {
             TudeeTextField(
-                value = taskState.taskDueDate?.toString() ?: "2024, 1, 1",
+                value = taskState.taskDueDate?.toString() ?: java.time.LocalDate.now()
+                    .format(java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy")),
                 onValueChange = { newValue ->
                     val parts = newValue.split(", ")
                     if (parts.size == 3) {
