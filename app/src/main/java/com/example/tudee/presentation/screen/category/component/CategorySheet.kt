@@ -1,7 +1,6 @@
 package com.example.tudee.presentation.screen.category.component
 
 import android.Manifest
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
@@ -35,6 +34,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -62,6 +62,8 @@ import com.example.tudee.presentation.screen.category.model.CategorySheetMode
 import com.example.tudee.presentation.screen.category.model.CategorySheetState
 import com.example.tudee.presentation.screen.category.model.UiImage
 import com.example.tudee.presentation.screen.category.model.isNotNull
+import com.example.tudee.utils.saveImageToInternalStorage
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -115,38 +117,20 @@ private fun CategorySheetContent(
     }
 
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
 
     val photoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia()
     ) { uri ->
         uri?.let {
-            try {
-                context.contentResolver.takePersistableUriPermission(
-                    uri,
-                    Intent.FLAG_GRANT_READ_URI_PERMISSION
-                )
-                selectedUiImage = UiImage.External(it.toString())
-                Log.d("IMAGE_PICKER", "Selected image URI: $uri")
-            } catch (e: Exception) {
-                Log.e("PERMISSION", "Error: ${e.message}")
+            coroutineScope.launch {
+                val tempUri = saveImageToInternalStorage(context, uri)
+                selectedUiImage = UiImage.External(tempUri.toString())
             }
         }
     }
 
-    val permissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
-            photoPickerLauncher.launch(
-                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-            )
-        } else {
-            Log.e("PERMISSION", "Storage permission denied")
-        }
-    }
-
     val isFormValid = categoryName.isNotBlank() && selectedUiImage.isNotNull()
-
 
     Column(
         modifier = Modifier
@@ -168,26 +152,9 @@ private fun CategorySheetContent(
         CategoryImageSection(
             selectedImage = selectedUiImage,
             onEditImage = {
-                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
-                    when {
-                        ContextCompat.checkSelfPermission(
-                            context,
-                            Manifest.permission.READ_EXTERNAL_STORAGE
-                        ) == PackageManager.PERMISSION_GRANTED -> {
-                            photoPickerLauncher.launch(
-                                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                            )
-                        }
-
-                        else -> {
-                            permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
-                        }
-                    }
-                } else {
                     photoPickerLauncher.launch(
                         PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                     )
-                }
             }
         )
     }
