@@ -1,7 +1,6 @@
 package com.example.tudee.presentation.screen.onboarding
 
 import android.content.res.Configuration
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -13,7 +12,6 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -49,13 +47,9 @@ fun OnBoardingScreen(
 
     val isFirstEntry by viewModel.isFirstEntry.collectAsState()
 
-    LaunchedEffect(isFirstEntry) {
-        if (!isFirstEntry) {
-            navController.navigate(Destination.HomeScreen.route) {
-                popUpTo(navController.graph.startDestinationId) {
-                    inclusive = true
-                }
-            }
+    if (!isFirstEntry) {
+        navController.navigate(Destination.HomeScreen.route) {
+            popUpTo(Destination.OnBoardingScreen.route) { inclusive = true }
         }
     }
 
@@ -95,9 +89,7 @@ fun OnBoardingScreen(
             viewModel.loadInitialData()
             viewModel.saveFirstEntry()
             navController.navigate(Destination.HomeScreen.route) {
-                popUpTo(navController.graph.startDestinationId) {
-                    inclusive = true
-                }
+                popUpTo(Destination.OnBoardingScreen.route) { inclusive = true }
             }
         }
     )
@@ -123,10 +115,7 @@ private fun OnBoardingContent(
                 modifier = Modifier
                     .align(alignment = Alignment.TopStart)
                     .zIndex(10f),
-                onClick = {
-                    Log.d("OnBoarding", "Skip button clicked")
-                    navigateToHome()
-                },
+                onClick = navigateToHome,
             ) {
                 Text(
                     stringResource(R.string.skip_button),
@@ -158,7 +147,7 @@ private fun OnBoardingContent(
                 onClick = {
                     scope.launch {
                         if (pageState.currentPage != onBoardingPageUiModels.lastIndex) {
-                            pageState.animateScrollToPage(pageState.currentPage + 1)
+                            pageState.animateScrollToPage(pageState.currentPage + Pages.SecondPage.page)
                         } else {
                             navigateToHome()
                         }
