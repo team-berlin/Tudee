@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tudee.R
 import com.example.tudee.data.mapper.toCategoryUiState
-import com.example.tudee.data.preferences.ThemePreferenceManager
 import com.example.tudee.domain.TaskCategoryService
 import com.example.tudee.domain.TaskService
 import com.example.tudee.domain.entity.Task

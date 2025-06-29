@@ -2,7 +2,6 @@ package com.example.tudee.presentation.screen.category.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.tudee.data.preferences.ThemePreferenceManager
 import com.example.tudee.domain.TaskCategoryService
 import com.example.tudee.domain.TaskService
 import com.example.tudee.domain.request.CategoryCreationRequest

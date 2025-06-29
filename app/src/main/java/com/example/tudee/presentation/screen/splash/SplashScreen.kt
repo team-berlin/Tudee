@@ -20,8 +20,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.tudee.R
+import com.example.tudee.data.preferences.PreferencesManager
 import com.example.tudee.designsystem.theme.TudeeTheme
-import com.example.tudee.domain.AppEntry
 import com.example.tudee.naviagtion.Destination
 import com.example.tudee.presentation.themeViewModel.ThemeViewModel
 import kotlinx.coroutines.delay
@@ -37,12 +37,12 @@ fun SplashScreen(
     overlayColor: Color = TudeeTheme.color.statusColors.overlay,
     backgroundPainter: Painter = painterResource(R.drawable.background_ellipse),
     iconPainter: Painter = painterResource(R.drawable.tudee_logo),
-    appEntry: AppEntry = getKoin().get()
+    prefs: PreferencesManager = getKoin().get()
 ) {
     val isDark by themeViewModel.isDarkMode.collectAsState()
     LaunchedEffect(Unit) {
         delay(3000)
-        if (appEntry.isFirstEntry()) {
+        if (prefs.isOnboardingCompleted().not()) {
             navController.navigate(Destination.OnBoardingScreen.route) {
                 popUpTo(Destination.SplashScreen.route) { inclusive = true }
             }

@@ -1,6 +1,8 @@
 package com.example.tudee.presentation.screen.onboarding
 
 import android.content.res.Configuration
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -12,8 +14,6 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -44,15 +44,6 @@ fun OnBoardingScreen(
     navController: NavController = rememberNavController(),
     viewModel: OnBoardingViewModel = getKoin().get()
 ) {
-
-    val isFirstEntry by viewModel.isFirstEntry.collectAsState()
-
-    if (!isFirstEntry) {
-        navController.navigate(Destination.HomeScreen.route) {
-            popUpTo(Destination.OnBoardingScreen.route) { inclusive = true }
-        }
-    }
-
     val onboardingOnBoardingPageUiModels = listOf(
         OnBoardingPageUiModel(
             title = stringResource(R.string.on_boarding_title1),
@@ -147,7 +138,13 @@ private fun OnBoardingContent(
                 onClick = {
                     scope.launch {
                         if (pageState.currentPage != onBoardingPageUiModels.lastIndex) {
-                            pageState.animateScrollToPage(pageState.currentPage + Pages.SecondPage.page)
+                            pageState.animateScrollToPage(
+                                page = pageState.currentPage + 1,
+                                animationSpec = spring(
+                                    dampingRatio = Spring.DampingRatioLowBouncy,
+                                    stiffness = Spring.StiffnessLow
+                                )
+                            )
                         } else {
                             navigateToHome()
                         }
